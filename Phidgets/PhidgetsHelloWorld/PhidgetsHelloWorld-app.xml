@@ -1,0 +1,23 @@
+<?xml version ="1.0" encoding="utf-8" ?>
+<application xmlns="http://ns.adobe.com/air/application/2.0">
+	<id>PhidgetsHelloWorld</id>
+	<version>1.0</version>
+	<filename>PhidgetsHelloWorld</filename>
+	<description></description>
+	<name>PhidgetsHelloWorld</name>
+	<copyright></copyright>
+	<initialWindow>
+		<content>PhidgetsHelloWorld.swf</content>
+		<systemChrome>standard</systemChrome>
+		<transparent>false</transparent>
+		<visible>true</visible>
+		<fullScreen>false</fullScreen>
+		<autoOrients>false</autoOrients>
+		<aspectRatio>portrait</aspectRatio>
+		<renderMode>auto</renderMode>
+	</initialWindow>
+	<customUpdateUI>false</customUpdateUI>
+	<allowBrowserInvocation>false</allowBrowserInvocation>
+	<icon>
+	</icon>
+</application>
