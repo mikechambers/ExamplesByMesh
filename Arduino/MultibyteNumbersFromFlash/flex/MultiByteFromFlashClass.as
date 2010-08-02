@@ -36,7 +36,7 @@ private var socket:Socket;
 
 private function onApplicationComplete():void
 {
-	//only allow numbers, eriod and minus sign
+	//only allow numbers, period and minus sign
 	numberInput.restrict = ".0-9\\-";
 	
 	socket = new Socket()
