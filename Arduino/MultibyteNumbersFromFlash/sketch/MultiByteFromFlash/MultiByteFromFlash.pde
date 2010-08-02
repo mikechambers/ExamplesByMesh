@@ -59,7 +59,7 @@ void loop()
     u.b[2] = Serial.read();
     u.b[3] = Serial.read();
     
-    //retriece the float value of the union
+    //retrieve the float value of the union
     //(based on the bytes passed in)
     value = u.ival;
   
