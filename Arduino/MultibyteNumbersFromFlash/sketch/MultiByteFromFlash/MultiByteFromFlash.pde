@@ -69,7 +69,7 @@ void loop()
     
     //write out a null byte, (the Flash Socket
     //class looks for this)
-    Serial.print(0, BIN);
+    Serial.print(0, BYTE);
   }
   
 }
