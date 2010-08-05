@@ -54,6 +54,10 @@ boolean shouldBlinkLED = false;
 //setup function. called when the program first runs
 void setup()
 {
+	//set the pin more for the digital ping that
+	//the LED is connected to (can be INPUT or OUTPUT)
+	pinMode(LED_PIN, INPUT);
+
 	//blink the LED 5 times so we can visually see that the
 	//program is running
 	blinkLED(5);
