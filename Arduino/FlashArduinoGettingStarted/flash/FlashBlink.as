@@ -45,9 +45,9 @@ package
 		//command sent to the Arduino to toggle LED blinking state
 		private static const TOGGLE_LED_STATE:String = "t";
 		
-		//Charachter that delineates the end of a message received
+		//Character that delineates the end of a message received
 		//from the Arduino
-		private static const EOL_DELIMETER:String = "\n";
+		private static const EOL_DELIMITER:String = "\n";
 		
 		//socket we will use to connect to TinkerProxy
 		private var _socket:Socket;
@@ -108,7 +108,7 @@ package
 			//Security Error
 			_socket.addEventListener( SecurityErrorEvent.SECURITY_ERROR, onSecurityError );
 			
-			//need to set Endianess for Socket. THIS IS IMPORTANT
+			//need to set Endianness for Socket. THIS IS IMPORTANT
 			//If this is set incorrectly, the Arduino will not be able to understand
 			//all of the data sent from Flash. 
 			//
@@ -148,7 +148,7 @@ package
 			out messages, looking for a character (that you specify) that delineates the
 			end of a message.
 			
-			If you just want to send a single charachter back from Arduino, then this
+			If you just want to send a single character back from Arduino, then this
 			is not necessary. However, the handler below is generic, and already does all
 			of the buffering, so you can just use it.
 		*/
@@ -174,11 +174,11 @@ package
 			var index:int;
 			
 			//loop through the buffer until it contains no more
-			//end of message delimeters
-			while((index = buffer.indexOf(EOL_DELIMETER)) > -1)
+			//end of message delimiter
+			while((index = buffer.indexOf(EOL_DELIMITER)) > -1)
 			{
-				//extract the message from the beginning to where the delimeter is
-				//we dont include the delimeter
+				//extract the message from the beginning to where the delimiter is
+				//we don't include the delimiter
 				msg = buffer.substring(0, index);
 				
 				//remove the message from the buffer
@@ -198,7 +198,7 @@ package
 			//make sure we are connected to the socket
 			if(!_socket.connected)
 			{
-				//if not, dont do anything
+				//if not, don't do anything
 				trace("You must be connected to send a command to the Arduino.");
 				return;
 			}
@@ -223,7 +223,7 @@ package
 		}
 		
 		//called when there is a security error. Usually if you try to connect to a socket
-		//when the SWF doesnt have permission. 
+		//when the SWF doesn't have permission. 
 		//See:
 		//http://www.adobe.com/devnet/flashplayer/articles/fplayer9_security_04.html
 		//In most cases, when testing locally, this will not be an issue.
