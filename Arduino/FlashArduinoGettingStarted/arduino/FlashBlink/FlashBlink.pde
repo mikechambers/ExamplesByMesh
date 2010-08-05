@@ -45,6 +45,8 @@
 //incoming command to toggle LED blinking state
 #define TOGGLE_LED_STATE 't'
 
+#define EOL_DELIMETER "\n"
+
 //int to hold incoming byte when we read it
 int incoming = 0;
 
@@ -54,17 +56,28 @@ boolean shouldBlinkLED = false;
 //setup function. called when the program first runs
 void setup()
 {
+	//start listening for incoming messages on the serial port
+	//at 9600 baud
+	Serial.begin(9600);
+
+    //Send a message out that the program is initializing
+    Serial.print("INITIALIZING");
+        
+    //Flash looks for this to know when the message is done
+    //See the comments in the Flash file for more info.
+    Serial.print(EOL_DELIMETER);
+        
 	//set the pin more for the digital ping that
 	//the LED is connected to (can be INPUT or OUTPUT)
-	pinMode(LED_PIN, INPUT);
+	pinMode(LED_PIN, OUTPUT);
 
 	//blink the LED 5 times so we can visually see that the
 	//program is running
 	blinkLED(5);
 
-	//start listening for incoming messages on the serial port
-	//at 9600 baud
-	Serial.begin(9600);
+    //Send out a message that initialization is complete.
+    Serial.print("READY");
+    Serial.print(EOL_DELIMETER);
 }
 
 //program loop. Called each timer tick (really fast)
@@ -79,10 +92,11 @@ void loop()
   
 	//check if there are any bytes available
 	//on the Serial port
-	if(Serial.available())
+	if(Serial.available() > 0)
 	{
 		//read a single byte.
-    	incoming = Serial.read();
+		incoming = Serial.read();
+    
 
 		//Calling Serial.read() remove the byte from the Serial
 		//buffer. In this case, if there are multiple bytes that
@@ -100,16 +114,18 @@ void loop()
       
 			//send a message to the Serial port with the 
 			//new LED Blink state
-			Serial.print("Toggling LED Blink State : ");
        
+			Serial.print("LED BLINK STATE: "); 
 			if(shouldBlinkLED)
 			{
-				Serial.println("ON");
+				Serial.print("ON");
 			}
         	else
         	{
-          		Serial.println("OFF");
+          		Serial.print("OFF");
         	}
+        
+			Serial.print(EOL_DELIMETER);
 
 			//note, if you are using XMLSocket in Flash to read
 			//the string data over the socket then we also have to send 
