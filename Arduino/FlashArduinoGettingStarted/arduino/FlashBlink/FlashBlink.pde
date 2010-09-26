@@ -45,7 +45,7 @@
 //incoming command to toggle LED blinking state
 #define TOGGLE_LED_STATE 't'
 
-#define EOL_DELIMETER "\n"
+#define EOL_DELIMITER "\n"
 
 //int to hold incoming byte when we read it
 int incoming = 0;
@@ -65,7 +65,7 @@ void setup()
         
     //Flash looks for this to know when the message is done
     //See the comments in the Flash file for more info.
-    Serial.print(EOL_DELIMETER);
+    Serial.print(EOL_DELIMITER);
         
 	//set the pin more for the digital ping that
 	//the LED is connected to (can be INPUT or OUTPUT)
@@ -77,7 +77,7 @@ void setup()
 
     //Send out a message that initialization is complete.
     Serial.print("READY");
-    Serial.print(EOL_DELIMETER);
+    Serial.print(EOL_DELIMITER);
 }
 
 //program loop. Called each timer tick (really fast)
@@ -125,7 +125,7 @@ void loop()
           		Serial.print("OFF");
         	}
         
-			Serial.print(EOL_DELIMETER);
+			Serial.print(EOL_DELIMITER);
 
 			//note, if you are using XMLSocket in Flash to read
 			//the string data over the socket then we also have to send 
