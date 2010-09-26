@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<application xmlns="http://ns.adobe.com/air/application/2.5">
+    <id>VectorHWAExample</id>
+    <filename>VectorHWAExample</filename>
+    <description></description>
+    <!-- To localize the description, use the following format for the description element.
+	<description>
+		<text xml:lang="en">English App description goes here</text>
+		<text xml:lang="fr">French App description goes here</text>
+		<text xml:lang="ja">Japanese App description goes here</text>
+	</description>
+	-->
+    <name>VectorHWAExample</name>
+    <!-- To localize the name, use the following format for the name element.
+	<name>
+		<text xml:lang="en">English App name goes here</text>
+		<text xml:lang="fr">French App name goes here</text>
+		<text xml:lang="ja">Japanese App name goes here</text>
+	</name>
+	-->
+    <copyright></copyright>
+    <initialWindow>
+        <content>VectorHWAExample.swf</content>
+        <systemChrome>standard</systemChrome>
+        <transparent>false</transparent>
+        <visible>true</visible>
+        <fullScreen>true</fullScreen>
+        <autoOrients>false</autoOrients>
+        <aspectRatio>portrait</aspectRatio>
+        <renderMode>gpu</renderMode>
+    </initialWindow>
+    <customUpdateUI>false</customUpdateUI>
+    <allowBrowserInvocation>false</allowBrowserInvocation>
+    <icon></icon>
+    <android>
+        <manifestAdditions><![CDATA[<manifest><uses-permission android:name="android.permission.INTERNET"/></manifest>]]></manifestAdditions>
+    </android>
+    <versionNumber>1.0</versionNumber>
+    <versionLabel></versionLabel>
+</application>
