@@ -97,23 +97,23 @@
 			//commands to draw a circle
 			var g = new Graphics();
 			
-				//stroke of 1 px
-				g.setStrokeStyle(1);
-				
-				//Set the stroke color, using the EaselJS 
-				//Graphics.getRGB static method.
-				//This creates a white color, with an alpha
-				//of .7
-				g.beginStroke(Graphics.getRGB(255,255,255,.7));
-				
-				//draw the circle
-				g.drawCircle(0,0, CIRCLE_RADIUS);
-				
-				//note that the circle has not been drawn yet. 
-				//the Graphics instance just has the commands to
-				//draw the circle.
-				//It will be drawn when the stage needs to render it
-				//which is usually when we call stage.tick()
+			//stroke of 1 px
+			g.setStrokeStyle(1);
+			
+			//Set the stroke color, using the EaselJS 
+			//Graphics.getRGB static method.
+			//This creates a white color, with an alpha
+			//of .7
+			g.beginStroke(Graphics.getRGB(255,255,255,.7));
+			
+			//draw the circle
+			g.drawCircle(0,0, CIRCLE_RADIUS);
+			
+			//note that the circle has not been drawn yet. 
+			//the Graphics instance just has the commands to
+			//draw the circle.
+			//It will be drawn when the stage needs to render it
+			//which is usually when we call stage.tick()
 			
 			//create a new Shape instance. This is a DisplayObject
 			//which can be added directly to the stage (and rendered).
