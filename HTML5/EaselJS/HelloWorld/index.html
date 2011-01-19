@@ -75,9 +75,16 @@
 		//initialize function, called when page loads.
 		function init()
 		{
-			//Normally, we would do some detection for the Canvas
-			//element here. See http://www.modernizr.com/ for
-			//a useful library for detecting HTML5 support.
+			//check and see if the canvas element is supported in
+			//the current browser
+			//http://diveintohtml5.org/detect.html#canvas
+			if(!(!!document.createElement('canvas').getContext))
+			{
+				var wrapper = document.getElementById("canvasWrapper");
+				wrapper.innerHTML = "Your browser does appear to not support " +
+				"the HTML5 Canvas element";
+				return;
+			}
 			
 			//get a reference to the canvas element
 			var canvas = document.getElementById("stageCanvas");
@@ -161,6 +168,8 @@
 	
 </head>
 <body onload="init()">
-	<canvas width="400" height="300" id="stageCanvas"></canvas>
+	<div width="400" height="300" id="canvasWrapper">
+		<canvas width="400" height="300" id="stageCanvas"></canvas>
+	</div>
 </body>
 </html>
