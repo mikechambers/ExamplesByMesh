@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- 
+	Copyright 2011
+	Mike Chambers
+	mikechambers@gmail.com
+	
+	http://www.mikechambers.com
+-->
+
+<head>
+	<meta charset="utf-8" />
+	
+	<meta name="author" content="Mike Chambers" /> 
+	<meta name="keywords" content="" /> 
+	<meta name="description" content="" /> 
+	<meta name="copyright" content="Mike Chambers" /> 
+	<meta name="robots" content="index,follow" /> 	
+	
+	<title>TITLE</title>
+	
+	<style>
+		#stageCanvas
+		{
+			background-color:#333333;
+		}
+	</style>
+
+	<!-- import the Easel library. Downloaded from:
+		http://easeljs.com/
+	-->
+	<script src="scripts/easeljs.js"></script>
+
+	<script>
+		//EaselJS Stage instance that wraps the Canvas element
+		var stage;
+		
+		//EaselJS Shape instance that we will animate
+		var circle;
+		
+		//radius of the circle Graphics that we will draw.
+		var CIRCLE_RADIUS = 10;
+		
+		//x position that we will reset Shape to when it goes off
+		//screen
+		var circleXReset;
+		
+		//EaselJS Rectangle instance we will use to store the bounds
+		//of the Canvas
+		var bounds = new Rectangle();
+		
+		//initialize function, called when page loads.
+		function init()
+		{
+			//Normally, we would do some detection for the Canvas
+			//element here. See http://www.modernizr.com/ for
+			//a useful library for detecting HTML5 support.
+			
+			//get a reference to the canvas element
+			var canvas = document.getElementById("stageCanvas");
+			
+			//copy the canvas bounds to the bounds instance.
+			//Note, if we resize the canvas, we need to reset
+			//these bounds.
+			bounds.w = canvas.width;
+			bounds.h = canvas.height;
+			
+			//pass the canvas element to the EaselJS Stage instance
+			//The Stage class abstracts away the Canvas element and
+			//is the root level display container for display elements.
+			stage = new Stage(canvas);
+			
+			//Create an EaselJS Graphics element to create the
+			//commands to draw a circle
+			var g = new Graphics();
+			
+				//stroke of 1 px
+				g.setStrokeStyle(1);
+				
+				//Set the stroke color, using the EaselJS 
+				//Graphics.getRGB static method.
+				//This creates a white color, with an alpha
+				//of .7
+				g.beginStroke(Graphics.getRGB(255,255,255,.7));
+				
+				//draw the circle
+				g.drawCircle(0,0, CIRCLE_RADIUS);
+				
+				//note that the circle has not been drawn yet. 
+				//the Graphics instance just has the commands to
+				//draw the circle.
+				//It will be drawn when the stage needs to render it
+				//which is usually when we call stage.tick()
+			
+			//create a new Shape instance. This is a DisplayObject
+			//which can be added directly to the stage (and rendered).
+			//Pass in the Graphics instance that we created, and that
+			//we want the Shape to draw.
+			circle = new Shape(g);
+			
+			//set the initial x position, and the reset position
+			circle.x = circleXReset = -CIRCLE_RADIUS;
+			
+			//set the y position
+			circle.y = canvas.height / 2;
+			
+			//add the circle to the stage.
+			stage.addChild(circle);
+			
+			//tell the stage to render to the canvas
+			stage.tick();
+			
+			//Subscribe to the Tick class. This will call the tick
+			//method at a set interval (similar to ENTER_FRAME with
+			//the Flash Player)
+			Tick.addListener(this);
+		}
+		
+		//function called by the Tick instance at a set interval
+		function tick()
+		{
+			//check and see if the Shape has gone of the right
+			//of the stage.
+			if(circle.x > bounds.w)
+			{
+				//if it has, reset it.
+				circle.x = circleXReset;
+			}
+			
+			//move the circle over 10 pixels
+			circle.x += 10;
+			
+			//re-render the stage
+			stage.tick();
+		}
+	</script>
+	
+	
+</head>
+<body onload="init()">
+	<canvas width="400" height="300" id="stageCanvas"></canvas>
+</body>
+</html>
