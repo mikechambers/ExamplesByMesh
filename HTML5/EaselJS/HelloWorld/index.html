@@ -70,7 +70,7 @@
 		
 		//EaselJS Rectangle instance we will use to store the bounds
 		//of the Canvas
-		var bounds = new Rectangle();
+		var bounds;
 		
 		//initialize function, called when page loads.
 		function init()
@@ -92,6 +92,7 @@
 			//copy the canvas bounds to the bounds instance.
 			//Note, if we resize the canvas, we need to reset
 			//these bounds.
+			bounds = new Rectangle();
 			bounds.w = canvas.width;
 			bounds.h = canvas.height;
 			
