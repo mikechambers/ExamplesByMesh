@@ -94,13 +94,15 @@ function init()
 	//create our Drone instance, that will
 	//follow our mouse
 	drone = new Drone();
-	
+
 	//position it just off the screen on the left
-	drone.y = 20;
-	drone.x = -Drone.DEFAULT_RADIUS * 2;
+	drone.y = canvasWrapper.attr("height") / 2;
+	drone.x = canvasWrapper.attr("width") / 2;
 	
 	//add the drone to the stage
 	stage.addChild(drone);
+	
+	stage.tick();
 
 	//set the tick interval to 24 frames per second.
 	Tick.setInterval(1000/24);
