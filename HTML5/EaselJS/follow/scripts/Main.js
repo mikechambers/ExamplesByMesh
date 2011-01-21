@@ -70,11 +70,27 @@ function init()
 	//listen for when the window looses focus
 	$(window).blur(onWindowBlur);
 	
-	//listen for a click event
-	canvasWrapper.click(onMouseClick);
+		
+	if(	(navigator.userAgent.match(/iPad/i) != null) ||
+		(navigator.userAgent.match(/iPhone/i)) || 
+		(navigator.userAgent.match(/iPod/i)))
+	{	
+		console.log("ios");
+		var c = canvasWrapper.get(0);
+		c.ontouchmove = onTouchMove;
+		c.ontouchstart = onTouchStart;
+		c.ontouchend = onTouchEnd;
+	}
+	else
+	{
+		console.log("not ios");
+		//listen for when the mouse moves
+		canvasWrapper.mousemove(onMouseMove);
+		
+		//listen for a click event
+		canvasWrapper.click(onMouseClick);
+	}
 	
-	//listen for when the mouse moves
-	canvasWrapper.mousemove(onMouseMove);	
 	
 	//create our Drone instance, that will
 	//follow our mouse
@@ -100,6 +116,19 @@ function init()
 	//the canvas)
 	Tick.setPaused(true);
 }
+
+function onTouchStart(e)
+{
+	e.preventDefault();
+	Tick.setPaused(false);
+}
+
+function onTouchEnd(e)
+{
+	e.preventDefault();
+	Tick.setPaused(true);
+}
+
 
 //called when the user clicks the mouse on the canvas
 function onMouseClick(e)
@@ -127,6 +156,17 @@ function tick()
 		//if not, render the stage
 		stage.tick();
 	}
+}
+
+function onTouchMove(e)
+{
+	e.preventDefault();
+	var touch = e.touches.item(0);
+	
+	var data = {pageX:touch.clientX, 
+				pageY:touch.clientY};
+	
+	updateMouseCoordinates(data);
 }
 
 //called when the mouse is moved over the canvas

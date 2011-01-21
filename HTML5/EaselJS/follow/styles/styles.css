@@ -6,3 +6,8 @@ body
 	margin:0em;
 	padding:0em;
 }
+
+canvas
+{
+	webkit-user-select:none;
+}
