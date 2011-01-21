@@ -75,11 +75,10 @@ function init()
 		(navigator.userAgent.match(/iPhone/i)) || 
 		(navigator.userAgent.match(/iPod/i)))
 	{	
-		console.log("ios");
 		var c = canvasWrapper.get(0);
-		c.ontouchmove = onTouchMove;
-		c.ontouchstart = onTouchStart;
-		c.ontouchend = onTouchEnd;
+			c.ontouchmove = onTouchMove;
+			c.ontouchstart = onTouchStart;
+			c.ontouchend = onTouchEnd;
 	}
 	else
 	{
@@ -117,16 +116,47 @@ function init()
 	Tick.setPaused(true);
 }
 
+var touchID = -1;
 function onTouchStart(e)
 {
 	e.preventDefault();
-	Tick.setPaused(false);
+	
+	/*
+	for(var i = 0; i < e.changedTouches.length; i++)
+	{
+		console.log(e.changedTouches[i].identifier);
+	}
+	console.log("----------");
+	*/
+
+	if(touchID == -1)
+	{
+		var touch = e.changedTouches[0];
+		
+		touchID = touch.identifier;
+		//console.log(touchID);
+		Tick.setPaused(false);
+	}
 }
 
 function onTouchEnd(e)
 {
 	e.preventDefault();
-	Tick.setPaused(true);
+	
+	//var touch = e.changedTouches[0];
+	
+	var changedTouches = e.changedTouches;
+	var len = changedTouches.length;
+	
+	for(var i = 0; i < len; i++)
+	{
+		if(changedTouches[i].identifier == touchID)
+		{
+			Tick.setPaused(true);
+			touchID = -1;
+			return;
+		}
+	}
 }
 
 
@@ -161,10 +191,28 @@ function tick()
 function onTouchMove(e)
 {
 	e.preventDefault();
-	var touch = e.touches.item(0);
 	
-	var data = {pageX:touch.clientX, 
-				pageY:touch.clientY};
+	var changedTouches = e.changedTouches;
+	var len = changedTouches.length;
+	var touch;
+	var found = false;
+	for(var i = 0; i < len; i++)
+	{
+		touch = changedTouches[i];
+		if(touch.identifier == touchID)
+		{
+			found = true
+			break;
+		}
+	}
+	
+	if(!found)
+	{
+		return;
+	}
+	
+	var data = {pageX:touch.pageX, 
+				pageY:touch.pageY};
 	
 	updateMouseCoordinates(data);
 }
