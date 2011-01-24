@@ -83,7 +83,6 @@ function init()
 		(navigator.userAgent.match(/Android/i))
 		)
 	{	
-		console.log("ios");
 			//we are on a touch device
 			//listen for touch events
 			mainCanvas.ontouchstart = onTouchStart;
