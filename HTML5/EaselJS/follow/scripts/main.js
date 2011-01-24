@@ -212,7 +212,7 @@ function tick()
 function onMouseMove(e)
 {
 	//update the Mouse position coordinates
-	updateMouseCoordinates(touch);
+	updateMouseCoordinates(e);
 }
 
 //called when the browser window is resized
