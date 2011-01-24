@@ -69,8 +69,7 @@ function init()
 	
 	//listen for when the window looses focus
 	$(window).blur(onWindowBlur);
-	
-		
+			
 	if(	(navigator.userAgent.match(/iPad/i) != null) ||
 		(navigator.userAgent.match(/iPhone/i)) || 
 		(navigator.userAgent.match(/iPod/i)) ||
@@ -84,7 +83,6 @@ function init()
 	}
 	else
 	{
-		console.log("not ios");
 		//listen for when the mouse moves
 		canvasWrapper.mousemove(onMouseMove);
 		
@@ -124,21 +122,12 @@ var touchID = -1;
 function onTouchStart(e)
 {
 	e.preventDefault();
-	
-	/*
-	for(var i = 0; i < e.changedTouches.length; i++)
-	{
-		console.log(e.changedTouches[i].identifier);
-	}
-	console.log("----------");
-	*/
 
 	if(touchID == -1)
 	{
 		var touch = e.changedTouches[0];
 		
 		touchID = touch.identifier;
-		//console.log(touchID);
 		Tick.setPaused(false);
 	}
 }
@@ -146,9 +135,7 @@ function onTouchStart(e)
 function onTouchEnd(e)
 {
 	e.preventDefault();
-	
-	//var touch = e.changedTouches[0];
-	
+		
 	var changedTouches = e.changedTouches;
 	var len = changedTouches.length;
 	
@@ -163,6 +150,35 @@ function onTouchEnd(e)
 	}
 }
 
+function onTouchMove(e)
+{
+	e.preventDefault();
+	
+	var changedTouches = e.changedTouches;
+	var len = changedTouches.length;
+	
+	var touch;
+	var found = false;
+	for(var i = 0; i < len; i++)
+	{
+		touch = changedTouches[i];
+		if(touch.identifier == touchID)
+		{
+			found = true
+			break;
+		}
+	}
+	
+	if(!found)
+	{
+		return;
+	}
+	
+	var data = {pageX:touch.pageX, 
+				pageY:touch.pageY};
+	
+	updateMouseCoordinates(data);
+}
 
 //called when the user clicks the mouse on the canvas
 function onMouseClick(e)
@@ -192,40 +208,11 @@ function tick()
 	}
 }
 
-function onTouchMove(e)
-{
-	e.preventDefault();
-	
-	var changedTouches = e.changedTouches;
-	var len = changedTouches.length;
-	var touch;
-	var found = false;
-	for(var i = 0; i < len; i++)
-	{
-		touch = changedTouches[i];
-		if(touch.identifier == touchID)
-		{
-			found = true
-			break;
-		}
-	}
-	
-	if(!found)
-	{
-		return;
-	}
-	
-	var data = {pageX:touch.pageX, 
-				pageY:touch.pageY};
-	
-	updateMouseCoordinates(data);
-}
-
 //called when the mouse is moved over the canvas
 function onMouseMove(e)
 {
 	//update the Mouse position coordinates
-	updateMouseCoordinates(e);
+	updateMouseCoordinates(touch);
 }
 
 //called when the browser window is resized
