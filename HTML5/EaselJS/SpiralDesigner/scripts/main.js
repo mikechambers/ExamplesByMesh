@@ -33,10 +33,25 @@ var bounds = {x:0,y:0, height:0, width:0};
 var radius = 20;
 var spread = 0.1;
 
-var spirals;
+var spiral;
 
 function init()
 {
+	//get a reference to the canvas element
+	canvasWrapper = $("#mainCanvas");
+	
+	//check for canvas support
+	if(!(!!document.createElement('canvas').getContext))
+	{
+		////document.createElement("article");
+		canvasWrapper.html("<div>" +
+			"It appears you are using a browser that does not support "+
+			"the HTML5 Canvas Element</div>");
+			
+			//canvas isnt support, so dont continue
+			return;
+	}	
+	
 	var params = parseGetParams();
 	
 	var radiusParam = params.radius;
@@ -53,20 +68,24 @@ function init()
 
 	spirals = [];
 
-	//get a reference to the canvas element
-	canvasWrapper = $("#mainCanvas");
 	canvasWrapper.click(onCanvasClick);
 	
 	//update the dimensions of the canvas
 	updateCanvasDimensions();
 	
-	stage = new Stage(canvasWrapper.get(0));
-	stage.autoClear = false;
-	
 	//listen for when the window resizes
 	$(window).resize(onWindowResize);
 	$(window).blur(onWindowBlur);
-	$(window).focus(onWindowFocus);
+	
+	stage = new Stage(canvasWrapper.get(0));
+	stage.autoClear = false;
+	
+	spiral = new Spiral(bounds, radius, spread);
+	
+	spiral.x = bounds.width / 2;
+	spiral.y = bounds.height / 2;
+
+	stage.addChild(spiral);	
 		
 	//24 frames a second
 	Tick.setInterval(1000/24);
@@ -75,24 +94,12 @@ function init()
 
 function onCanvasClick(e)
 {
-	var spiral = new Spiral(bounds, radius, spread);
-	
-	spiral.x = (e.pageX - canvasOffset.left);
-	spiral.y = (e.pageY - canvasOffset.top);
-
-	spirals.push(spiral);
-
-	stage.addChild(spiral);
+	Tick.setPaused(!Tick.getPaused());
 }
 
 function onWindowBlur(e)
 {
 	Tick.setPaused(true);
-}
-
-function onWindowFocus(e)
-{
-	Tick.setPaused(false);
 }
 
 function tick()
@@ -109,7 +116,7 @@ function onWindowResize(e)
 
 function updateCanvasDimensions()
 {
-	canvasWrapper.attr("height", $(window).height(true) - 5);
+	canvasWrapper.attr("height", $(window).height(true));
 	canvasWrapper.attr("width", $(window).width(true));
 	
 	bounds.width = canvasWrapper.attr("width");

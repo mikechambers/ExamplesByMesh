@@ -36,7 +36,7 @@ function Spiral(bounds, radius, a)
 		this.a = a;
 	}
 	
-	this.color = Graphics.getRGB(255, 255, 255, .1);
+	this.color = Graphics.getRGB(255, 255, 255, .2);
 	
 	this.$draw();
 }
@@ -50,14 +50,19 @@ Spiral.prototype.a = 0.1;
 
 Spiral.prototype.$draw = function()
 {
-
-
 	var g = new Graphics();
 		g.setStrokeStyle(1);
 		g.beginStroke(this.color)
 		g.drawCircle(0,0, this.radius);
 	
 	this.graphics = g;
+	
+	//note the +1 is to add some padding, so any anti-aliasing isnt 
+	//cut off when we cache the graphics
+	this.cache(-(this.radius + 1), 
+				-(this.radius + 1), 
+				(this.radius + 1) * 2, 
+				(this.radius + 1) * 2);
 }
 
 Spiral.prototype.tick = function()
@@ -85,6 +90,4 @@ Spiral.prototype.update = function()
 	
 	this.x += this.a * this.angle * Math.cos(this.angle);
 	this.y += this.a * this.angle * Math.sin(this.angle);	
-	
-	this.$draw();
 }

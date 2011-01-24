@@ -1,23 +1,5 @@
 body
 {
+	background-color:#111111;
 	overflow: hidden;
-}
-
-.ui-page
-{
-	background: #333333;
-}
-
-#footer-bar
-{
-	position:fixed;
-	left:0px;
-	bottom:0px;
-}
-
-#optionsLink
-{
-	position:fixed;
-	left:5px;
-	bottom:5px;
 }

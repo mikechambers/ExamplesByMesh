@@ -22,70 +22,16 @@
 
 	<script src="scripts/easeljs.js"></script>
 	<script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
-	<script src="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.js"></script>
 	
 	<script src="scripts/Spiral.js"></script>
-	<script src="scripts/Main.js"></script>
+	<script src="scripts/main.js"></script>
 	
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
 	<link rel="stylesheet" href="styles/styles.css">
 	
 </head>
 <body>
 	
-	<div data-role="page" data-fullscreen="true" id="main">
-		<div data-role="content">
-			<canvas id="mainCanvas"></canvas>
-			<!--
-			<a href="#options-screen" id="optionsLink" data-role="button" data-inline="true" data-rel="dialog" data-transition="slidedown">Options</a>
-			-->
-		</div>
-
-		<div data-role="footer" class="ui-bar" id="footer-bar">
-			<a href="#options-screen" data-role="button" data-icon="gear" data-role="button" data-icon="plus" data-inline="true" data-rel="dialog" data-transition="slidedown">Options</a>
-			<a href="index.html">Pause</a>
-			<a href="index.html">Clear</a>
-			<a href="index.html" data-role="button">Save Image</a>
-		</div>
-
-	</div>
-
-	<!--
-	<div data-role="page"> 
-	-->
-	<div data-role="page" id="options-screen">
-		<div data-role="content" data-theme="c" id="options-screen"> 
-			<h3>Spiral Designer Options</h3> 
-			<label for="spiral-color-select" class="select">Spiral Color:</label>
-			<select name="spiral-color-select" id="spiral-color-select">
-				<option value="gray">Gray</option>
-				<option value="white">White</option>
-				<option value="Black">Black</option>
-				<option value="random">Random</option>
-			</select>          
-
-			<label for="background-color-select" class="select">Background Color:</label>
-			<select name="background-color-select" id="background-color-select">
-				<option value="gray">Gray</option>
-				<option value="white">White</option>
-				<option value="Black">Black</option>
-				<option value="random">Random</option>
-			</select>
-			
-			<div data-role="fieldcontain">
-				<label for="circle-radius-slider">Circle Radius:</label>
-			 	<input type="range" name="circle-radius-slider" id="slider" value="20" min="1" max="500"  />
-			</div>
-
-			<div data-role="fieldcontain">
-				<label for="arc-angle-slider">Arc Angle:</label>
-			 	<input type="range" name="arc-angle-slider" id="slider" value="0.1" min="0.1" max="1.5"  />
-			</div>
-
-			<a href="#main" data-role="button" data-transition="slideup">Save</a> 
-			<a href="#main" data-role="button" data-transition="slideup">Cancel</a>    
-		</div> 
-	</div>	
+	<canvas id="mainCanvas"></canvas>	
 	
 </body>
 </html>
