@@ -2,6 +2,7 @@
 <html lang="en">
 
 
+
 <!-- 
 	Copyright 2011
 	Mike Chambers
@@ -41,8 +42,11 @@
 	<meta name="copyright" content="Mike Chambers" /> 
 	<meta name="robots" content="index,follow" />
 	
-	<!-- Disabled Pinch to zoom on Android / iOS -->
+	<!-- Note, uncomment this to disable pinch to zoom on Android. However
+		if you do, it will force drawing to be aliased on iOS, and will cause
+		it to be aliased on Android while the canvas is being updated.
 	<meta name="viewport" content="width=device-width, user-scalable=no" />
+	-->
 	
 	<title>Follow EaselJS Example</title>
 
@@ -51,6 +55,7 @@
 	
 	<script src="scripts/MathUtil.js"></script>
 	<script src="scripts/Drone.js"></script>
+	<script src="scripts/Target.js"></script>
 	<script src="scripts/main.js"></script>
 
 	<link rel="stylesheet" href="styles/styles.css">

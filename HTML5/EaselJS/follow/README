@@ -22,9 +22,10 @@ THE SOFTWARE.
 
 -----------
 
-EaselJS example that shows how to create persistent designs using stage.autoClear as false.
+EaselJS example that shows a couple of techniques:
 
-Also, shows how to subclass DisplayObjects in order to have them move and draw themselves, which can 
-dramatically simplify code.
-
-Also includes some code that shows how to save and restore canvas graphics when it is resized.
+-creating persistent designs, by setting stage.autoClear to false
+-How to subclass DisplayObjects and have them move / draw themselves
+-How to save an restore canvas graphics when a canvas is resized
+-Managing multiple canvas / stages with EaselJS
+-Using touch events in JavaScript

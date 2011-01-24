@@ -22,25 +22,28 @@
 	THE SOFTWARE.
 */
 
-body
+function Target(color)
 {
-	background-color: #FFFFFF;
-
-	overflow: hidden;
-	margin:0em;
-	padding:0em;
+	this.color = color;
+	this.$draw();
 }
 
-/*
-canvas
-{
-	webkit-user-select:none;
-}
-*/
+Target.prototype = new Shape();
+Target.prototype.color = null;
 
-#overlayCanvas
+Target.prototype.$draw = function()
 {
-	position:absolute;
-	left:0;
-	top:0;
+	var g = new Graphics();
+		g.setStrokeStyle(1);
+		g.beginFill(this.color);
+		g.beginStroke(this.color);
+		g.drawCircle(0,0,3);
+		
+	this.graphics = g;
+}
+
+Target.prototype.tick = function()
+{
+	this.x = Mouse.x;
+	this.y = Mouse.y;
 }
