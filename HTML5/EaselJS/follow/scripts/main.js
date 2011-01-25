@@ -334,26 +334,21 @@ function onMouseMove(e)
 
 /************** general app functions *************/
 
-//called at each time inteval. This is essentially the listener
+//called at each time interval. This is essentially the listener
 //for Tick.addListener
 function tick()
 {
-	//check if we are paused
-	if(!Tick.getPaused())
+	//update the main stage / canvas
+	stage.tick();
+	
+	//check if we have an overlay stage
+	if(overlayStage)
 	{
+		//update the overlay line
+		updateLine();
 		
-		//if not, render the stage
-		stage.tick();
-		
-		//if we have an overlay stage
-		if(overlayStage)
-		{
-			//update the overlay line
-			updateLine();
-			
-			//rerender the overlay stage / canvas
-			overlayStage.tick();
-		}
+		//rerender the overlay stage / canvas
+		overlayStage.tick();
 	}
 }
 
@@ -397,7 +392,7 @@ function updateCanvasDimensions()
 //update the mouse coordinates
 function updateMouseCoordinates(e)
 {
-	//we store these in a global object so they can be easily acccessed
+	//we store these in a global object so they can be easily accessed
 	//from anywhere (other classes)
 	Mouse.x = e.pageX - canvasOffset.left;
 	Mouse.y = e.pageY - canvasOffset.top;
