@@ -22,10 +22,7 @@
 	THE SOFTWARE.
 */
 
-//when an item is removed, tween it down to its min size before removing
-
-
-$(document).ready(init);
+x$(window).load(init);
 
 var stage;
 var overlayStage;
@@ -33,7 +30,7 @@ var overlayStage;
 var mainCanvas;
 
 var canvasWrapper;
-var canvasOffset;
+var canvasOffset = {top:0, left:0};
 
 var defaultDrone;
 
@@ -48,17 +45,20 @@ var lastDrone;
 
 var image;
 
+//viewport dimensions for container / browser
+var viewport = {height:0, width:0};
+
 //called once the page has loaded
 function init()
 {
 	//get a reference to the canvas element
-	canvasWrapper = $("#mainCanvas");
-	
+	canvasWrapper = x$("#mainCanvas");
+
 	//check for canvas support
 	if(!Modernizr.canvas)
 	{
 		////document.createElement("article");
-		canvasWrapper.html("<div>" +
+		canvasWrapper.outer("<div>" +
 			"It appears you are using a browser that does not support "+
 			"the HTML5 Canvas Element</div>");
 			
@@ -66,20 +66,21 @@ function init()
 			return;
 	}
 	
-	/*		
+		
 	if(!Modernizr.touch)
 	{
-		canvasWrapper.replaceWith("<div>" +
+		canvasWrapper.outer("<div>" +
 			"It appears you are using a browser that does not support "+
 			"touch input.</div>");
 			
 			//touch isnt support, so dont continue
 			return;
 	}		
-	*/
+	
 	
 	//get a reference to the actual canvas element
-	mainCanvas = canvasWrapper.get(0);		
+	//todo: make sure this is the canvas element
+	mainCanvas = canvasWrapper[0];		
 	
 	image = new Image();
 	image.onload = onImageLoad;
@@ -88,16 +89,16 @@ function init()
 	
 	//we are on a touch device
 	//listen for touch events
-	mainCanvas.ontouchstart = onTouchStart;
-	mainCanvas.ontouchend = onTouchEnd;
+	canvasWrapper.on("touchstart", onTouchStart);
+	canvasWrapper.on("touchend", onTouchEnd);
 	
 	tempData = {};
 
 	//listen for when the window resizes
-	$(window).resize(onWindowResize);
+	x$(window).on("resize", onWindowResize);
 	
 	//listen for when the window looses focus
-	$(window).blur(onWindowBlur);	
+	x$(window).on("blur", onWindowBlur);	
 		
 	//update the dimensions of the canvas
 	updateCanvasDimensions();
@@ -135,12 +136,12 @@ function onImageLoad(e)
 function scaleImageData2()
 {
 	//scale the image to fit the entire window
-	image.style.width = $(window).width(true);
-	image.style.height = $(window).height(true);
+	image.style.width = viewport.width;
+	image.style.height = viewport.height;
 	
 	var srcCanvas = $('<canvas>');
-		srcCanvas.attr("height", $(window).height(true));
-		srcCanvas.attr("width", $(window).width(true));
+		srcCanvas.attr("height", viewport.height);
+		srcCanvas.attr("width", viewport.width);
 
 	var context = srcCanvas.get(0).getContext("2d");
 		context.drawImage(image, 0, 0);
@@ -160,30 +161,32 @@ function scaleImageData()
 	//resizing code from:
 	//http://stackoverflow.com/questions/3448347/how-to-scale-an-imagedata-in-html-canvas/3449416#3449416
 	//http://jsfiddle.net/Hm2xq/2/
-	var srcCanvas = $('<canvas>');
+	var srcCanvas = x$('<canvas>');
+	
 		srcCanvas.attr("height", image.height);
 		srcCanvas.attr("width", image.width);
 
-	var context = srcCanvas.get(0).getContext("2d");
+		//todo: make sure this is the element
+	var context = srcCanvas[0].getContext("2d");
 		context.drawImage(image, 0, 0);
 	
 	var tempData = context.getImageData(0, 0, image.width, image.height);
 	
-	var newCanvas = $('<canvas>')
+	var newCanvas = x$('<canvas>')
 		.attr("width", tempData.width)
 	    .attr("height", tempData.height)[0];
 	
 	newCanvas.getContext("2d").putImageData(tempData, 0, 0);
 	
-	var destCanvas = $('<canvas>');
+	var destCanvas = x$('<canvas>');
 	
-	var dContext = destCanvas.get(0).getContext("2d");
-	destCanvas.attr("width", $(window).width(true));
-	destCanvas.attr("height", $(window).height(true));
+	var dContext = destCanvas[0].getContext("2d");
+	destCanvas.attr("height", viewport.height);
+	destCanvas.attr("width", viewport.width);
 	
 	dContext.scale(
-			$(window).height(true) / image.height,
-			$(window).width(true) / image.width
+			viewport.height / image.height,
+			viewport.width / image.width
 		);
 
 	dContext.drawImage(newCanvas, 0,0);
@@ -355,12 +358,19 @@ function tick()
 //function that updates the size of the canvas based on the window size
 function updateCanvasDimensions()
 {
+	viewport.height = window.innerHeight;
+	viewport.width = window.innerWidth;
+	
 	//note that changing the canvas dimensions clears the canvas.
-	canvasWrapper.attr("height", $(window).height(true));
-	canvasWrapper.attr("width", $(window).width(true));
+	canvasWrapper.attr("height", viewport.height);
+	canvasWrapper.attr("width", viewport.width);
+	
+	//keep for debugging on android
+	//console.log([document.body.clientHeight, window.innerHeight, screen.availHeight]);// 618,613,748
 	
 	//save the canvas offset
-	canvasOffset = canvasWrapper.offset();
+	canvasOffset.left = canvasWrapper.attr("offsetLeft");
+	canvasOffset.top = canvasWrapper.attr("offsetTop");
 	
 	scaleImageData();	
 }
@@ -381,7 +391,7 @@ function onWindowResize(e)
 {
 	//right now, the stage instance, doesnt expose the canvas
 	//context, so we have to get a reference to it ourselves
-	var context = canvasWrapper.get(0).getContext("2d");
+	var context = canvasWrapper[0].getContext("2d");
 	
 	//copy the image data from the current canvas
 	var data = context.getImageData(0, 0, 
