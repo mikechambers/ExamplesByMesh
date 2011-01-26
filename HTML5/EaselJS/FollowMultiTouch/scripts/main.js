@@ -366,6 +366,7 @@ function onWindowBlur(e)
 //called when the browser window is resized
 function onWindowResize(e)
 {
+	
 	//right now, the stage instance, doesnt expose the canvas
 	//context, so we have to get a reference to it ourselves
 	var context = canvasWrapper[0].getContext("2d");
@@ -374,7 +375,7 @@ function onWindowResize(e)
 	var data = context.getImageData(0, 0, 
 			canvasWrapper.attr("width"), 
 			canvasWrapper.attr("height"));
-			
+	
 	//update the canvas dimensions since the window
 	//has resized. Note that changing canvas dimensions, 
 	//will cause it to be cleared

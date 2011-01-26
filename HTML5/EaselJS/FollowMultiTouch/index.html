@@ -48,12 +48,15 @@
 	<meta name="viewport" content="width=device-width, user-scalable=no" />
 	-->
 	
+	<!-- Prevent ipad for scaling (on rotate) as it really messed messes
+		with drawing aliasing, as well as reported viewport dimensions -->
+	<meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+	
 	<title>Follow EaselJS Example</title>
 
 	<script src="scripts/easeljs.js"></script>
 	<script src="scripts/modernizr-1.6.min.js"></script>
 	<script src="scripts/xui-2.0.0.min.js"></script>
-	
 	
 	<script src="scripts/MathUtil.js"></script>
 	<script src="scripts/Drone.js"></script>
