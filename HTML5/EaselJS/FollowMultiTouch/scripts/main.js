@@ -133,29 +133,6 @@ function onImageLoad(e)
 	scaleImageData();
 }
 
-function scaleImageData2()
-{
-	//scale the image to fit the entire window
-	image.style.width = viewport.width;
-	image.style.height = viewport.height;
-	
-	var srcCanvas = $('<canvas>');
-		srcCanvas.attr("height", viewport.height);
-		srcCanvas.attr("width", viewport.width);
-
-	var context = srcCanvas.get(0).getContext("2d");
-		context.drawImage(image, 0, 0);
-	
-	var imageData = context.getImageData(0, 0, srcCanvas.attr("width"), srcCanvas.attr("height"));
-	
-	if(!PC)
-	{
-		PC = new PixelCanvas();
-	}
-	
-	PC.imageData = imageData;
-}
-
 function scaleImageData()
 {
 	//resizing code from:
