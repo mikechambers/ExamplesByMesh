@@ -112,13 +112,19 @@ Drone.prototype.$draw = function()
 	
 	//some code to tween between colors (from Grant Skinner)
 	//60 narrows the range, 180 determine where the color is
+	/*
 	g.beginFill(
 		Graphics.getHSL(
 			Math.cos((this.count++)*0.1) * 60 + 180, 
 			100, 
 			50, 
 			1.0));
+	*/
+	//console.log([this.x, this.y, PC.getPixelRBG(this.x, this.y)]);
 	
+	var rgb = PC.getPixelRBG(Math.floor(this.x), Math.floor(this.y));
+	
+	g.beginFill(Graphics.getRGB(rgb.r, rgb.g, rgb.b, .5));
 	//draw the circle
 	g.drawCircle(0,0,this.radius);
 	

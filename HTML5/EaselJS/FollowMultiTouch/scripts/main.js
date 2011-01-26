@@ -46,6 +46,8 @@ var lineGraphics;
 var drones = {length:0};
 var lastDrone;
 
+var image;
+
 //called once the page has loaded
 function init()
 {
@@ -63,7 +65,8 @@ function init()
 			//canvas isnt support, so dont continue
 			return;
 	}
-			
+	
+	/*		
 	if(!Modernizr.touch)
 	{
 		canvasWrapper.replaceWith("<div>" +
@@ -73,9 +76,15 @@ function init()
 			//touch isnt support, so dont continue
 			return;
 	}		
-			
+	*/
+	
 	//get a reference to the actual canvas element
 	mainCanvas = canvasWrapper.get(0);		
+	
+	image = new Image();
+	image.onload = onImageLoad;
+	//image.onerror = onImageError;
+	image.src = "images/test_small.jpg";
 	
 	//we are on a touch device
 	//listen for touch events
@@ -115,6 +124,80 @@ function init()
 	//the canvas)
 	Tick.setPaused(true);
 }
+
+var PC = new PixelCanvas();
+
+function onImageLoad(e)
+{
+	scaleImageData();
+}
+
+function scaleImageData2()
+{
+	//scale the image to fit the entire window
+	image.style.width = $(window).width(true);
+	image.style.height = $(window).height(true);
+	
+	var srcCanvas = $('<canvas>');
+		srcCanvas.attr("height", $(window).height(true));
+		srcCanvas.attr("width", $(window).width(true));
+
+	var context = srcCanvas.get(0).getContext("2d");
+		context.drawImage(image, 0, 0);
+	
+	var imageData = context.getImageData(0, 0, srcCanvas.attr("width"), srcCanvas.attr("height"));
+	
+	if(!PC)
+	{
+		PC = new PixelCanvas();
+	}
+	
+	PC.imageData = imageData;
+}
+
+function scaleImageData()
+{
+	//resizing code from:
+	//http://stackoverflow.com/questions/3448347/how-to-scale-an-imagedata-in-html-canvas/3449416#3449416
+	//http://jsfiddle.net/Hm2xq/2/
+	var srcCanvas = $('<canvas>');
+		srcCanvas.attr("height", image.height);
+		srcCanvas.attr("width", image.width);
+
+	var context = srcCanvas.get(0).getContext("2d");
+		context.drawImage(image, 0, 0);
+	
+	var tempData = context.getImageData(0, 0, image.width, image.height);
+	
+	var newCanvas = $('<canvas>')
+		.attr("width", tempData.width)
+	    .attr("height", tempData.height)[0];
+	
+	newCanvas.getContext("2d").putImageData(tempData, 0, 0);
+	
+	var destCanvas = $('<canvas>');
+	
+	var dContext = destCanvas.get(0).getContext("2d");
+	destCanvas.attr("width", $(window).width(true));
+	destCanvas.attr("height", $(window).height(true));
+	
+	dContext.scale(
+			$(window).height(true) / image.height,
+			$(window).width(true) / image.width
+		);
+
+	dContext.drawImage(newCanvas, 0,0);
+	
+	var imageData = dContext.getImageData(0, 0, destCanvas.attr("width"), destCanvas.attr("height"));
+
+	if(!PC)
+	{
+		PC = new PixelCanvas();
+	}
+	
+	PC.imageData = imageData;
+}
+
 
 /************** touch events for iOS / Android **************/
 
@@ -277,7 +360,9 @@ function updateCanvasDimensions()
 	canvasWrapper.attr("width", $(window).width(true));
 	
 	//save the canvas offset
-	canvasOffset = canvasWrapper.offset();		
+	canvasOffset = canvasWrapper.offset();
+	
+	scaleImageData();	
 }
 
 /************** Window Events ************/
