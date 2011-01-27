@@ -145,33 +145,9 @@ function onImageMouseDown(e)
 			x$(element).setStyle("opacity", .5);
 		}
 	});
-	
-	x$("#loadingDiv").inner("Loading...");
-	
-	/*
-	var imageName = e.target.getAttribute("data-image");
 
-	image = new Image();
-	image.onload = onImageLoad;
-	image.onerror = onImageError;
-	//image.src = "images/opt/" + imageName;
-	//image.src = "images/opt/image_thumb.jpg";
-	image.src = e.target.src;
-	*/
 	image = e.target;
 	
-	onImageLoad(e);
-}
-
-function onImageError(e)
-{
-	console.log("Error Loading Image");
-	console.log(e);
-}
-
-function onImageLoad(e)
-{
-	//x$("#loadingDiv").inner("");
 	updateCanvasDimensions();
 	
 	x$("#imageSelect").css({
@@ -187,11 +163,6 @@ function onImageLoad(e)
 function onIntroTransitionEnd(e)
 {
 	x$("#imageSelect").un("webkitTransitionEnd", onIntroTransitionEnd);
-	x$("#imageSelect").remove();
-}
-
-function onImageSelectTweenComplete()
-{
 	x$("#imageSelect").remove();
 }
 
@@ -228,6 +199,8 @@ function scaleImageData()
 			viewport.height / image.height,
 			viewport.width / image.width
 		);
+		
+	
 
 	dContext.drawImage(newCanvas, 0,0);
 	
