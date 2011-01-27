@@ -83,7 +83,7 @@ function init()
 	}
 	*/	
 	
-	x$(".imageButton").on("click", onImageClick);
+	x$(".imageButton").on("mousedown", onImageMouseDown);
 	
 
 }
@@ -135,9 +135,9 @@ function initCanvas()
 	Tick.setPaused(true);
 }
 
-function onImageClick(e)
+function onImageMouseDown(e)
 {	
-	x$(".imageButton").un("click", onImageClick);
+	x$(".imageButton").un("mousedown", onImageMouseDown);
 	x$("#loadingDiv").inner("Loading...");
 	
 	var imageName = e.target.getAttribute("data-image");
@@ -156,12 +156,17 @@ function onImageError(e)
 
 function onImageLoad(e)
 {
-	x$("#loadingDiv").inner("");
+	//x$("#loadingDiv").inner("");
 	updateCanvasDimensions();
 	
-	x$("#imageSelect").css({position:"absolute", top:"0"});
+	x$("#imageSelect").css({
+			position:"absolute", 
+			top:"0", 
+			webkitTransform:"translate(0px,"+ -viewport.height+ "px)",
+			opacity:0});
 	
-	x$("#imageSelect").tween({top:(-viewport.height+"px"), duration:1500, after:onImageSelectTweenComplete});
+	//x$("#imageSelect").setStyle("webkitTransform", "translate(0px,"+ -viewport.height+ "px)");
+
 }
 
 function onImageSelectTweenComplete()
