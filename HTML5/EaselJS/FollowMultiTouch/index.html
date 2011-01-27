@@ -50,7 +50,12 @@
 	
 	<!-- Prevent ipad for scaling (on rotate) as it really messed messes
 		with drawing aliasing, as well as reported viewport dimensions -->
+		<!--
 	<meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+-->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+
+<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 	
 	<title>Follow EaselJS Example</title>
 
@@ -69,10 +74,10 @@
 <body>
 	<div id="imageSelect">
 		<div id="selectContainer">
-			<div>Select an image to begin</div>
+			<div class="text">Select an image to begin</div>
 			<div id="images">
 				<div>
-					<img src="images/image_thumb.png" data-image="image.jpg" class="imageButton" />
+					<img src="images/image_thumb.png" id="foo" data-image="image.jpg" class="imageButton" />
 					<img src="images/image2_thumb.png" class="imageButton" data-image="image2.jpg" />
 				</div>	
 				<div>
@@ -80,7 +85,11 @@
 					<img src="images/image4_thumb.png" class="imageButton" data-image="image4.jpg" />
 				</div>
 			</div>
-			<div id="loadingDiv"></div>
+			<div class="text credits">
+				<p>Created by <a href="http://www.mikechambers.com">Mike Chambers</a> using <a href="http://www.easelhs.com">EaselJS</a>, Canvas, and CSS3. Code is available on <a href="https://github.com/mikechambers/ExamplesByMesh/tree/master/HTML5/EaselJS/FollowMultiTouch">GitHub</a>.</p>
+				<p>All images copyright <a href="http://www.flickr.com/photos/mikechambers/">Mike Chambers</a>.</p>
+			</div>
+			<div id="loadingDiv" class="text"></div>
 		</div>
 	</div>
 	

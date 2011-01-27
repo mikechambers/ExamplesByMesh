@@ -41,6 +41,21 @@ body
 	font: 15px 'Lucida Grande', Arial, sans-serif;
 }
 
+.text
+{
+	padding:5px;
+}
+
+.credits
+{
+	font-size:11px;
+}
+
+.credits a
+{
+	color:#393939;
+}
+
 #imageSelect
 {
 	width:100%;

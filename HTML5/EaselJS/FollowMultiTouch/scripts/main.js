@@ -84,8 +84,6 @@ function init()
 	*/	
 	
 	x$(".imageButton").on("mousedown", onImageMouseDown);
-	
-
 }
 
 function initCanvas()
@@ -138,6 +136,16 @@ function initCanvas()
 function onImageMouseDown(e)
 {	
 	x$(".imageButton").un("mousedown", onImageMouseDown);
+	
+	var t = e.target;
+	x$(".imageButton").each(function(element, index, xui)
+	{
+	    if(element != t)
+		{
+			x$(element).setStyle("opacity", .5);
+		}
+	});
+	
 	x$("#loadingDiv").inner("Loading...");
 	
 	var imageName = e.target.getAttribute("data-image");
@@ -165,8 +173,14 @@ function onImageLoad(e)
 			webkitTransform:"translate(0px,"+ -viewport.height+ "px)",
 			opacity:0});
 	
-	//x$("#imageSelect").setStyle("webkitTransform", "translate(0px,"+ -viewport.height+ "px)");
+	
+	x$("#imageSelect").on("webkitTransitionEnd", onIntroTransitionEnd);
+}
 
+function onIntroTransitionEnd(e)
+{
+	x$("#imageSelect").un("webkitTransitionEnd", onIntroTransitionEnd);
+	x$("#imageSelect").remove();
 }
 
 function onImageSelectTweenComplete()
@@ -406,7 +420,6 @@ function onWindowBlur(e)
 //called when the browser window is resized
 function onWindowResize(e)
 {
-	
 	//right now, the stage instance, doesnt expose the canvas
 	//context, so we have to get a reference to it ourselves
 	var context = canvasWrapper[0].getContext("2d");
