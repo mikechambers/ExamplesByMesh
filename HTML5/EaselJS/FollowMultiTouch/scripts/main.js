@@ -45,18 +45,21 @@ var lastDrone;
 
 var image;
 
+var PC = new PixelCanvas();
+
 //viewport dimensions for container / browser
 var viewport = {height:0, width:0};
 
 //called once the page has loaded
 function init()
 {
-	//get a reference to the canvas element
+
 	canvasWrapper = x$("#mainCanvas");
 
 	//check for canvas support
 	if(!Modernizr.canvas)
 	{
+		//todo : display hidden div
 		////document.createElement("article");
 		canvasWrapper.outer("<div>" +
 			"It appears you are using a browser that does not support "+
@@ -66,7 +69,9 @@ function init()
 			return;
 	}
 	
-		
+	//todo: check for data- access
+	
+	/*	
 	if(!Modernizr.touch)
 	{
 		canvasWrapper.outer("<div>" +
@@ -75,18 +80,25 @@ function init()
 			
 			//touch isnt support, so dont continue
 			return;
-	}		
+	}
+	*/	
 	
+	x$(".imageButton").on("click", onImageClick);
+	
+
+}
+
+function initCanvas()
+{
+	if(stage)
+	{
+		return;
+	}
 	
 	//get a reference to the actual canvas element
 	//todo: make sure this is the canvas element
 	mainCanvas = canvasWrapper[0];		
-	
-	image = new Image();
-	image.onload = onImageLoad;
-	//image.onerror = onImageError;
-	image.src = "images/test_small.jpg";
-	
+		
 	//we are on a touch device
 	//listen for touch events
 	canvasWrapper.on("touchstart", onTouchStart);
@@ -98,11 +110,8 @@ function init()
 	x$(window).on("resize", onWindowResize);
 	
 	//listen for when the window looses focus
-	x$(window).on("blur", onWindowBlur);	
-		
-	//update the dimensions of the canvas
-	updateCanvasDimensions();
-	
+	x$(window).on("blur", onWindowBlur);
+			
 	//initialize the Stage instance with the Canvas. Note, 
 	//canvasWrapper is a JQuery object, but stage expects
 	//the actual Canvas element.
@@ -126,20 +135,48 @@ function init()
 	Tick.setPaused(true);
 }
 
-var PC = new PixelCanvas();
+function onImageClick(e)
+{	
+	x$(".imageButton").un("click", onImageClick);
+	x$("#loadingDiv").inner("Loading...");
+	
+	var imageName = e.target.getAttribute("data-image");
+
+	image = new Image();
+	image.onload = onImageLoad;
+	image.onerror = onImageError;
+	image.src = "images/" + imageName;
+}
+
+function onImageError(e)
+{
+	console.log("Error Loading Image");
+	console.log(e);
+}
 
 function onImageLoad(e)
 {
-	scaleImageData();
+	x$("#loadingDiv").inner("");
+	updateCanvasDimensions();
+	
+	x$("#imageSelect").css({position:"absolute", top:"0"});
+	
+	x$("#imageSelect").tween({top:(-viewport.height+"px"), duration:1500, after:onImageSelectTweenComplete});
+}
+
+function onImageSelectTweenComplete()
+{
+	x$("#imageSelect").remove();
 }
 
 function scaleImageData()
 {
+	initCanvas();
+	
 	//resizing code from:
 	//http://stackoverflow.com/questions/3448347/how-to-scale-an-imagedata-in-html-canvas/3449416#3449416
 	//http://jsfiddle.net/Hm2xq/2/
 	var srcCanvas = x$('<canvas>');
-	
 		srcCanvas.attr("height", image.height);
 		srcCanvas.attr("width", image.width);
 
@@ -258,8 +295,6 @@ function removeDrone(id)
 	
 	delete drones[id];
 	drones.length--;
-	
-	
 }
 
 //called when a touch ends on iOS and Android devices. (i.e. user lifts a finger

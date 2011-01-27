@@ -67,6 +67,24 @@
 	
 </head>
 <body>
-	<canvas id="mainCanvas" width="600" height="400"></canvas>
+	<div id="imageSelect">
+		<div id="selectContainer">
+			<div>Select an image to begin</div>
+			<div id="images">
+				<div>
+					<img src="images/image_thumb.png" data-image="image.jpg" class="imageButton" />
+					<img src="images/image2_thumb.png" class="imageButton" data-image="image2.jpg" />
+				</div>	
+				<div>
+					<img src="images/image3_thumb.png" class="imageButton" data-image="image3.jpg" />
+					<img src="images/image4_thumb.png" class="imageButton" data-image="image4.jpg" />
+				</div>
+			</div>
+			<div id="loadingDiv"></div>
+		</div>
+	</div>
+	
+	<canvas id="mainCanvas"></canvas>
+	
 </body>
 </html>
