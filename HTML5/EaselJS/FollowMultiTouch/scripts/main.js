@@ -148,12 +148,19 @@ function onImageMouseDown(e)
 	
 	x$("#loadingDiv").inner("Loading...");
 	
+	/*
 	var imageName = e.target.getAttribute("data-image");
 
 	image = new Image();
 	image.onload = onImageLoad;
 	image.onerror = onImageError;
-	image.src = "images/" + imageName;
+	//image.src = "images/opt/" + imageName;
+	//image.src = "images/opt/image_thumb.jpg";
+	image.src = e.target.src;
+	*/
+	image = e.target;
+	
+	onImageLoad(e);
 }
 
 function onImageError(e)
