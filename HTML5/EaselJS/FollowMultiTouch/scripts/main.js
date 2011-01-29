@@ -124,14 +124,16 @@ function onImageMouseDown(e)
 	initCanvas();
 	updateCanvasDimensions();
 		
-	x$("#imageSelect").css({
+	var divXUI = x$("#imageSelect");
+	//console.log(divXUI.getStyle("padding-top"));
+	
+	//note the 50 constant below is the top-padding style for the div, set in the stylesheet.
+	divXUI.css({
 			position:"absolute", 
-			top:"0", 
-			webkitTransform:"translate(0px,"+ -viewport.height+ "px)",
-			opacity:0});
+			top:"0",
+			webkitTransform:"translate(0px,"+ -(viewport.height + 50) + "px)"});
 	
-	
-	x$("#imageSelect").on("webkitTransitionEnd", onIntroTransitionEnd);
+	divXUI.on("webkitTransitionEnd", onIntroTransitionEnd);
 }
 
 function onIntroTransitionEnd(e)
