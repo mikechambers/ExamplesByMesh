@@ -25,20 +25,10 @@
 x$(window).load(init);
 
 var stage;
-var overlayStage;
-
 var canvas;
 
 var canvasWrapper;
 var canvasOffset = {top:0, left:0};
-
-var defaultDrone;
-
-var targetShape;
-var lineShape;
-
-var targetColor;
-var lineGraphics;
 
 var drones = {length:0};
 var lastDrone;
