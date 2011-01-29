@@ -87,13 +87,7 @@ function init()
 }
 
 function initCanvas()
-{
-	console.log("initCanvas");
-	if(stage)
-	{
-		return;
-	}
-	
+{	
 	//get a reference to the actual canvas element
 	//todo: make sure this is the canvas element
 	mainCanvas = canvasWrapper[0];		
@@ -148,10 +142,7 @@ function onImageMouseDown(e)
 	
 	initCanvas();
 	updateCanvasDimensions();
-	
-	//listen for when the window resizes
-	x$(window).on("resize", onWindowResize);
-	
+		
 	x$("#imageSelect").css({
 			position:"absolute", 
 			top:"0", 
@@ -166,6 +157,9 @@ function onIntroTransitionEnd(e)
 {
 	x$("#imageSelect").un("webkitTransitionEnd", onIntroTransitionEnd);
 	x$("#imageSelect").remove();
+	
+	//listen for when the window resizes
+	x$(window).on("resize", onWindowResize);
 }
 
 function scaleImageData()
