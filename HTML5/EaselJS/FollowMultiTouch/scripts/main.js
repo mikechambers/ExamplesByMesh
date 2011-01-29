@@ -27,7 +27,7 @@ x$(window).load(init);
 var stage;
 var overlayStage;
 
-var mainCanvas;
+var canvas;
 
 var canvasWrapper;
 var canvasOffset = {top:0, left:0};
@@ -90,7 +90,7 @@ function initCanvas()
 {	
 	//get a reference to the actual canvas element
 	//todo: make sure this is the canvas element
-	mainCanvas = canvasWrapper[0];		
+	canvas = canvasWrapper[0];		
 		
 	//we are on a touch device
 	//listen for touch events
@@ -105,7 +105,7 @@ function initCanvas()
 	//initialize the Stage instance with the Canvas. Note, 
 	//canvasWrapper is a JQuery object, but stage expects
 	//the actual Canvas element.
-	stage = new Stage(mainCanvas);
+	stage = new Stage(canvas);
 	
 	//set autoClear to false, so the stage is not
 	//cleared between renders (when stage.tick()) is called
@@ -198,9 +198,12 @@ function scaleImageData()
 		);
 		
 	dContext.drawImage(newCanvas, 0,0);
-	 
+	
 	//todo: might be able to cache destCanvas.attr("width") / height in a variable
-	var imageData = dContext.getImageData(0, 0, destCanvas.attr("width"), destCanvas.attr("height"));
+	var imageData = dContext.getImageData(0, 0, 
+			parseInt(destCanvas.attr("width")), 
+			parseInt(destCanvas.attr("height"))
+			);
 
 	if(!PC)
 	{
@@ -230,7 +233,7 @@ function onTouchStart(e)
 		touch = e.changedTouches[0];
 		id = touch.identifier;
 		
-		mainCanvas.ontouchmove = onTouchMove;
+		canvas.ontouchmove = onTouchMove;
 		
 		var t = {
 			x:touch.pageX - canvasOffset.left,
@@ -265,7 +268,6 @@ function onTouchStart(e)
 
 function addDrone(drone, id)
 {
-	console.log("addDrone");
 	var length = drones.length;
 	
 	if(drones[id])
@@ -314,7 +316,7 @@ function onTouchEnd(e)
 	
 	if(drones.length == 0)
 	{
-		mainCanvas.ontouchmove = null;
+		canvas.ontouchmove = null;
 		Tick.setPaused(true);
 	}
 }
@@ -409,9 +411,9 @@ function onWindowResize(e)
 	var context = canvasWrapper[0].getContext("2d");
 	
 	//copy the image data from the current canvas
-	var data = context.getImageData(0, 0, 
-			canvasWrapper.attr("width"), 
-			canvasWrapper.attr("height"));
+	var data = context.getImageData(0, 0,
+			canvas.width,
+			canvas.height);
 	
 	//update the canvas dimensions since the window
 	//has resized. Note that changing canvas dimensions, 
