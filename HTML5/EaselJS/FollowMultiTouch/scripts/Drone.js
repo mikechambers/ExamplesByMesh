@@ -25,15 +25,12 @@
 //constructor for Drone
 function Drone(target)
 {
-	this.target = target;
+	this.target = (target)?target:{x:0,y:0};
 	//set the radius to the default radius
 	this.radius = Drone.DEFAULT_RADIUS;
 		
 	//set stroke color
 	this.strokeColor = Graphics.getRGB(0, 0, 0, .3);
-	
-	//draw ourselves
-	this.$draw();
 }
 
 //extends EaselJS Shape
