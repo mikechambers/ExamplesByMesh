@@ -88,6 +88,7 @@ function init()
 
 function initCanvas()
 {
+	console.log("initCanvas");
 	if(stage)
 	{
 		return;
@@ -148,6 +149,7 @@ function onImageMouseDown(e)
 
 	image = e.target;
 	
+	initCanvas();
 	updateCanvasDimensions();
 	
 	x$("#imageSelect").css({
@@ -168,8 +170,6 @@ function onIntroTransitionEnd(e)
 
 function scaleImageData()
 {
-	initCanvas();
-	
 	var h = image.height;
 	var w = image.width;
 	
@@ -271,6 +271,7 @@ function onTouchStart(e)
 
 function addDrone(drone, id)
 {
+	console.log("addDrone");
 	var length = drones.length;
 	
 	if(drones[id])
