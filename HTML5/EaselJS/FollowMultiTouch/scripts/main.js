@@ -104,9 +104,6 @@ function initCanvas()
 	canvasWrapper.on("touchend", onTouchEnd);
 	
 	tempData = {};
-
-	//listen for when the window resizes
-	x$(window).on("resize", onWindowResize);
 	
 	//listen for when the window looses focus
 	x$(window).on("blur", onWindowBlur);
@@ -151,6 +148,9 @@ function onImageMouseDown(e)
 	
 	initCanvas();
 	updateCanvasDimensions();
+	
+	//listen for when the window resizes
+	x$(window).on("resize", onWindowResize);
 	
 	x$("#imageSelect").css({
 			position:"absolute", 
