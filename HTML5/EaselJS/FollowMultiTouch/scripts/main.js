@@ -366,6 +366,13 @@ function tick()
 //function that updates the size of the canvas based on the window size
 function updateCanvasDimensions()
 {
+	//only run if height / width has changed
+	if(viewport.height == window.innerHeight &&
+		viewport.width == window.innerWidth)
+	{
+			return
+	}
+	
 	viewport.height = window.innerHeight;
 	viewport.width = window.innerWidth;
 	
