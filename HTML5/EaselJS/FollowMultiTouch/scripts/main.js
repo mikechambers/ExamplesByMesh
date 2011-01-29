@@ -170,18 +170,21 @@ function scaleImageData()
 {
 	initCanvas();
 	
+	var h = image.height;
+	var w = image.width;
+	
 	//resizing code from:
 	//http://stackoverflow.com/questions/3448347/how-to-scale-an-imagedata-in-html-canvas/3449416#3449416
 	//http://jsfiddle.net/Hm2xq/2/
 	var srcCanvas = x$('<canvas>');
-		srcCanvas.attr("height", image.height);
-		srcCanvas.attr("width", image.width);
+		srcCanvas.attr("height", h);
+		srcCanvas.attr("width", w);
 
 		//todo: make sure this is the element
 	var context = srcCanvas[0].getContext("2d");
 		context.drawImage(image, 0, 0);
 	
-	var tempData = context.getImageData(0, 0, image.width, image.height);
+	var tempData = context.getImageData(0, 0, w, h);
 	
 	var newCanvas = x$('<canvas>')
 		.attr("width", tempData.width)
@@ -196,14 +199,13 @@ function scaleImageData()
 	destCanvas.attr("width", viewport.width);
 	
 	dContext.scale(
-			viewport.height / image.height,
-			viewport.width / image.width
+			viewport.height / h,
+			viewport.width / w
 		);
 		
-	
-
 	dContext.drawImage(newCanvas, 0,0);
-	
+	 
+	//todo: might be able to cache destCanvas.attr("width") / height in a variable
 	var imageData = dContext.getImageData(0, 0, destCanvas.attr("width"), destCanvas.attr("height"));
 
 	if(!PC)
