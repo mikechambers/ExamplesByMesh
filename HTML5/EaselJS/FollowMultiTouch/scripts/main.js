@@ -186,11 +186,12 @@ function scaleImageData()
 	
 	newCanvas.getContext("2d").putImageData(tempData, 0, 0);
 	
-	var destCanvas = x$('<canvas>');
+	var destCanvasWrapper = x$('<canvas>');
+	var destCanvas = destCanvasWrapper[0];
 	
-	var dContext = destCanvas[0].getContext("2d");
-	destCanvas.attr("height", viewport.height);
-	destCanvas.attr("width", viewport.width);
+	var dContext = destCanvas.getContext("2d");
+	destCanvasWrapper.attr("height", viewport.height);
+	destCanvasWrapper.attr("width", viewport.width);
 	
 	dContext.scale(
 			viewport.height / h,
@@ -199,10 +200,9 @@ function scaleImageData()
 		
 	dContext.drawImage(newCanvas, 0,0);
 	
-	//todo: might be able to cache destCanvas.attr("width") / height in a variable
 	var imageData = dContext.getImageData(0, 0, 
-			parseInt(destCanvas.attr("width")), 
-			parseInt(destCanvas.attr("height"))
+			destCanvas.width, 
+			destCanvas.height
 			);
 
 	if(!PC)
