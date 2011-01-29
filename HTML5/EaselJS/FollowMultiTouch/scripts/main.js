@@ -233,7 +233,7 @@ function onTouchStart(e)
 		touch = e.changedTouches[0];
 		id = touch.identifier;
 		
-		canvas.ontouchmove = onTouchMove;
+		canvasWrapper.on("touchmove", onTouchMove);
 		
 		var t = {
 			x:touch.pageX - canvasOffset.left,
@@ -316,7 +316,7 @@ function onTouchEnd(e)
 	
 	if(drones.length == 0)
 	{
-		canvas.ontouchmove = null;
+		canvasWrapper.un("touchmove", onTouchMove);
 		Tick.setPaused(true);
 	}
 }
