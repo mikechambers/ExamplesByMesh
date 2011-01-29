@@ -118,15 +118,6 @@ function initCanvas()
 function onImageMouseDown(e)
 {	
 	x$(".imageButton").un("mousedown", onImageMouseDown);
-	
-	var t = e.target;
-	x$(".imageButton").each(function(element, index, xui)
-	{
-	    if(element != t)
-		{
-			x$(element).setStyle("opacity", .5);
-		}
-	});
 
 	image = e.target;
 	
