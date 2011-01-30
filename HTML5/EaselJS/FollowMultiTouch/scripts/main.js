@@ -26,14 +26,12 @@ x$(window).load(init);
 
 var stage;
 var canvas;
-
 var canvasWrapper;
 var canvasOffset = {top:0, left:0};
-
 var drones = {length:0};
 var lastDrone;
-
 var image;
+var hasTouchSupport = false;
 
 var PC = new PixelCanvas();
 
@@ -58,21 +56,9 @@ function init()
 			//canvas isnt support, so dont continue
 			return;
 	}
-	
-	//todo: check for data- access
-	
-	/*	
-	if(!Modernizr.touch)
-	{
-		canvasWrapper.outer("<div>" +
-			"It appears you are using a browser that does not support "+
-			"touch input.</div>");
-			
-			//touch isnt support, so dont continue
-			return;
-	}
-	*/	
-	
+
+	hasTouchSupport = Modernizr.touch;
+
 	x$(".imageButton").on("mousedown", onImageMouseDown);
 }
 
@@ -82,16 +68,6 @@ function initCanvas()
 	//todo: make sure this is the canvas element
 	canvas = canvasWrapper[0];		
 		
-	//we are on a touch device
-	//listen for touch events
-	canvasWrapper.on("touchstart", onTouchStart);
-	canvasWrapper.on("touchend", onTouchEnd);
-	
-	tempData = {};
-	
-	//listen for when the window looses focus
-	x$(window).on("blur", onWindowBlur);
-			
 	//initialize the Stage instance with the Canvas. Note, 
 	//canvasWrapper is a JQuery object, but stage expects
 	//the actual Canvas element.
@@ -99,7 +75,22 @@ function initCanvas()
 	
 	//set autoClear to false, so the stage is not
 	//cleared between renders (when stage.tick()) is called
-	stage.autoClear = false;	
+	stage.autoClear = false;		
+		
+	if(hasTouchSupport)
+	{	
+		//we are on a touch device
+		//listen for touch events
+		canvasWrapper.on("touchstart", onTouchStart);
+		canvasWrapper.on("touchend", onTouchEnd);
+	}
+	else
+	{
+		canvasWrapper.on("click", onCanvasClick);
+	}
+	
+	//listen for when the window looses focus
+	x$(window).on("blur", onWindowBlur);	
 
 	//set the tick interval to 24 frames per second.
 	Tick.setInterval(1000/24);
@@ -115,14 +106,73 @@ function initCanvas()
 	Tick.setPaused(true);
 }
 
+function onCanvasClick(e)
+{
+	var pauseState = !Tick.getPaused();
+	
+	//toggle the Tick / Time paused state.
+	Tick.setPaused(pauseState);
+	
+	//see if we are paused;
+	if(pauseState)
+	{
+		//if so, remove the overlay graphics
+		//overlayStage.removeChild(targetShape);
+		//overlayStage.removeChild(lineShape);
+		
+		canvasWrapper.un("mousemove", onMouseMove);
+	}
+	else
+	{
+		
+		if(lastDrone)
+		{
+			stage.removeChild(lastDrone);
+		}
+		
+		var t = {
+			x:e.pageX - canvasOffset.left,
+			y:e.pageY - canvasOffset.top
+		};		
+		
+		lastDrone = createNewDroneOnPoint(t);
+								
+		stage.addChild(lastDrone);
+		
+		//add overlay graphics
+		//overlayStage.addChild(targetShape);
+		//overlayStage.addChild(lineShape);
+		canvasWrapper.on("mousemove", onMouseMove);
+	}
+	
+	//update the overlay stage / canvas
+	//overlayStage.tick();
+}
+
+function createNewDroneOnPoint(t)
+{
+	var d = new Drone(t);
+	d.x = t.x;
+	d.y = t.y;
+	return d;
+}
+
+//called when the mouse is moved over the canvas
+function onMouseMove(e)
+{
+	lastDrone.target.x = e.pageX + canvasOffset.left;
+	lastDrone.target.y = e.pageY + canvasOffset.top;
+}
+
 function onImageMouseDown(e)
 {	
 	x$(".imageButton").un("mousedown", onImageMouseDown);
 
 	image = e.target;
 	
-	initCanvas();
+	
 	updateCanvasDimensions();
+	initCanvas();	
 		
 	var divXUI = x$("#imageSelect");
 	//console.log(divXUI.getStyle("padding-top"));
@@ -223,9 +273,7 @@ function onTouchStart(e)
 			y:touch.pageY - canvasOffset.top
 		};
 		
-		lastDrone = new Drone(t);
-		lastDrone.x = t.x;
-		lastDrone.y = t.y;
+		lastDrone = createNewDroneOnPoint(t);
 		
 		addDrone(lastDrone, id);
 		
