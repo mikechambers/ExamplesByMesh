@@ -33,6 +33,14 @@ var lastDrone;
 var image;
 var hasTouchSupport = false;
 
+var canvasOverlayWrapper;
+var canvasOverlayOffset = {top:0, left:0};
+var overlayStage;
+var targetShape;
+var lineShape;
+var targetColor;
+var lineGraphics;
+
 var PC = new PixelCanvas();
 
 //viewport dimensions for container / browser
@@ -41,7 +49,7 @@ var viewport = {height:0, width:0};
 //called once the page has loaded
 function init()
 {
-
+console.log("init");
 	canvasWrapper = x$("#mainCanvas");
 
 	//check for canvas support
@@ -58,16 +66,24 @@ function init()
 	}
 
 	hasTouchSupport = Modernizr.touch;
+	
+	if(!hasTouchSupport)
+	{
+		//overlay canvas used to draw target and line
+		canvasWrapper.after('<canvas id="overlayCanvas"></canvas>');
+		canvasOverlayWrapper = x$("#overlayCanvas");
+	}
 
 	x$(".imageButton").on("mousedown", onImageMouseDown);
 }
 
 function initCanvas()
 {	
+	console.log("initCanvas");
 	//get a reference to the actual canvas element
 	//todo: make sure this is the canvas element
 	canvas = canvasWrapper[0];		
-		
+
 	//initialize the Stage instance with the Canvas. Note, 
 	//canvasWrapper is a JQuery object, but stage expects
 	//the actual Canvas element.
@@ -86,7 +102,29 @@ function initCanvas()
 	}
 	else
 	{
-		canvasWrapper.on("click", onCanvasClick);
+		//listen for a click event
+		canvasOverlayWrapper.on("click", onCanvasClick);
+		
+		//color used to draw target and line
+		targetColor = Graphics.getRGB(0,0,0,.1);
+		
+		//stage to manager the overlay canvas. Need to get the actual
+		//element from the JQuery object.
+		overlayStage = new Stage(canvasOverlayWrapper[0]);		
+		
+		//EaselJS Shape that is drawn at mouse point
+		targetShape = new Target(targetColor);
+		
+		//Shape and graphic used to draw a line from the
+		//Drone to the touch point
+		lineShape = new Shape();
+		
+		//note: we redraw the graphic a lot, but just resuse the
+		//same Graphics instance (by calling clear). This saves a LOT
+		//of object creation
+		lineGraphics = new Graphics();
+		
+		lineShape.graphics = lineGraphics;		
 	}
 	
 	//listen for when the window looses focus
@@ -120,7 +158,10 @@ function onCanvasClick(e)
 		//overlayStage.removeChild(targetShape);
 		//overlayStage.removeChild(lineShape);
 		
-		canvasWrapper.un("mousemove", onMouseMove);
+		canvasOverlayWrapper.un("mousemove", onMouseMove);
+		
+		overlayStage.removeChild(targetShape);
+		overlayStage.removeChild(lineShape);
 	}
 	else
 	{
@@ -136,17 +177,20 @@ function onCanvasClick(e)
 		};		
 		
 		lastDrone = createNewDroneOnPoint(t);
-								
+							
 		stage.addChild(lastDrone);
 		
-		//add overlay graphics
-		//overlayStage.addChild(targetShape);
-		//overlayStage.addChild(lineShape);
-		canvasWrapper.on("mousemove", onMouseMove);
+		overlayStage.addChild(targetShape);
+		overlayStage.addChild(lineShape);
+		
+		targetShape.x = t.x;
+		targetShape.y = t.y;
+		
+		canvasOverlayWrapper.on("mousemove", onMouseMove);
 	}
 	
 	//update the overlay stage / canvas
-	//overlayStage.tick();
+	overlayStage.tick();
 }
 
 function createNewDroneOnPoint(t)
@@ -160,8 +204,8 @@ function createNewDroneOnPoint(t)
 //called when the mouse is moved over the canvas
 function onMouseMove(e)
 {
-	lastDrone.target.x = e.pageX + canvasOffset.left;
-	lastDrone.target.y = e.pageY + canvasOffset.top;
+	targetShape.x = lastDrone.target.x = e.pageX + canvasOffset.left;
+	targetShape.y = lastDrone.target.y = e.pageY + canvasOffset.top;
 }
 
 function onImageMouseDown(e)
@@ -169,7 +213,6 @@ function onImageMouseDown(e)
 	x$(".imageButton").un("mousedown", onImageMouseDown);
 
 	image = e.target;
-	
 	
 	updateCanvasDimensions();
 	initCanvas();	
@@ -222,10 +265,10 @@ function scaleImageData()
 	var destCanvasWrapper = x$('<canvas>');
 	var destCanvas = destCanvasWrapper[0];
 	
-	var dContext = destCanvas.getContext("2d");
 	destCanvasWrapper.attr("height", viewport.height);
 	destCanvasWrapper.attr("width", viewport.width);
 	
+	var dContext = destCanvas.getContext("2d");
 	dContext.scale(
 			viewport.height / h,
 			viewport.width / w
@@ -394,11 +437,34 @@ function tick()
 {
 	//update the main stage / canvas
 	stage.tick();
+	
+	//update the overlay line
+	updateLine();
+	
+	//rerender the overlay stage / canvas
+	overlayStage.tick();
+}
+
+//redraws the overlay line based on Mouse and Drone position
+function updateLine()
+{
+	//clear previous line
+	lineGraphics.clear();
+	
+	//stroke style
+	lineGraphics.setStrokeStyle(1);
+	
+	//stroke color
+	lineGraphics.beginStroke(targetColor);
+	
+	lineGraphics.moveTo(targetShape.x, targetShape.y);
+	lineGraphics.lineTo(lastDrone.x, lastDrone.y);
 }
 
 //function that updates the size of the canvas based on the window size
 function updateCanvasDimensions()
 {
+	console.log("updateCanvasDimensions");
 	//only run if height / width has changed
 	if(viewport.height == window.innerHeight &&
 		viewport.width == window.innerWidth)
@@ -419,6 +485,17 @@ function updateCanvasDimensions()
 	//save the canvas offset
 	canvasOffset.left = canvasWrapper.attr("offsetLeft");
 	canvasOffset.top = canvasWrapper.attr("offsetTop");
+	
+	if(canvasOverlayWrapper)
+	{
+		canvasOverlayWrapper.attr("height", viewport.height);
+		canvasOverlayWrapper.attr("width", viewport.width);	
+		
+		//todo: get direct properties
+		canvasOverlayOffset.left = canvasOverlayWrapper.attr("offsetLeft");
+		canvasOverlayOffset.top = canvasOverlayWrapper.attr("offsetTop");
+	}
+	
 	
 	scaleImageData();	
 }

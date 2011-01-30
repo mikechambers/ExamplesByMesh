@@ -49,9 +49,3 @@ Target.prototype.$draw = function()
 	//have to be redrawn each time the canvas is rendered.
 	this.cache(-radius, -radius, radius * 2, radius * 2);
 }
-
-Target.prototype.tick = function()
-{
-	this.x = Mouse.x;
-	this.y = Mouse.y;
-}
