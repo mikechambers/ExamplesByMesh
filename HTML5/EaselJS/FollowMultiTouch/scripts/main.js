@@ -234,6 +234,17 @@ function onIntroTransitionEnd(e)
 	x$("#imageSelect").un("webkitTransitionEnd", onIntroTransitionEnd);
 	x$("#imageSelect").remove();
 	
+	var divXUI = x$("#bottomBar");
+	//console.log(divXUI.getStyle("padding-top"));
+	
+	//note the 50 constant below is the top-padding style for the div, set in the stylesheet.
+	divXUI.css({bottom:"2%"});
+	
+	divXUI.on("webkitTransitionEnd", onBottomBarTransitionEnd);
+}
+
+function onBottomBarTransitionEnd(e)
+{
 	//listen for when the window resizes
 	x$(window).on("resize", onWindowResize);
 }

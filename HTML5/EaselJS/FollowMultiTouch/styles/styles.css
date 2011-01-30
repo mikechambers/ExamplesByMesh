@@ -124,4 +124,49 @@ img
 	position:relative;
 }
 
+#bottomBar
+{
+	position:fixed;
+
+	bottom:-10%;
+	left:2%;
+	right:2%;
+	padding:8px 8px 8px 8px;
+	
+	text-align:right;
+	text-transform:uppercase;
+	
+	background: #D9D9D9; /* old browsers */
+	background: -moz-linear-gradient(top, #D9D9D9 0%, #ADADAD 100%); /* firefox */
+
+	background: -webkit-gradient(linear, left top, left bottom, 
+						color-stop(0%,#D9D9D9), color-stop(100%,#ADADAD)); /* webkit */
+
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#D9D9D9', 
+				endColorstr='#ADADAD',GradientType=0 ); /* ie */
+				
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	
+	border-color:#A6A6A6;
+	border-style:solid;
+	border-width:1px;
+	
+	-webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+	
+	-webkit-transition:bottom .5s ease;
+	-moz-transition:bottom .5s ease;
+	-o-transition:bottom .5s ease;
+	-transition:bottom .5s ease;
+}
+
+.bottomButton
+{
+	margin-left:6px;
+	margin-right:6px;
+}
+
 
