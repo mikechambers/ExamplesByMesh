@@ -214,6 +214,8 @@ function onImageMouseDown(e)
 
 	image = e.target;
 	
+	x$("#thumbImage").attr("src", image.src);
+	
 	updateCanvasDimensions();
 	initCanvas();	
 		
@@ -234,19 +236,44 @@ function onIntroTransitionEnd(e)
 	x$("#imageSelect").un("webkitTransitionEnd", onIntroTransitionEnd);
 	x$("#imageSelect").remove();
 	
-	var divXUI = x$("#bottomBar");
-	//console.log(divXUI.getStyle("padding-top"));
+	var bottomXUI = x$("#bottomBar");
+	bottomXUI.css({bottom:"2%"});
 	
-	//note the 50 constant below is the top-padding style for the div, set in the stylesheet.
-	divXUI.css({bottom:"2%"});
+	var topXUI = x$("#topBar");
+	topXUI.css({top:"2%"});	
 	
-	divXUI.on("webkitTransitionEnd", onBottomBarTransitionEnd);
+	bottomXUI.on("webkitTransitionEnd", onBottomBarTransitionEnd);
 }
 
 function onBottomBarTransitionEnd(e)
 {
 	//listen for when the window resizes
 	x$(window).on("resize", onWindowResize);
+	
+	
+	x$(".bottomButton").on("click", onBottomButtonClick);
+}
+
+function onBottomButtonClick(e)
+{
+	var action = e.target.getAttribute("data-button");
+	
+	switch(action)
+	{
+		case "SAVE":
+		{
+			break;
+		}
+		case "BACK":
+		{
+			break;
+		}
+		case "CLEAR":
+		{
+			stage.clear();
+			break;
+		}
+	}
 }
 
 function scaleImageData()
@@ -449,11 +476,14 @@ function tick()
 	//update the main stage / canvas
 	stage.tick();
 	
-	//update the overlay line
-	updateLine();
+	if(canvasOverlayWrapper)
+	{
+		//update the overlay line
+		updateLine();
 	
-	//rerender the overlay stage / canvas
-	overlayStage.tick();
+		//rerender the overlay stage / canvas
+		overlayStage.tick();
+	}
 }
 
 //redraws the overlay line based on Mouse and Drone position

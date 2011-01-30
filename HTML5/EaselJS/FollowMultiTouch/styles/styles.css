@@ -124,6 +124,30 @@ img
 	position:relative;
 }
 
+#topBar
+{
+	position:fixed;
+
+	top:-15%;
+	left:2%;
+	right:2%;
+	
+	text-align:right;
+	
+	-webkit-transition:top .5s ease;
+	-moz-transition:top .5s ease;
+	-o-transition:top .5s ease;
+	-transition:top .5s ease;
+}
+
+#thumbImage
+{
+	-webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);	
+}
+
+
 #bottomBar
 {
 	position:fixed;
@@ -167,6 +191,8 @@ img
 {
 	margin-left:6px;
 	margin-right:6px;
+	text-decoration: none;
+	color:#363636;
 }
 
 
