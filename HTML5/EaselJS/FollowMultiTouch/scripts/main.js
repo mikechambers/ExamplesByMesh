@@ -332,19 +332,31 @@ function saveImage()
 	//for smart phones, tablets, which might take a second to process the data
 	//we dont want to image to tween in before it has loaded.
 	x$("#saveImage").on("load", onSaveImageLoad);
-
 	x$("#saveImage").attr("src", imageData);
+	
+	x$("#modalDiv").setStyle("display","block");
 }
 
 function onCloseSavePanelClick(e)
 {
 	x$("#savePanelCloseLink").un("click", onCloseSavePanelClick);
 	
+	
+	x$("#modalDiv").setStyle("opacity",0.0);
+	x$("#modalDiv").on("webkitTransitionEnd", onModalTransitionEnd);
+	
 	x$("#savePanel").css({
 			webkitTransform:"translate("+ 0 +"px,0px)"
 			});
 			
 	x$("#savePanel").on("webkitTransitionEnd", onSaveCloseTransitionEnd);
+}
+
+function onModalTransitionEnd(e)
+{
+	//have to set display to none, or else it will capture mouse click
+	x$("#modalDiv").setStyle("display","none");
+	x$("#modalDiv").un("webkitTransitionEnd", onModalTransitionEnd);
 }
 
 function onSaveCloseTransitionEnd(e)
@@ -360,6 +372,10 @@ function onSaveImageLoad(e)
 {
 	x$("#saveImage").un("load", onSaveImageLoad);
 	x$("#savePanelCloseLink").on("click", onCloseSavePanelClick);
+	
+	//we cant set this above, when we set the display:box style, as it will go
+	//straight to opacity 1.0 without the CSS transition kicking in
+	x$("#modalDiv").setStyle("opacity",1.0);
 	
 	x$("#savePanel").css({
 			webkitTransform:"translate("+ -((viewport.width / 2) + 150) +"px,0px)"

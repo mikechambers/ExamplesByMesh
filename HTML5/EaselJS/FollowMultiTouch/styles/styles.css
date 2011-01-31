@@ -79,6 +79,25 @@ body
 	-transition:all .5s ease;	
 }
 
+#modalDiv
+{
+	position:absolute;
+	top:0;
+	left:0;
+	background-color:rgba(0,0,0,0.5);
+	width:100%;
+	height:100%;
+	min-height: 100%;
+	
+	display:none;
+	opacity:0.0;
+	
+	-webkit-transition:opacity .5s ease;
+	-moz-transition:opacity .5s ease;
+	-o-transition:opacity .5s ease;
+	-transition:opacity .5s ease;
+}
+
 #images
 {
 	background: #fafafc;
