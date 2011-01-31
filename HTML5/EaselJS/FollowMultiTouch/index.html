@@ -63,7 +63,7 @@
 	
 </head>
 <body>
-	<div id="topBar"><img id="thumbImage" height="60"></div>
+	<div id="topBar"><img id="thumbImage" width="60" /></div>
 	
 	<div id="imageSelect">
 		<div id="selectContainer">
@@ -87,7 +87,13 @@
 	
 	<canvas id="mainCanvas"></canvas>
 	
-	<div id="bottomBar"><a href="#" class="bottomButton" data-button="SAVE">Save</a> | <a href="#" class="bottomButton" data-button="BACK">Back</a> | <a href="#" class="bottomButton" data-button="CLEAR">Clear</a></div>
+	<div id="bottomBar"><a href="#" class="bottomButton" data-button="SAVE">Create PNG</a> | <a href="#" class="bottomButton" data-button="BACK">Back</a> | <a href="#" class="bottomButton" data-button="CLEAR">Clear</a></div>
+	
+	<div id="savePanel">
+		<div><a href="#" id="savePanelClose">Close</a></div>
+		<div id="saveImageWrapper"><img width="300" id="saveImage" /></div>
+		<div id="saveInstructions"></div>
+	</div>
 	
 	<script src="scripts/easeljs.js"></script>
 	<script src="scripts/modernizr-1.6.min.js"></script>

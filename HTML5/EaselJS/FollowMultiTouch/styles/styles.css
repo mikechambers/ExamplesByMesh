@@ -187,6 +187,28 @@ img
 	-transition:bottom .5s ease;
 }
 
+#savePanel
+{
+	position:fixed;
+	
+	top:30%;
+	right:-310px;
+	
+	text-align:center;
+	
+	-webkit-transition:all .5s ease;
+	-moz-transition:all .5s ease;
+	-o-transition:all .5s ease;
+	-transition:all .5s ease;
+	
+	background-color:#FFFFFF;
+}
+
+#savePanelClose
+{
+	text-decoration:none;
+}
+
 .bottomButton
 {
 	margin-left:6px;

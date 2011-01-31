@@ -49,7 +49,6 @@ var viewport = {height:0, width:0};
 //called once the page has loaded
 function init()
 {
-console.log("init");
 	canvasWrapper = x$("#mainCanvas");
 
 	//check for canvas support
@@ -79,7 +78,6 @@ console.log("init");
 
 function initCanvas()
 {	
-	console.log("initCanvas");
 	//get a reference to the actual canvas element
 	//todo: make sure this is the canvas element
 	canvas = canvasWrapper[0];		
@@ -99,9 +97,13 @@ function initCanvas()
 		//listen for touch events
 		canvasWrapper.on("touchstart", onTouchStart);
 		canvasWrapper.on("touchend", onTouchEnd);
+		
+		x$("#saveInstructions").inner("Touch and Hold to Save");	
 	}
 	else
 	{
+		
+		x$("#saveInstructions").inner("Right Click to Save");	
 		//listen for a click event
 		canvasOverlayWrapper.on("click", onCanvasClick);
 		
@@ -146,25 +148,21 @@ function initCanvas()
 
 function onCanvasClick(e)
 {
-	var pauseState = !Tick.getPaused();
+	var paused = !Tick.getPaused();
 	
-	//toggle the Tick / Time paused state.
-	Tick.setPaused(pauseState);
+	Tick.setPaused(paused);
 	
 	//see if we are paused;
-	if(pauseState)
+	if(paused)
 	{
-		//if so, remove the overlay graphics
-		//overlayStage.removeChild(targetShape);
-		//overlayStage.removeChild(lineShape);
-		
 		canvasOverlayWrapper.un("mousemove", onMouseMove);
-		
+
 		overlayStage.removeChild(targetShape);
 		overlayStage.removeChild(lineShape);
 	}
 	else
-	{
+	{	
+		Tick.setPaused(false);
 		
 		if(lastDrone)
 		{
@@ -187,9 +185,10 @@ function onCanvasClick(e)
 		targetShape.y = t.y;
 		
 		canvasOverlayWrapper.on("mousemove", onMouseMove);
+		
+		overlayStage.tick();
 	}
-	
-	//update the overlay stage / canvas
+
 	overlayStage.tick();
 }
 
@@ -262,6 +261,7 @@ function onBottomButtonClick(e)
 	{
 		case "SAVE":
 		{
+			saveImage();
 			break;
 		}
 		case "BACK":
@@ -274,6 +274,79 @@ function onBottomButtonClick(e)
 			break;
 		}
 	}
+}
+
+function saveImage()
+{		
+	console.log("saveImage");
+	var context = canvas.getContext('2d');
+	var w = canvas.width;
+	var h = canvas.height;
+	
+	var data = context.getImageData(0, 0,
+			w,
+			h);		
+	
+	//store the current globalCompositeOperation
+	var compositeOperation = context.globalCompositeOperation;
+
+	//set to draw behind current content
+	context.globalCompositeOperation = "destination-over";
+
+	//set background color
+	context.fillStyle = "#FFFFFF";
+
+	//draw background on entire canvas
+	context.fillRect(0,0,w,h);
+
+	//get the image data from the canvas
+	var imageData = canvas.toDataURL("image/png");
+	
+	//clear the canvas
+	context.clearRect (0,0,w,h);
+	
+	//restore it with original settings
+	context.putImageData(data, 0,0);		
+	
+	//reset the globalCompositeOperation to what it was
+	context.globalCompositeOperation = compositeOperation;
+	
+	//dont start transition until image has loaded. This is mostly
+	//for smart phones, tablets, which might take a second to process the data
+	//we dont want to image to tween in before it has loaded.
+	x$("#saveImage").on("load", onSaveImageLoad);
+
+	x$("#saveImage").attr("src", imageData);
+}
+
+function onCloseSavePanelClick(e)
+{
+	x$("#savePanelClose").un("click", onCloseSavePanelClick);
+	
+	x$("#savePanel").css({
+			webkitTransform:"translate("+ 0 +"px,0px)"
+			});
+			
+	x$("#savePanel").on("webkitTransitionEnd", onSaveCloseTransitionEnd);
+}
+
+function onSaveCloseTransitionEnd(e)
+{
+	var saveImage = x$("#saveImage");
+	
+	saveImage.un("load", onSaveImageLoad);
+	x$("#savePanel").un("webkitTransitionEnd", onSaveCloseTransitionEnd);
+	saveImage.attr("src", "");
+}
+
+function onSaveImageLoad(e)
+{
+	x$("#saveImage").un("load", onSaveImageLoad);
+	x$("#savePanelClose").on("click", onCloseSavePanelClick);
+	
+	x$("#savePanel").css({
+			webkitTransform:"translate("+ -((viewport.width / 2) + 150) +"px,0px)"
+			});
 }
 
 function scaleImageData()
@@ -505,7 +578,6 @@ function updateLine()
 //function that updates the size of the canvas based on the window size
 function updateCanvasDimensions()
 {
-	console.log("updateCanvasDimensions");
 	//only run if height / width has changed
 	if(viewport.height == window.innerHeight &&
 		viewport.width == window.innerWidth)
