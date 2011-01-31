@@ -96,11 +96,13 @@ function canvasToImage(backgroundColor)
 	var w = canvas.width;
 	var h = canvas.height;
 
-	//get the ImageData for the canvas
-	var data = context.getImageData(0, 0, w, h);		
+	var data;		
 
 	if(backgroundColor)
 	{
+		//get the current ImageData for the canvas.
+		data = context.getImageData(0, 0, w, h);
+		
 		//store the current globalCompositeOperation
 		var compositeOperation = context.globalCompositeOperation;
 
