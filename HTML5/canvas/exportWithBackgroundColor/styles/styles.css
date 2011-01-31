@@ -1,0 +1,38 @@
+
+body, a:link, a:active, a:visited
+{
+	font: 12px 'Lucida Grande', Arial, sans-serif;
+	text-decoration:none;
+	color:#333333;
+}
+
+a:hover
+{
+	text-decoration:underline;
+}
+
+#drawingContainer
+{
+	width:450px;
+	position:relative;
+}
+
+#canvas
+{
+	border-style:solid;
+	border-color:"#000000";
+	border-width:1px;
+}
+
+#canvasImage
+{
+	position:absolute;
+	right:0px;
+}
+
+#transparentGraphic
+{
+	position:absolute;
+	right:0px;
+	top:0px;
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- 
+	Copyright 2011
+	Mike Chambers
+	mikechambers@gmail.com
+	
+	http://www.mikechambers.com
+-->
+
+<head>
+	<meta charset="utf-8" />
+	
+	<meta name="author" content="Mike Chambers" /> 
+	<meta name="keywords" content="" /> 
+	<meta name="description" content="" /> 
+	<meta name="copyright" content="Mike Chambers" /> 
+	<meta name="robots" content="index,follow" /> 	
+	
+	<title>Canvas Export with Background Color</title>
+
+	<link rel="stylesheet" href="styles/styles.css">
+	
+</head>
+<body>
+
+	<div id="container">
+		<div id="drawingContainer">
+			<canvas id="canvas" width="200" height="200"></canvas>
+			<img id="transparentGraphic" src="images/transparent_graphic.png" width="200" height="200" />
+			<img id="canvasImage" width="200" height="200" />
+		
+		</div>
+		<div>
+			Create Image :<br />
+				<a href="#" class="backgroundLink" data-color="">Transparent Background</a> | 
+				<a href="#" class="backgroundLink" data-color="#FF0000">Red Background (Solid)</a> | 
+				<a href="#" class="backgroundLink" data-color="rgba(255,0,0,0.5)">Red Background (50% Alpha)</a>
+		</div>
+	</div>
+	<script src="scripts/main.js"></script>
+</body>
+</html>
