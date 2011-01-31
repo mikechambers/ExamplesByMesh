@@ -87,12 +87,15 @@
 	
 	<canvas id="mainCanvas"></canvas>
 	
-	<div id="bottomBar"><a href="#" class="bottomButton" data-button="SAVE">Create PNG</a> | <a href="#" class="bottomButton" data-button="BACK">Back</a> | <a href="#" class="bottomButton" data-button="CLEAR">Clear</a></div>
+	<div id="bottomBar" class="bar">
+		<a href="#" class="bottomButton" data-button="SAVE">Create PNG</a> | <a href="#" class="bottomButton" data-button="BACK">Back</a> | <a href="#" class="bottomButton" data-button="CLEAR">Clear</a>
+	</div>
 	
 	<div id="savePanel">
-		<div><a href="#" id="savePanelClose">Close</a></div>
 		<div id="saveImageWrapper"><img width="300" id="saveImage" /></div>
-		<div id="saveInstructions"></div>
+		<div id="saveBar" class="bar">
+			<span id="saveInstructionsSpan"></span><span id="savePanelCloseSpan"> | <a href="#" id="savePanelCloseLink">Close</a></span>
+		</div>
 	</div>
 	
 	<script src="scripts/easeljs.js"></script>

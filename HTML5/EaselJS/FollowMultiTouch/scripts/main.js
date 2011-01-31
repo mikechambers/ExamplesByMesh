@@ -146,12 +146,12 @@ function initCanvas()
 		canvasWrapper.on("touchstart", onTouchStart);
 		canvasWrapper.on("touchend", onTouchEnd);
 		
-		x$("#saveInstructions").inner("Touch and Hold to Save");	
+		x$("#saveInstructionsSpan").inner("Touch and Hold to Save");	
 	}
 	else
 	{
 		
-		x$("#saveInstructions").inner("Right Click to Save");	
+		x$("#saveInstructionsSpan").inner("Right Click to Save");	
 		//listen for a click event
 		canvasOverlayWrapper.on("click", onCanvasClick);
 		
@@ -338,7 +338,7 @@ function saveImage()
 
 function onCloseSavePanelClick(e)
 {
-	x$("#savePanelClose").un("click", onCloseSavePanelClick);
+	x$("#savePanelCloseLink").un("click", onCloseSavePanelClick);
 	
 	x$("#savePanel").css({
 			webkitTransform:"translate("+ 0 +"px,0px)"
@@ -359,7 +359,7 @@ function onSaveCloseTransitionEnd(e)
 function onSaveImageLoad(e)
 {
 	x$("#saveImage").un("load", onSaveImageLoad);
-	x$("#savePanelClose").on("click", onCloseSavePanelClick);
+	x$("#savePanelCloseLink").on("click", onCloseSavePanelClick);
 	
 	x$("#savePanel").css({
 			webkitTransform:"translate("+ -((viewport.width / 2) + 150) +"px,0px)"
