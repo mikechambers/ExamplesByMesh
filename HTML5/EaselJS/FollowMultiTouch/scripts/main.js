@@ -324,6 +324,31 @@ function onBottomButtonClick(e)
 	}
 }
 
+function openModalDiv()
+{
+	x$("#modalDiv").setStyle("display","block");
+	
+	setTimeout("openModalDivDelay()");
+}
+
+function openModalDivDelay()
+{
+	x$("#modalDiv").setStyle("opacity",1.0);
+}
+
+function closeModalDiv()
+{
+	x$("#modalDiv").setStyle("opacity",0.0);
+	x$("#modalDiv").on("webkitTransitionEnd", onModalTransitionEnd);
+}
+
+function onModalTransitionEnd(e)
+{
+	//have to set display to none, or else it will capture mouse click
+	x$("#modalDiv").setStyle("display","none");
+	x$("#modalDiv").un("webkitTransitionEnd", onModalTransitionEnd);
+}
+
 function saveImage()
 {		
 	var imageData = stage.toImage("image/png", "#FFFFFF");
@@ -334,7 +359,8 @@ function saveImage()
 	x$("#saveImage").on("load", onSaveImageLoad);
 	x$("#saveImage").attr("src", imageData);
 	
-	x$("#modalDiv").setStyle("display","block");
+	//:modal x$("#modalDiv").setStyle("display","block");
+	openModalDiv();
 }
 
 function onCloseSavePanelClick(e)
@@ -342,8 +368,10 @@ function onCloseSavePanelClick(e)
 	x$("#savePanelCloseLink").un("click", onCloseSavePanelClick);
 	
 	
-	x$("#modalDiv").setStyle("opacity",0.0);
-	x$("#modalDiv").on("webkitTransitionEnd", onModalTransitionEnd);
+	//:modal x$("#modalDiv").setStyle("opacity",0.0);
+	//:modal x$("#modalDiv").on("webkitTransitionEnd", onModalTransitionEnd);
+	
+	closeModalDiv();
 	
 	x$("#savePanel").css({
 			webkitTransform:"translate("+ 0 +"px,0px)"
@@ -352,12 +380,14 @@ function onCloseSavePanelClick(e)
 	x$("#savePanel").on("webkitTransitionEnd", onSaveCloseTransitionEnd);
 }
 
+/*
 function onModalTransitionEnd(e)
 {
 	//have to set display to none, or else it will capture mouse click
 	x$("#modalDiv").setStyle("display","none");
 	x$("#modalDiv").un("webkitTransitionEnd", onModalTransitionEnd);
 }
+*/
 
 function onSaveCloseTransitionEnd(e)
 {
@@ -375,7 +405,7 @@ function onSaveImageLoad(e)
 	
 	//we cant set this above, when we set the display:box style, as it will go
 	//straight to opacity 1.0 without the CSS transition kicking in
-	x$("#modalDiv").setStyle("opacity",1.0);
+	//:modal x$("#modalDiv").setStyle("opacity",1.0);
 	
 	x$("#savePanel").css({
 			webkitTransform:"translate("+ -((viewport.width / 2) + 150) +"px,0px)"
