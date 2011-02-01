@@ -336,11 +336,11 @@ function onIntroTransitionEnd(e)
 	x$("#imageSelect").un(transitionEndName, onIntroTransitionEnd);
 	x$("#imageSelect").remove();
 	
+	var margin = x$("#bottomBar").getStyle("right");
 	var bottomXUI = x$("#bottomBar");
-	//bottomXUI.css({bottom:"2%"});
-	bottomXUI.css({bottom:"20px"});
+	bottomXUI.css({bottom:margin});
 	var topXUI = x$("#topBar");
-	topXUI.css({top:"20px"});	
+	topXUI.css({top:margin});	
 	
 	bottomXUI.on(transitionEndName, onBottomBarTransitionEnd);
 }

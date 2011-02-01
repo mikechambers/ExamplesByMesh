@@ -5,11 +5,6 @@ function PixelCanvas(imageData)
 
 PixelCanvas.prototype.imageData = null;
 
-PixelCanvas.RED = 0;
-PixelCanvas.GREEN = 1;
-PixelCanvas.BLUE = 2;
-PixelCanvas.ALPHA = 3;
-
 PixelCanvas.prototype.getPixelRBG = function(xPos, yPos)
 {
 	var imageData = this.imageData;
@@ -17,25 +12,18 @@ PixelCanvas.prototype.getPixelRBG = function(xPos, yPos)
 	{
 		return Graphics.getRGB(0,0,0);
 	}
+
+	var offset = (yPos * (imageData.width * 4)) + (xPos*4);
 	
-	var w = imageData.width;
+	//red:0, green:1, blue:2, alhpa:3
 	
-	var r = imageData.data[(
-				(yPos * (w * 4)) + (xPos*4)) + PixelCanvas.RED
-				];
+	var out = {
+				r:imageData.data[(offset)],
+				g:imageData.data[(offset + 1)],
+				b:imageData.data[(offset + 2)],
+				a:imageData.data[(offset + 3)]
+	};
 				
-	var g = imageData.data[(
-				(yPos * (w * 4)) + (xPos*4)) + PixelCanvas.GREEN
-				];
-				
-	var b = imageData.data[(
-				(yPos * (w * 4)) + (xPos*4)) + PixelCanvas.BLUE
-				];
-				
-	var a = imageData.data[(
-				(yPos * (w * 4)) + (xPos*4)) + PixelCanvas.ALPHA
-				];
-				
-	return {r:r,g:g,b:b,a:a};
+	return out;
 }
 
