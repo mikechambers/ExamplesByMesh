@@ -85,10 +85,10 @@ body
 	*/
 	padding-top:100px;
 	
-	-webkit-transition:all .5s ease;
-	-moz-transition:all .5s ease;
-	-o-transition:all .5s ease;
-	transition:all .5s ease;	
+	-webkit-transition:all .5s ease-out;
+	-moz-transition:all .5s ease-out;
+	-o-transition:all .5s ease-out;
+	transition:all .5s ease-out;	
 }
 
 #credits
@@ -99,8 +99,13 @@ body
 	left:10px;
 	
 	/* the 100 is from the padding-top in #imageSelect */
-	bottom:100px;
+	bottom:10px;
 	text-align:left;
+	
+	-webkit-transition:all .5s ease-out;
+	-moz-transition:all .5s ease-out;
+	-o-transition:all .5s ease-out;
+	transition:all .5s ease-out;
 }
 
 #modalDiv
@@ -116,10 +121,10 @@ body
 	display:none;
 	opacity:0.0;
 	
-	-webkit-transition:opacity .5s ease;
-	-moz-transition:opacity .5s ease;
-	-o-transition:opacity .5s ease;
-	transition:opacity .5s ease;
+	-webkit-transition:opacity .5s ease-out;
+	-moz-transition:opacity .5s ease-out;
+	-o-transition:opacity .5s ease-out;
+	transition:opacity .5s ease-out;
 }
 
 img
@@ -183,7 +188,7 @@ img
 {
 	position:fixed;
 
-	bottom:-10%;
+	bottom:-20%;
 	left:2%;
 	right:2%;
 	padding:8px 8px 8px 8px;
@@ -195,10 +200,10 @@ img
 
 .drawingAnimatable
 {
-	-webkit-transition:all .3s ease-out;
-	-moz-transition:all .3s ease-out;
-	-o-transition:all .3s ease-out;
-	transition:all .3s ease-out;
+	-webkit-transition:all .2s ease-out;
+	-moz-transition:all .2s ease-out;
+	-o-transition:all .2s ease-out;
+	transition:all .2s ease-out;
 }
 
 #savePanel
@@ -210,10 +215,10 @@ img
 	
 	text-align:center;
 	
-	-webkit-transition:all .5s ease;
-	-moz-transition:all .5s ease;
-	-o-transition:all .5s ease;
-	transition:all .5s ease;
+	-webkit-transition:all .5s ease-out;
+	-moz-transition:all .5s ease-out;
+	-o-transition:all .5s ease-out;
+	transition:all .5s ease-out;
 	
 	padding:8px;
 	

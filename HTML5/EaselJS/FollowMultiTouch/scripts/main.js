@@ -294,6 +294,7 @@ function onImageDown(e)
 			top:"0",
 			webkitTransform:"translate(0px,"+ -(viewport.height + 100) + "px)"});
 	
+	x$("#credits").setStyle("webkitTransform", "translate(0px, 200px)");
 	divXUI.on("webkitTransitionEnd", onIntroTransitionEnd);
 }
 
