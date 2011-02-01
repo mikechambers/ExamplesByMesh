@@ -29,6 +29,8 @@ EaselJS example that shows a couple of techniques:
 -How to save an restore canvas graphics when a canvas is resized
 -Managing multiple canvas / stages with EaselJS
 -Using touch events in JavaScript
+-Using CSS3 Transitions and Transformations
+-Using CSS3 Media Queries to deliver different designs to different screen sizes
 
 More info at:
 http://www.mikechambers.com/blog/2011/01/24/easeljs-example-follow-drone/
