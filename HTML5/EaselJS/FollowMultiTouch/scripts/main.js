@@ -34,10 +34,12 @@ Stage.prototype.toImage = function(mimeType, backgroundColor)
 	var w = this.canvas.width;
 	var h = this.canvas.height;
 
-	var data = ctx.getImageData(0, 0, w, h);		
+	var data;		
 
 	if(backgroundColor)
 	{
+		data = ctx.getImageData(0, 0, w, h);
+		
 		//store the current globalCompositeOperation
 		var compositeOperation = ctx.globalCompositeOperation;
 
@@ -89,6 +91,11 @@ var lineShape;
 var targetColor;
 var lineGraphics;
 
+var isFirefox = false;
+
+var transformName;
+var transitionEndName;
+
 var PC = new PixelCanvas();
 
 //viewport dimensions for container / browser
@@ -127,6 +134,8 @@ function init()
 	canvasWrapper = x$("#mainCanvas");
 	hasTouchSupport = Modernizr.touch;
 	
+	isFirefox = (navigator.userAgent.indexOf("Firefox") != -1);
+	
 	if(!hasTouchSupport)
 	{
 		//overlay canvas used to draw target and line
@@ -140,6 +149,17 @@ function init()
 		//on iOS mousedown has significant lag in firing, so we 
 		//listen for touchstart on touch devices
 		x$(".imageButton").on("touchstart", onImageDown);
+	}
+
+	if(isFirefox)
+	{
+		transformName = "-moz-transform";
+		transitionEndName = "transitionend";
+	}
+	else
+	{
+		transformName = "webkitTransform";
+		transitionEndName = "webkitTransitionEnd";
 	}
 }
 
@@ -286,21 +306,25 @@ function onImageDown(e)
 	initCanvas();	
 		
 	var divXUI = x$("#imageSelect");
-	//console.log(divXUI.getStyle("padding-top"));
+	
+	var css = {
+		position:"absolute", 
+		top:"0"
+	}
+		
+	divXUI.on(transitionEndName, onIntroTransitionEnd);
 	
 	//note the 100 constant below is the top-padding style for the div, set in the stylesheet.
-	divXUI.css({
-			position:"absolute", 
-			top:"0",
-			webkitTransform:"translate(0px,"+ -(viewport.height + 100) + "px)"});
+	css[transformName] = "translate(0px,"+ -(viewport.height + 100) + "px)";
+	divXUI.css(css);
 	
-	x$("#credits").setStyle("webkitTransform", "translate(0px, 200px)");
-	divXUI.on("webkitTransitionEnd", onIntroTransitionEnd);
+	x$("#credits").setStyle(transformName, "translate(0px, 200px)");
+	
 }
 
 function onIntroTransitionEnd(e)
 {
-	x$("#imageSelect").un("webkitTransitionEnd", onIntroTransitionEnd);
+	x$("#imageSelect").un(transitionEndName, onIntroTransitionEnd);
 	x$("#imageSelect").remove();
 	
 	var bottomXUI = x$("#bottomBar");
@@ -309,7 +333,7 @@ function onIntroTransitionEnd(e)
 	var topXUI = x$("#topBar");
 	topXUI.css({top:"2%"});	
 	
-	bottomXUI.on("webkitTransitionEnd", onBottomBarTransitionEnd);
+	bottomXUI.on(transitionEndName, onBottomBarTransitionEnd);
 }
 
 function onBottomBarTransitionEnd(e)
@@ -359,14 +383,14 @@ function openModalDivDelay()
 function closeModalDiv()
 {
 	x$("#modalDiv").setStyle("opacity",0.0);
-	x$("#modalDiv").on("webkitTransitionEnd", onModalTransitionEnd);
+	x$("#modalDiv").on(transitionEndName, onModalTransitionEnd);
 }
 
 function onModalTransitionEnd(e)
 {
 	//have to set display to none, or else it will capture mouse click
 	x$("#modalDiv").setStyle("display","none");
-	x$("#modalDiv").un("webkitTransitionEnd", onModalTransitionEnd);
+	x$("#modalDiv").un(transitionEndName, onModalTransitionEnd);
 }
 
 function saveImage()
@@ -379,7 +403,6 @@ function saveImage()
 	x$("#saveImage").on("load", onSaveImageLoad);
 	x$("#saveImage").attr("src", imageData);
 	
-	//:modal x$("#modalDiv").setStyle("display","block");
 	openModalDiv();
 }
 
@@ -387,34 +410,22 @@ function onCloseSavePanelClick(e)
 {
 	x$("#savePanelCloseLink").un("click", onCloseSavePanelClick);
 	
-	
-	//:modal x$("#modalDiv").setStyle("opacity",0.0);
-	//:modal x$("#modalDiv").on("webkitTransitionEnd", onModalTransitionEnd);
-	
 	closeModalDiv();
 	
-	x$("#savePanel").css({
-			webkitTransform:"translate("+ 0 +"px,0px)"
-			});
+	var css = {};
+		css[transformName] = "translate("+ 0 +"px,0px)";
+	
+	x$("#savePanel").css(css);
 			
-	x$("#savePanel").on("webkitTransitionEnd", onSaveCloseTransitionEnd);
+	x$("#savePanel").on(transitionEndName, onSaveCloseTransitionEnd);
 }
-
-/*
-function onModalTransitionEnd(e)
-{
-	//have to set display to none, or else it will capture mouse click
-	x$("#modalDiv").setStyle("display","none");
-	x$("#modalDiv").un("webkitTransitionEnd", onModalTransitionEnd);
-}
-*/
 
 function onSaveCloseTransitionEnd(e)
 {
 	var saveImage = x$("#saveImage");
 	
 	saveImage.un("load", onSaveImageLoad);
-	x$("#savePanel").un("webkitTransitionEnd", onSaveCloseTransitionEnd);
+	x$("#savePanel").un(transitionEndName, onSaveCloseTransitionEnd);
 	saveImage.attr("src", "");
 }
 
@@ -423,13 +434,10 @@ function onSaveImageLoad(e)
 	x$("#saveImage").un("load", onSaveImageLoad);
 	x$("#savePanelCloseLink").on("click", onCloseSavePanelClick);
 	
-	//we cant set this above, when we set the display:box style, as it will go
-	//straight to opacity 1.0 without the CSS transition kicking in
-	//:modal x$("#modalDiv").setStyle("opacity",1.0);
-	
-	x$("#savePanel").css({
-			webkitTransform:"translate("+ -((viewport.width / 2) + 150) +"px,0px)"
-			});
+	var css = {};
+		css[transformName] = "translate("+ -((viewport.width / 2) + 150) +"px,0px)";
+		
+	x$("#savePanel").css(css);
 }
 
 function scaleImageData()
