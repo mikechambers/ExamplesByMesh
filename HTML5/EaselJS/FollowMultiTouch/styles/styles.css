@@ -196,14 +196,13 @@ img
 {
 	position:fixed;
 
-	bottom:-20%;
+	bottom:-200px;
 	left:2%;
 	right:2%;
 	padding:8px 8px 8px 8px;
 	
 	text-align:right;
 	text-transform:uppercase;
-
 }
 
 .drawingAnimatable
@@ -250,7 +249,6 @@ img
 	position:absolute;
 	right:14px;
 	text-align:right;
-	
 }
 
 #saveInstructionsSpan

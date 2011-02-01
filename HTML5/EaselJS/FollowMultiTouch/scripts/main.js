@@ -337,8 +337,8 @@ function onIntroTransitionEnd(e)
 	x$("#imageSelect").remove();
 	
 	var bottomXUI = x$("#bottomBar");
-	bottomXUI.css({bottom:"2%"});
-	
+	//bottomXUI.css({bottom:"2%"});
+	bottomXUI.css({bottom:"10px"});
 	var topXUI = x$("#topBar");
 	topXUI.css({top:"2%"});	
 	
