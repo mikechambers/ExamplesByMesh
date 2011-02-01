@@ -149,6 +149,8 @@ function init()
 		//on iOS mousedown has significant lag in firing, so we 
 		//listen for touchstart on touch devices
 		x$(".imageButton").on("touchstart", onImageDown);
+		
+		x$(document).on("touchmove", onDocumentTouchMove);
 	}
 
 	if(isFirefox)
@@ -161,6 +163,13 @@ function init()
 		transformName = "webkitTransform";
 		transitionEndName = "webkitTransitionEnd";
 	}
+	
+}
+
+function onDocumentTouchEvent(e)
+{
+	//this is to prevent page scroll on touch devices
+	e.preventDefault();
 }
 
 function initCanvas()
@@ -413,7 +422,7 @@ function onCloseSavePanelClick(e)
 	closeModalDiv();
 	
 	var css = {};
-		css[transformName] = "translate("+ 0 +"px,0px)";
+		css[transformName] = "translate(0px,0px)";
 	
 	x$("#savePanel").css(css);
 			
