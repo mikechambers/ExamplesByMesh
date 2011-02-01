@@ -249,12 +249,14 @@ img
 {
 	padding-left:5px;
 	color:#363636;
+	font-style:italic;
 }
 
 #savePanelCloseLink
 {
 	text-decoration:none;
 	color:#363636;
+	padding-left:8px;
 }
 
 #saveImage
