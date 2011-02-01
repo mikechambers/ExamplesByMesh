@@ -132,9 +132,9 @@ function init()
 
 	
 	canvasWrapper = x$("#mainCanvas");
-	hasTouchSupport = Modernizr.touch;
 	
 	isFirefox = (navigator.userAgent.indexOf("Firefox") != -1);
+	hasTouchSupport = Modernizr.touch && !isFirefox;
 	
 	if(!hasTouchSupport)
 	{
