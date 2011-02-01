@@ -450,56 +450,26 @@ function onSaveImageLoad(e)
 }
 
 function scaleImageData()
-{
-	var h = image.height;
-	var w = image.width;
+{	
+	var w = viewport.width;
+	var h = viewport.height;
 	
-	//resizing code from:
-	//http://stackoverflow.com/questions/3448347/how-to-scale-an-imagedata-in-html-canvas/3449416#3449416
-	//http://jsfiddle.net/Hm2xq/2/
 	var srcCanvas = x$('<canvas>');
 		srcCanvas.attr("height", h);
 		srcCanvas.attr("width", w);
-
-		//todo: make sure this is the element
-	var context = srcCanvas[0].getContext("2d");
-		context.drawImage(image, 0, 0);
-	
-	var tempData = context.getImageData(0, 0, w, h);
-	
-	var newCanvas = x$('<canvas>')
-		.attr("width", tempData.width)
-	    .attr("height", tempData.height)[0];
-	
-	newCanvas.getContext("2d").putImageData(tempData, 0, 0);
-	
-	var destCanvasWrapper = x$('<canvas>');
-	var destCanvas = destCanvasWrapper[0];
-	
-	destCanvasWrapper.attr("height", viewport.height);
-	destCanvasWrapper.attr("width", viewport.width);
-	
-	var dContext = destCanvas.getContext("2d");
-	dContext.scale(
-			viewport.height / h,
-			viewport.width / w
-		);
 		
-	dContext.drawImage(newCanvas, 0,0);
-	
-	var imageData = dContext.getImageData(0, 0, 
-			destCanvas.width, 
-			destCanvas.height
-			);
+	var context = srcCanvas[0].getContext("2d");
+		context.drawImage(image, 0, 0, w, h);
+		
+	var imageData = context.getImageData(0, 0, w, h);
 
 	if(!PC)
 	{
 		PC = new PixelCanvas();
 	}
-	
-	PC.imageData = imageData;
-}
 
+	PC.imageData = imageData;			
+}
 
 /************** touch events for iOS / Android **************/
 
