@@ -208,10 +208,10 @@ img
 
 #savePanel
 {
-	position:fixed;
+	position:absolute;
 	
 	top:30%;
-	right:-320px;
+	right:-340px;
 	
 	text-align:center;
 	
