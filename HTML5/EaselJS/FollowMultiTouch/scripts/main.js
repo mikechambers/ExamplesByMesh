@@ -166,7 +166,7 @@ function init()
 	
 }
 
-function onDocumentTouchEvent(e)
+function onDocumentTouchMove(e)
 {
 	//this is to prevent page scroll on touch devices
 	e.preventDefault();
