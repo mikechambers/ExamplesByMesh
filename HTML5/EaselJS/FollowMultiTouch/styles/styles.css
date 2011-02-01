@@ -174,11 +174,6 @@ img
 	right:2%;
 	
 	text-align:right;
-	
-	-webkit-transition:top .5s ease;
-	-moz-transition:top .5s ease;
-	-o-transition:top .5s ease;
-	-transition:top .5s ease;
 }
 
 #thumbImage
@@ -200,11 +195,15 @@ img
 	
 	text-align:right;
 	text-transform:uppercase;
-	
-	-webkit-transition:bottom .5s ease;
-	-moz-transition:bottom .5s ease;
-	-o-transition:bottom .5s ease;
-	-transition:bottom .5s ease;
+
+}
+
+.drawingAnimatable
+{
+	-webkit-transition:all .3s ease-out;
+	-moz-transition:all .3s ease-out;
+	-o-transition:all .3s ease-out;
+	-transition:all .3s ease-out;
 }
 
 #savePanel
