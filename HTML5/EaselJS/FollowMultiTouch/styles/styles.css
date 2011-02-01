@@ -54,6 +54,25 @@ body
 	margin-bottom:10px;
 }
 
+#credits, #creditsSmall
+{
+	font-size:12px;
+	
+	position:absolute;
+	left:10px;
+	
+	/* the 100 is from the padding-top in #imageSelect */
+	bottom:10px;
+	text-align:left;
+	
+	width:100%;
+	
+	-webkit-transition:all .5s ease-out;
+	-moz-transition:all .5s ease-out;
+	-o-transition:all .5s ease-out;
+	transition:all .5s ease-out;
+}
+
 #credits p
 {
 	margin:6px;
@@ -67,6 +86,11 @@ body
 #credits a:hover
 {
 	text-decoration:none;
+}
+
+#creditsSmall
+{
+	display:none;
 }
 
 #imageSelect
@@ -91,22 +115,6 @@ body
 	transition:all .5s ease-out;	
 }
 
-#credits
-{
-	font-size:12px;
-	
-	position:absolute;
-	left:10px;
-	
-	/* the 100 is from the padding-top in #imageSelect */
-	bottom:10px;
-	text-align:left;
-	
-	-webkit-transition:all .5s ease-out;
-	-moz-transition:all .5s ease-out;
-	-o-transition:all .5s ease-out;
-	transition:all .5s ease-out;
-}
 
 #modalDiv
 {
