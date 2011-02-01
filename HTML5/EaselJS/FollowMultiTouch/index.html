@@ -62,7 +62,7 @@
 	<link rel="stylesheet" href="styles/styles.css">
 	
 </head>
-<body>
+<body>	
 	<div id="topBar" class="drawingAnimatable"><img id="thumbImage" width="120" height="80" /></div>
 	
 	<div id="imageSelect">
@@ -99,7 +99,16 @@
 		</div>
 	</div>
 	
-	
+	<div id="noSupport">
+		<div>It appears that you are using a browser that does not support some, or all of the HTML5 and CSS3 features required for this example.</div>
+		<div>The features required for this example include:
+			<ul>
+				<li id="canvasSupport">HTML5 Canvas Element</li>
+				<li id="transitionSupport">CSS3 Transitions</li>
+				<li id="transformSupport">CSS3 Transforms</li>
+			</ul>
+		</div>
+	</div>	
 	
 	<script src="scripts/easeljs.js"></script>
 	<script src="scripts/modernizr-1.6.min.js"></script>

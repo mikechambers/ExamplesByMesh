@@ -97,21 +97,34 @@ var viewport = {height:0, width:0};
 //called once the page has loaded
 function init()
 {
-	canvasWrapper = x$("#mainCanvas");
-
-	//check for canvas support
+	var abort = false;
+	
 	if(!Modernizr.canvas)
 	{
-		//todo : display hidden div
-		////document.createElement("article");
-		canvasWrapper.outer("<div>" +
-			"It appears you are using a browser that does not support "+
-			"the HTML5 Canvas Element</div>");
-			
-			//canvas isnt support, so dont continue
+		x$("#canvasSupport").setStyle("color", "#FF0000");
+		abort = true;
+	}
+	
+	if(!Modernizr.csstransitions)
+	{
+		abort = true;
+		x$("#transitionSupport").setStyle("color", "#FF0000");
+	}	
+	
+	if(!Modernizr.csstransforms)
+	{
+		abort = true;
+		x$("#transformSupport").setStyle("color", "#FF0000");
+	}
+	
+	if(abort)
+	{
+			x$("#noSupport").setStyle("display", "block");
 			return;
 	}
 
+	
+	canvasWrapper = x$("#mainCanvas");
 	hasTouchSupport = Modernizr.touch;
 	
 	if(!hasTouchSupport)
