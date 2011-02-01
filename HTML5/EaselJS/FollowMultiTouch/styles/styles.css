@@ -85,9 +85,9 @@ body
 	*/
 	padding-top:100px;
 	
-	-webkittransition:all .5s ease;
-	-moztransition:all .5s ease;
-	-otransition:all .5s ease;
+	-webkit-transition:all .5s ease;
+	-moz-transition:all .5s ease;
+	-o-transition:all .5s ease;
 	transition:all .5s ease;	
 }
 
@@ -116,9 +116,9 @@ body
 	display:none;
 	opacity:0.0;
 	
-	-webkittransition:opacity .5s ease;
-	-moztransition:opacity .5s ease;
-	-otransition:opacity .5s ease;
+	-webkit-transition:opacity .5s ease;
+	-moz-transition:opacity .5s ease;
+	-o-transition:opacity .5s ease;
 	transition:opacity .5s ease;
 }
 
@@ -195,9 +195,9 @@ img
 
 .drawingAnimatable
 {
-	-webkittransition:all .3s ease-out;
-	-moztransition:all .3s ease-out;
-	-otransition:all .3s ease-out;
+	-webkit-transition:all .3s ease-out;
+	-moz-transition:all .3s ease-out;
+	-o-transition:all .3s ease-out;
 	transition:all .3s ease-out;
 }
 
@@ -210,9 +210,9 @@ img
 	
 	text-align:center;
 	
-	-webkittransition:all .5s ease;
-	-moztransition:all .5s ease;
-	-otransition:all .5s ease;
+	-webkit-transition:all .5s ease;
+	-moz-transition:all .5s ease;
+	-o-transition:all .5s ease;
 	transition:all .5s ease;
 	
 	padding:8px;

@@ -288,11 +288,11 @@ function onImageDown(e)
 	var divXUI = x$("#imageSelect");
 	//console.log(divXUI.getStyle("padding-top"));
 	
-	//note the 50 constant below is the top-padding style for the div, set in the stylesheet.
+	//note the 100 constant below is the top-padding style for the div, set in the stylesheet.
 	divXUI.css({
 			position:"absolute", 
 			top:"0",
-			webkitTransform:"translate(0px,"+ -(viewport.height + 50) + "px)"});
+			webkitTransform:"translate(0px,"+ -(viewport.height + 100) + "px)"});
 	
 	divXUI.on("webkitTransitionEnd", onIntroTransitionEnd);
 }
