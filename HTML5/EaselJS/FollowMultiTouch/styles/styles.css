@@ -233,9 +233,9 @@ img
 {
 	width:100%;
 	text-align:left;
-	padding-top:1px;
-	padding-bottom:1px;
-	font-size:12px;
+	padding-top:2px;
+	padding-bottom:2px;
+	font-size:14px;
 }
 
 #savePanelCloseSpan
@@ -246,16 +246,23 @@ img
 	
 }
 
+#saveInstructionsSpan
+{
+	padding-left:5px;
+	color:#363636;
+}
+
 #savePanelCloseLink
 {
 	text-decoration:none;
 	color:#363636;
 }
 
-#saveInstructionsSpan
+#saveImage
 {
-	padding-left:5px;
-	color:#363636;
+	border-style:solid;
+	border-color:#A6A6A6;
+	border-width:1px;
 }
 
 .bottomButton

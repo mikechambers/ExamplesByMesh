@@ -119,9 +119,15 @@ function init()
 		//overlay canvas used to draw target and line
 		canvasWrapper.after('<canvas id="overlayCanvas"></canvas>');
 		canvasOverlayWrapper = x$("#overlayCanvas");
+		
+		x$(".imageButton").on("mousedown", onImageDown);
 	}
-
-	x$(".imageButton").on("mousedown", onImageMouseDown);
+	else
+	{
+		//on iOS mousedown has significant lag in firing, so we 
+		//listen for touchstart on touch devices
+		x$(".imageButton").on("touchstart", onImageDown);
+	}
 }
 
 function initCanvas()
@@ -146,12 +152,12 @@ function initCanvas()
 		canvasWrapper.on("touchstart", onTouchStart);
 		canvasWrapper.on("touchend", onTouchEnd);
 		
-		x$("#saveInstructionsSpan").inner("Touch and Hold to Save");	
+		x$("#saveInstructionsSpan").inner("Touch and Hold Image to Save");	
 	}
 	else
 	{
 		
-		x$("#saveInstructionsSpan").inner("Right Click to Save");	
+		x$("#saveInstructionsSpan").inner("Right Click Image to Save");	
 		//listen for a click event
 		canvasOverlayWrapper.on("click", onCanvasClick);
 		
@@ -255,9 +261,9 @@ function onMouseMove(e)
 	targetShape.y = lastDrone.target.y = e.pageY + canvasOffset.top;
 }
 
-function onImageMouseDown(e)
+function onImageDown(e)
 {	
-	x$(".imageButton").un("mousedown", onImageMouseDown);
+	x$(".imageButton").un(e.type, onImageDown);
 
 	image = e.target;
 	
@@ -328,7 +334,7 @@ function openModalDiv()
 {
 	x$("#modalDiv").setStyle("display","block");
 	
-	setTimeout("openModalDivDelay()");
+	setTimeout("openModalDivDelay()", 10);
 }
 
 function openModalDivDelay()
