@@ -137,12 +137,8 @@ body
 
 img
 {
-	/*border: 1px solid #a3a3a3;*/
-	/*border: 1px solid #4C3C1B;
-	    padding: 5px;
-	    width: 300px;
-	    background-color: #FFFFFF;*/
 	padding: 5px;
+	background-color:#FFFFFF;
 }
 
 #selectContainer
@@ -173,16 +169,6 @@ img
 	position:relative;
 }
 
-#topBar
-{
-	position:fixed;
-
-	top:-15%;
-	left:2%;
-	right:2%;
-	
-	text-align:right;
-}
 
 #thumbImage
 {
@@ -197,12 +183,22 @@ img
 	position:fixed;
 
 	bottom:-200px;
-	left:2%;
-	right:2%;
-	padding:8px 8px 8px 8px;
+	right:20px;
+
+	padding:10px;
+	
+	text-align:center;
+	text-transform:uppercase;
+}
+
+#topBar
+{
+	position:fixed;
+
+	top:-200px;
+	right:20px;
 	
 	text-align:right;
-	text-transform:uppercase;
 }
 
 .drawingAnimatable

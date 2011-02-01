@@ -338,9 +338,9 @@ function onIntroTransitionEnd(e)
 	
 	var bottomXUI = x$("#bottomBar");
 	//bottomXUI.css({bottom:"2%"});
-	bottomXUI.css({bottom:"10px"});
+	bottomXUI.css({bottom:"20px"});
 	var topXUI = x$("#topBar");
-	topXUI.css({top:"2%"});	
+	topXUI.css({top:"20px"});	
 	
 	bottomXUI.on(transitionEndName, onBottomBarTransitionEnd);
 }
