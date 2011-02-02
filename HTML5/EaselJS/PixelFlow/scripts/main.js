@@ -516,91 +516,74 @@ function onBottomButtonClick(e)
 	}
 }
 
-//utility function that opens a modal dialog with a css transition
-function openModalDiv()
-{
-	//set the display to block so the div is added to the page flow
-	x$("#modalDiv").setStyle("display","block");
-	
-	//we have to set this small timeout, because if we change the opacity right after
-	//changing the display, the css transition wont kick in
-	setTimeout("openModalDivDelay()", 10);
-}
-
-//called from setTimeout while opening modal window
-function openModalDivDelay()
-{
-	//set the opacity style to kick in the css transition
-	//fade it in
-	x$("#modalDiv").setStyle("opacity",1.0);
-}
-
-//utility function to close the modal dialog
-function closeModalDiv()
-{
-	var div = x$("#modalDiv");
-	
-	//fade it out.
-	div.setStyle("opacity",0.0);
-	
-	//listen for when the transition ends
-	div.on(transitionEndName, onModalTransitionEnd);
-}
-
-//called when the transition to remove the modal div ends
-function onModalTransitionEnd(e)
-{
-	//unsubscribe from the event
-	unsubscribeFromEvent(e);
-	
-	//have to set display to none, or else it will capture mouse click
-	x$("#modalDiv").setStyle("display","none");
-}
-
+//called when the user has requested to generate an image from the canvas
 function saveImage()
 {		
-	var imageData = stage.toDataURL("image/png", "#FFFFFF");
+	//get the image data url string from the stage. Create a PNG
+	//with a white background
+	var dataURL = stage.toDataURL("image/png", "#FFFFFF");
+	
+	var saveImage = x$("#saveImage");
 	
 	//dont start transition until image has loaded. This is mostly
 	//for smart phones, tablets, which might take a second to process the data
-	//we dont want to image to tween in before it has loaded.
-	x$("#saveImage").on("load", onSaveImageLoad);
-	x$("#saveImage").attr("src", imageData);
+	//we dont want the image to tween in before it has loaded.
+	saveImage.on("load", onSaveImageLoad);
 	
+	//load the data url in the save image element
+	saveImage.attr("src", dataURL);
+	
+	//open the modal div
 	openModalDiv();
 }
 
+//called when the image data has loaded into the save image panel
 function onSaveImageLoad(e)
 {
-	x$("#saveImage").un("load", onSaveImageLoad);
+	unsubscribeFromEvent(e);
+	
+	//listen for when the close button is pressed
 	x$("#savePanelCloseLink").on("click", onCloseSavePanelClick);
 	
-	var css = {};
-		css[transformName] = "translate("+ -((viewport.width / 2) + 150) +"px,0px)";
+	//generate the CSS transform to move the save panel onto the screen
+	var css = {};	
+	css[transformName] = "translate("+ -((viewport.width / 2) + 150) +"px,0px)";
 		
+	//update the panel styles
 	x$("#savePanel").css(css);
 }
 
+//called when the save panel close button is pressed
 function onCloseSavePanelClick(e)
 {
-	x$("#savePanelCloseLink").un("click", onCloseSavePanelClick);
+	unsubscribeFromEvent(e);
 	
+	//close the modal dialog
 	closeModalDiv();
 	
+	//create the CSS to return the panel to its original position
 	var css = {};
 		css[transformName] = "translate(0px,0px)";
 	
-	x$("#savePanel").css(css);
-			
-	x$("#savePanel").on(transitionEndName, onSaveCloseTransitionEnd);
+	var savePanel = x$("#savePanel");
+	
+	//update the css
+	savePanel.css(css);
+	
+	//listen for when the transition ends
+	savePanel.on(transitionEndName, onSaveCloseTransitionEnd);
 }
 
+//called when the save panel transition offscreen / close completes
 function onSaveCloseTransitionEnd(e)
 {
+	unsubscribeFromEvent(e);
 	var saveImage = x$("#saveImage");
 	
+	//stop listening for the load event
 	saveImage.un("load", onSaveImageLoad);
-	x$("#savePanel").un(transitionEndName, onSaveCloseTransitionEnd);
+	
+	//clear the image
 	saveImage.attr("src", "");
 }
 
@@ -882,4 +865,48 @@ function onWindowResize(e)
 		stage.tick();
 	}
 }
+
+/****************** modal window methods ********************/
+
+//utility function that opens a modal dialog with a css transition
+function openModalDiv()
+{
+	//set the display to block so the div is added to the page flow
+	x$("#modalDiv").setStyle("display","block");
+	
+	//we have to set this small timeout, because if we change the opacity right after
+	//changing the display, the css transition wont kick in
+	setTimeout("openModalDivDelay()", 10);
+}
+
+//called from setTimeout while opening modal window
+function openModalDivDelay()
+{
+	//set the opacity style to kick in the css transition
+	//fade it in
+	x$("#modalDiv").setStyle("opacity",1.0);
+}
+
+//utility function to close the modal dialog
+function closeModalDiv()
+{
+	var div = x$("#modalDiv");
+	
+	//fade it out.
+	div.setStyle("opacity",0.0);
+	
+	//listen for when the transition ends
+	div.on(transitionEndName, onModalTransitionEnd);
+}
+
+//called when the transition to remove the modal div ends
+function onModalTransitionEnd(e)
+{
+	//unsubscribe from the event
+	unsubscribeFromEvent(e);
+	
+	//have to set display to none, or else it will capture mouse click
+	x$("#modalDiv").setStyle("display","none");
+}
+
 
