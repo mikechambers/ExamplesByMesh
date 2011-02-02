@@ -118,7 +118,7 @@ Drone.prototype.$draw = function()
 			1.0));
 	*/
 	
-	var rgba = PC.getRBGA(Math.floor(this.x), Math.floor(this.y));
+	var rgba = PD.getRBGA(Math.floor(this.x), Math.floor(this.y));
 	
 	g.beginFill(Graphics.getRGB(rgba.r, rgba.g, rgba.b, .5));
 	//draw the circle

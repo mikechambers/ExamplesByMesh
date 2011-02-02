@@ -108,7 +108,7 @@ var transformName, transitionEndName;
 
 //Global instance so it cna be accessed from anywhere.
 //this stores 
-var PC = new PixelData();
+var PD = new PixelData();
 
 //viewport dimensions for container / browser
 var viewport = {height:0, width:0};
@@ -587,11 +587,17 @@ function onSaveCloseTransitionEnd(e)
 	saveImage.attr("src", "");
 }
 
+//scales the selected image to the current dimensions of the main drawing canvas.
+//the scaled image is used to provide a pixel / color map for drawing on the main canvas
 function scaleImageData()
 {	
+	//get the window dimensions
+	//note, we should technically get the canvas dimensions here
 	var w = viewport.width;
 	var h = viewport.height;
 	
+	//create a temporary canvas. We will use this to scale the image, and generate
+	//the pixel information
 	var srcCanvas = x$('<canvas>');
 		srcCanvas.attr("height", h);
 		srcCanvas.attr("width", w);
@@ -600,16 +606,25 @@ function scaleImageData()
 	//the GPU (i.e. as part of a CSS transition). This can lead
 	//to some weird visual glitches 
 	var context = srcCanvas[0].getContext("2d");
+	
+		//draw the image into the temp canvas, setting the h / w
+		//this will scale / skew it so it fills the entire canvas
 		context.drawImage(image, 0, 0, w, h);
 		
+	//get the ImadeData from the canvas (this contains all of the pixel
+	// rgba info)
 	var imageData = context.getImageData(0, 0, w, h);
 
-	if(!PC)
+	//see if we have created an instance of the PixelData instance (which
+	//provides access to the data)
+	if(!PD)
 	{
-		PC = new PixelData();
+		//no, create a new instance
+		PD = new PixelData();
 	}
 
-	PC.imageData = imageData;			
+	//update the image data
+	PD.imageData = imageData;			
 }
 
 /************** touch events for iOS / Android **************/
@@ -626,70 +641,67 @@ function onTouchStart(e)
 	var startIndex = 0;
 	var touch;
 	var id;
+	
+	//see if this is the first touch point
 	if(drones.length == 0)
 	{
+		//it is
+		
+		//get first touch point
 		touch = e.changedTouches[0];
+		
+		//get its id
 		id = touch.identifier;
 		
+		//listen for the touchmove event on the main canvas
 		canvasWrapper.on("touchmove", onTouchMove);
 		
+		//create a new target for the drone, based on the canvas
+		//relative touch coordinates
 		var t = {
 			x:touch.pageX - canvasOffset.left,
 			y:touch.pageY - canvasOffset.top
 		};
 		
+		//create a new drone, and store it in the lastDrone var
 		lastDrone = createNewDroneOnPoint(t);
 		
+		//add the drone, with the touch id
 		addDrone(lastDrone, id);
 		
+		//increment the start index (for the look below)
 		startIndex++;
 	}
 
+	//get the number of change touch points for this event
+	//in this case, how many new touch points were added at the
+	//same time
 	var len = e.changedTouches.length;
+	
+	//loop through the points
 	for(var i = startIndex; i < len; i++)
 	{
+		//get the touch instance
 		touch = e.changedTouches[i];
+		
+		//touch id
 		id = touch.identifier;
 		
+		//clone the last drone (so the new one will appear to grow
+		//from it)
 		var d = lastDrone._clone();
 			
+		//add the new, cloned drone with the specified id
 		addDrone(d, id);
 		
+		//set the last drone to the new drone
 		lastDrone = d;
 	}
 
-	
+	//start the Ticker so we start getting tick events
 	Tick.setPaused(false);
 }
 
-function addDrone(drone, id)
-{
-	var length = drones.length;
-	
-	if(drones[id])
-	{
-		return;
-	}
-	
-	drones.length++;
-	drones[id] = drone;
-	
-	stage.addChild(drone);
-}
-
-function removeDrone(id)
-{
-	if(!drones[id])
-	{
-		return;
-	}
-	
-	var drone = drones[id];
-	stage.removeChild(drone);
-	
-	delete drones[id];
-	drones.length--;
-}
 
 //called when a touch ends on iOS and Android devices. (i.e. user lifts a finger
 //from screen)
@@ -707,12 +719,18 @@ function onTouchEnd(e)
 	//loop through the changed touch points
 	for(var i = 0; i < len; i++)
 	{
+		///remove the drone associated with the touch id
+		//that ended
 		removeDrone(changedTouches[i].identifier);
 	}
 	
+	//check if there are any drones left
 	if(drones.length == 0)
 	{
-		canvasWrapper.un("touchmove", onTouchMove);
+		//if not stop listening for the touch move event
+		unsubscribeFromEvent(e);
+		
+		//pause the Ticker
 		Tick.setPaused(true);
 	}
 }
@@ -749,6 +767,57 @@ function onTouchMove(e)
 		drone.target.x = touch.pageX - canvasOffset.left;
 		drone.target.y = touch.pageY - canvasOffset.top;
 	}
+}
+
+/*************** Drone utility methods ***********/
+
+//adds a new drone and associates it with the specified touch id
+//the drones are stored in an object, instead of an Array so we
+//can look it up by its ID (and not have to loop through the Array
+//each time)
+function addDrone(drone, id)
+{
+	//get the drone length
+	var length = drones.length;
+	
+	//see if the drone already exists for the specified id
+	if(drones[id])
+	{
+		//if it does, do nothing
+		return;
+	}
+	
+	//increment the length property
+	drones.length++;
+	
+	//store the drone
+	drones[id] = drone;
+	
+	//add the drone to the stage
+	stage.addChild(drone);
+}
+
+//removes the drone associated with the specified touch id
+function removeDrone(id)
+{
+	//if there is no drone for the specified id
+	if(!drones[id])
+	{
+		//dont do anything
+		return;
+	}
+	
+	//get the drone
+	var drone = drones[id];
+	
+	//remove it from the stage
+	stage.removeChild(drone);
+	
+	//delete the drone id from the object
+	delete drones[id];
+	
+	//decrement the length property
+	drones.length--;
 }
 
 /************** general app functions *************/
