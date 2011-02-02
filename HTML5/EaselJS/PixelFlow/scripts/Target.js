@@ -22,16 +22,24 @@
 	THE SOFTWARE.
 */
 
+//This is poorly named, since Drone takes a "target" object.
+//this class is used to track the mouse and display a simple graphic to
+//show its position
 function Target(color)
 {
 	this.color = color;
+	
+	//draw ourselves
 	this.$draw();
 }
 
+//we extend the EaselJS Shape
 Target.prototype = new Shape();
+
 Target.prototype.color = null;
 Target.RADIUS = 4;
 
+//renders the shape
 Target.prototype.$draw = function()
 {
 	var radius = Target.RADIUS;

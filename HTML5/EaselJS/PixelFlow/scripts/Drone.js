@@ -22,10 +22,13 @@
 	THE SOFTWARE.
 */
 
-//constructor for Drone
+//class which draws itself on the canvas and follows the coordinates from
+//the specified target
 function Drone(target)
 {
+	//if no target is specified, just use a default one
 	this.target = (target)?target:{x:0,y:0};
+	
 	//set the radius to the default radius
 	this.radius = Drone.DEFAULT_RADIUS;
 		
@@ -33,7 +36,8 @@ function Drone(target)
 	this.strokeColor = Graphics.getRGB(0, 0, 0, .3);
 }
 
-//extends EaselJS Shape
+//extends EaselJS Shape (this will have to be updated in EaselJS to
+//use new inheritance syntax)
 Drone.prototype = new Shape();
 
 //How fast the drone moves
@@ -41,13 +45,14 @@ Drone.prototype.speed = 5;
 
 Drone.prototype.target = null;
 
+//not used right now
 Drone.prototype.count = 0;
 
 //temp object we use to pass around point data
 //so we can reuse and dont have to keep reinstantiating
 Drone.prototype.p2 = new Point(0,0);
 
-//direction the radius tween is moving in
+//tracks whether the radius is growing or getting smaller
 Drone.prototype.reverse = false;
 
 //current radius
@@ -118,16 +123,20 @@ Drone.prototype.$draw = function()
 			1.0));
 	*/
 	
+	//get the pixel color information from the image for the drone's
+	//current position
 	var rgba = PD.getRBGA(Math.floor(this.x), Math.floor(this.y));
 	
+	//use the color from the pixel
 	g.beginFill(Graphics.getRGB(rgba.r, rgba.g, rgba.b, .5));
+	
 	//draw the circle
 	g.drawCircle(0,0,this.radius);
 
 	g.endFill();		
 	
 	//set the graphics property to our Graphics. This 
-	//will be used the the Shape baseclass to render
+	//will be used by the Shape baseclass to render
 	//our graphics
 	this.graphics = g;
 }
@@ -141,7 +150,9 @@ Drone.prototype.tick = function()
 
 Drone.prototype.update = function()
 {				
-	//copy our coordinates into the Point instance
+	//copy our current coordinates into the Point instance
+	//technically, we could pass the drone instance to the methods
+	//below
 	this.p2.x = this.x;
 	this.p2.y = this.y;
 
