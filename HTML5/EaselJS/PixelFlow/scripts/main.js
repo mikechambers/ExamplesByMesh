@@ -409,7 +409,7 @@ function onImageSelectDown(e)
 	x$("#thumbImage").attr("src", image.src);
 	
 	//get a reference to the imageSelectDiv
-	var divXUI = x$("#imageSelect");
+	var divXUI = x$("#imageSelectDiv");
 	
 	initCanvas();
 	updateCanvasDimensions();
@@ -429,8 +429,8 @@ function onImageSelectDown(e)
 
 function onIntroTransitionEnd(e)
 {
-	x$("#imageSelect").un(transitionEndName, onIntroTransitionEnd);
-	x$("#imageSelect").remove();	
+	x$("#imageSelectDiv").un(transitionEndName, onIntroTransitionEnd);
+	x$("#imageSelectDiv").remove();	
 	
 	//we have to do this here. If we do it earlier, then it glitches the 
 	//gpu on ipad

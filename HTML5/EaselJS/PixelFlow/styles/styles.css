@@ -92,7 +92,7 @@ body
 	display:none;
 }
 
-#imageSelect
+#imageSelectDiv
 {	
 	position:absolute;
 	top:0px;
@@ -115,7 +115,6 @@ body
 	-o-transition:all .5s ease;
 	transition:all .5s ease;	
 }
-
 
 #modalDiv
 {
@@ -164,12 +163,6 @@ img
 	left:0;
 	top:0;
 }
-
-#imageSelect
-{
-	position:relative;
-}
-
 
 #thumbImage
 {
