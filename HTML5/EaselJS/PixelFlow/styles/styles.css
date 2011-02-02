@@ -189,6 +189,17 @@ img
 	
 	text-align:center;
 	text-transform:uppercase;
+	font-size:18px;
+}
+
+.bottomButton
+{
+	margin-left:6px;
+	margin-right:6px;
+	text-decoration: none;
+
+	
+	color:#363636;
 }
 
 #topBar
@@ -266,16 +277,6 @@ img
 	border-style:solid;
 	border-color:#A6A6A6;
 	border-width:1px;
-}
-
-.bottomButton
-{
-	margin-left:6px;
-	margin-right:6px;
-	text-decoration: none;
-	font-size:18px;
-	
-	color:#363636;
 }
 
 .bar

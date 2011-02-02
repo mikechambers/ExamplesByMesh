@@ -163,7 +163,18 @@ function init()
 		transformName = "webkitTransform";
 		transitionEndName = "webkitTransitionEnd";
 	}
-	
+
+	if(!supportsToDataURL())
+	{
+		x$("#saveButtonSpan").setStyle("display", "none");
+	}
+}
+
+function supportsToDataURL()
+{
+	var c = document.createElement("canvas");
+	var data = c.toDataURL("image/png");
+	return (data.indexOf("data:image/png") == 0);
 }
 
 function onDocumentTouchMove(e)
@@ -350,8 +361,14 @@ function onBottomBarTransitionEnd(e)
 	//listen for when the window resizes
 	x$(window).on("resize", onWindowResize);
 	
-	
-	x$(".bottomButton").on("click", onBottomButtonClick);
+	if(hasTouchSupport)
+	{
+		x$(".bottomButton").on("touchstart", onBottomButtonClick);
+	}
+	else
+	{
+		x$(".bottomButton").on("click", onBottomButtonClick);
+	}
 }
 
 function onBottomButtonClick(e)
@@ -386,6 +403,7 @@ function openModalDiv()
 
 function openModalDivDelay()
 {
+	
 	x$("#modalDiv").setStyle("opacity",1.0);
 }
 
@@ -415,6 +433,17 @@ function saveImage()
 	openModalDiv();
 }
 
+function onSaveImageLoad(e)
+{
+	x$("#saveImage").un("load", onSaveImageLoad);
+	x$("#savePanelCloseLink").on("click", onCloseSavePanelClick);
+	
+	var css = {};
+		css[transformName] = "translate("+ -((viewport.width / 2) + 150) +"px,0px)";
+		
+	x$("#savePanel").css(css);
+}
+
 function onCloseSavePanelClick(e)
 {
 	x$("#savePanelCloseLink").un("click", onCloseSavePanelClick);
@@ -438,16 +467,7 @@ function onSaveCloseTransitionEnd(e)
 	saveImage.attr("src", "");
 }
 
-function onSaveImageLoad(e)
-{
-	x$("#saveImage").un("load", onSaveImageLoad);
-	x$("#savePanelCloseLink").on("click", onCloseSavePanelClick);
-	
-	var css = {};
-		css[transformName] = "translate("+ -((viewport.width / 2) + 150) +"px,0px)";
-		
-	x$("#savePanel").css(css);
-}
+
 
 function scaleImageData()
 {	
