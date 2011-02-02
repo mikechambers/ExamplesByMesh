@@ -411,42 +411,76 @@ function onImageSelectDown(e)
 	//get a reference to the imageSelectDiv
 	var divXUI = x$("#imageSelectDiv");
 	
+	//initialize the canvas
 	initCanvas();
+	
+	//update the screen and canvas dimensions
 	updateCanvasDimensions();
 	
-	var css = {
-		//position:"absolute", 
-		//top:"0px"
-	}
+	//object to set css properties
+	var css = {};
 	
 	//note the 100 constant below is the top-padding style for the div, set in the stylesheet.
+	//i should pull this from the CSS and parse it into an int (100px)
+	//do a css transform and move the div off of the screen (up)
 	css[transformName] = "translate(0px,"+ -(viewport.height + 100) + "px)";
-	divXUI.on(transitionEndName, onIntroTransitionEnd);
+	
+	//listen for when the transition ends
+	divXUI.on(transitionEndName, onImageSelectTransitionEnd);
+	
+	//set the update style
 	divXUI.css(css);
 	
-	x$("#credits").setStyle(transformName, "translate(0px, 200px)");
+	var creditsDiv = x$("#credits");
+	
+	//move the credits off the bottom of the screen with a css transform
+	creditsDiv.setStyle(transformName, "translate(0px, 200px)");
+	creditsDiv.on(transitionEndName, onCreditsTransitionEnd);
 }
 
-function onIntroTransitionEnd(e)
+//unsubscribes the event.target from the specified event
+//returns an XUI wrapper of the element that was the target of
+//the event
+function unsubscribeFromEvent(e)
 {
-	x$("#imageSelectDiv").un(transitionEndName, onIntroTransitionEnd);
-	x$("#imageSelectDiv").remove();	
+	return x$(e.target).un(e.type);
+}
+
+//called when the credits transition ends
+function onCreditsTransitionEnd(e)
+{
+	unsubscribeFromEvent(e).remove();
+}
+
+//called when the transition from the main screen ends
+function onImageSelectTransitionEnd(e)
+{
+	//unsubscribe the event and remove the element from the dom
+	unsubscribeFromEvent(e).remove();	
 	
 	//we have to do this here. If we do it earlier, then it glitches the 
 	//gpu on ipad
+	//scale the selected image and copy the pixel data
 	scaleImageData();	
 		
-	var margin = x$("#bottomBar").getStyle("right");
 	var bottomXUI = x$("#bottomBar");
+	var margin = bottomXUI.getStyle("right");
+	
 	bottomXUI.css({bottom:margin});
+	
 	var topXUI = x$("#topBar");
-	topXUI.css({top:margin});	
+		topXUI.css({top:margin});	
 	
 	bottomXUI.on(transitionEndName, onBottomBarTransitionEnd);
 }
 
+//called when the transition to bring the bottom bar to
+//the screen ends
 function onBottomBarTransitionEnd(e)
 {
+	//unsubscribe from the event
+	unsubscribeFromEvent(e);
+	
 	//listen for when the window resizes
 	x$(window).on("resize", onWindowResize);
 	
