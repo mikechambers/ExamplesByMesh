@@ -471,70 +471,90 @@ function onImageSelectTransitionEnd(e)
 	var topXUI = x$("#topBar");
 		topXUI.css({top:margin});	
 	
+	//listen for when the transition ends
 	bottomXUI.on(transitionEndName, onBottomBarTransitionEnd);
 }
 
 //called when the transition to bring the bottom bar to
-//the screen ends
+//the screen ends.
 function onBottomBarTransitionEnd(e)
 {
+	//at this point we have completed the transition and are now in the
+	//drawing view
+	
 	//unsubscribe from the event
 	unsubscribeFromEvent(e);
 	
 	//listen for when the window resizes
 	x$(window).on("resize", onWindowResize);
 	
+	//listen for when any of the buttons on the bottom bar are clicked
 	x$(".bottomButton").on("click", onBottomButtonClick);
 }
 
-
+//called when any of the bottom tab buttons are pressed
 function onBottomButtonClick(e)
 {
+	//get the data- attribute associated with the clicked link
 	var action = e.target.getAttribute("data-button");
 	
+	//figure out which was clicked
 	switch(action)
 	{
 		case "SAVE":
 		{
+			//save button was clicked
 			saveImage();
-			break;
-		}
-		case "BACK":
-		{
 			break;
 		}
 		case "CLEAR":
 		{
+			//clear button was clicked
 			stage.clear();
 			break;
 		}
 	}
 }
 
+//utility function that opens a modal dialog with a css transition
 function openModalDiv()
 {
+	//set the display to block so the div is added to the page flow
 	x$("#modalDiv").setStyle("display","block");
 	
+	//we have to set this small timeout, because if we change the opacity right after
+	//changing the display, the css transition wont kick in
 	setTimeout("openModalDivDelay()", 10);
 }
 
+//called from setTimeout while opening modal window
 function openModalDivDelay()
 {
-	
+	//set the opacity style to kick in the css transition
+	//fade it in
 	x$("#modalDiv").setStyle("opacity",1.0);
 }
 
+//utility function to close the modal dialog
 function closeModalDiv()
 {
-	x$("#modalDiv").setStyle("opacity",0.0);
-	x$("#modalDiv").on(transitionEndName, onModalTransitionEnd);
+	var div = x$("#modalDiv");
+	
+	//fade it out.
+	div.setStyle("opacity",0.0);
+	
+	//listen for when the transition ends
+	div.on(transitionEndName, onModalTransitionEnd);
 }
 
+//called when the transition to remove the modal div ends
 function onModalTransitionEnd(e)
 {
+	//unsubscribe from the event
+	unsubscribeFromEvent(e);
+	
 	//have to set display to none, or else it will capture mouse click
 	x$("#modalDiv").setStyle("display","none");
-	x$("#modalDiv").un(transitionEndName, onModalTransitionEnd);
 }
 
 function saveImage()
