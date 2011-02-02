@@ -241,38 +241,47 @@ function initCanvas()
 	//cleared between renders (when stage.tick()) is called
 	stage.autoClear = false;		
 		
+	//string to use for how to save an image
+	var instructionString;
 	if(hasTouchSupport)
 	{	
 		//we are on a touch device
-		//listen for touch events
+		//listen for touch events for drawing
 		canvasWrapper.on("touchstart", onTouchStart);
 		canvasWrapper.on("touchend", onTouchEnd);
 		
-		x$("#saveInstructionsSpan").inner("Touch and Hold Image to Save");	
+		instructionString = "Touch and Hold Image to Save";	
 	}
 	else
 	{
+		instructionString = "Right Click Image to Save";
+		
 		//if it doesnt have touch support, then we assume
 		//it is a mouse based computer
 		//and we display the overlay graphic
 		
+		//We dont show the overlay on touch devices, and currently most touch
+		//devices (smart phones and tablets) are not fast enough to manager both canvases
+		//ideally we could profile based on performance, but for now, we are just doing
+		//it based on input
+		
 		//overlay canvas used to draw target and line
-		//note we dynamically add it, intead
+		//note we dynamically add it, instead of removing it so we can save
+		//some processing / initialization on touch devices
 		canvasWrapper.after('<canvas id="overlayCanvas"></canvas>');
 		canvasOverlayWrapper = x$("#overlayCanvas");		
 		
-		x$("#saveInstructionsSpan").inner("Right Click Image to Save");	
-		//listen for a click event
+		//listen for a click event on the overlay
 		canvasOverlayWrapper.on("click", onCanvasClick);
 		
 		//color used to draw target and line
 		targetColor = Graphics.getRGB(0,0,0,.1);
 		
-		//stage to manager the overlay canvas. Need to get the actual
+		//stage to manage the overlay canvas. Need to get the actual
 		//element from the JQuery object.
 		overlayStage = new Stage(canvasOverlayWrapper[0]);		
 		
-		//EaselJS Shape that is drawn at mouse point
+		//EaselJS Shape that is drawn at the mouse point
 		targetShape = new Target(targetColor);
 		
 		//Shape and graphic used to draw a line from the
@@ -287,7 +296,10 @@ function initCanvas()
 		lineShape.graphics = lineGraphics;		
 	}
 	
-	//listen for when the window looses focus
+	//set the save image instructions
+	x$("#saveInstructionsSpan").inner(instructionString);
+	
+	//listen for when the window looses focus (so we can pause everything)
 	x$(window).on("blur", onWindowBlur);	
 
 	//set the tick interval to 24 frames per second.
@@ -304,47 +316,61 @@ function initCanvas()
 	Tick.setPaused(true);
 }
 
+//called when the drawing canvas is clicked (with a mouse)
 function onCanvasClick(e)
 {
+	//toggle pause state
 	var paused = !Tick.getPaused();
-	
 	Tick.setPaused(paused);
 	
-	//see if we are paused;
 	if(paused)
 	{
+		//we are paused
+		
+		//stop listening for mouse move events (and thus stop)
+		//drawing
 		canvasOverlayWrapper.un("mousemove", onMouseMove);
 
+		//remove the overlay graphics from the stage
 		overlayStage.removeChild(targetShape);
 		overlayStage.removeChild(lineShape);
 	}
 	else
 	{	
-		Tick.setPaused(false);
+		//we are no longer paused
 		
+		//check and see if there is already a drone instance
 		if(lastDrone)
 		{
+			//if so, remove it
 			stage.removeChild(lastDrone);
 		}
 		
+		//create a target for the new drone, based on the current canvas relative
+		//position of the mouse cursor
 		var t = {
 			x:e.pageX - canvasOffset.left,
 			y:e.pageY - canvasOffset.top
 		};		
 		
+		//create a new drone
 		lastDrone = createNewDroneOnPoint(t);
-							
+		
+		//add the drone to the stage
 		stage.addChild(lastDrone);
 		
+		//add the overlay graphics to the stage
 		overlayStage.addChild(targetShape);
 		overlayStage.addChild(lineShape);
 		
+		
+		//position the overlay mouse tracking shape
 		targetShape.x = t.x;
 		targetShape.y = t.y;
 		
-		canvasOverlayWrapper.on("mousemove", onMouseMove);
 		
-		overlayStage.tick();
+		//start listening for mouse move events
+		canvasOverlayWrapper.on("mousemove", onMouseMove);
 	}
 
 	overlayStage.tick();
