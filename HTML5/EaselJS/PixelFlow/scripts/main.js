@@ -361,15 +361,9 @@ function onBottomBarTransitionEnd(e)
 	//listen for when the window resizes
 	x$(window).on("resize", onWindowResize);
 	
-	if(hasTouchSupport)
-	{
-		x$(".bottomButton").on("touchstart", onBottomButtonClick);
-	}
-	else
-	{
-		x$(".bottomButton").on("click", onBottomButtonClick);
-	}
+	x$(".bottomButton").on("click", onBottomButtonClick);
 }
+
 
 function onBottomButtonClick(e)
 {
