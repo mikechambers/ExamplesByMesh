@@ -168,13 +168,13 @@ function init()
 	if(!hasTouchSupport)
 	{	
 		//listen for mousedown on the image select screen
-		x$(".imageButton").on("mousedown", onImageDown);
+		x$(".imageButton").on("mousedown", onImageSelectDown);
 	}
 	else
 	{
 		//on iOS mousedown has significant lag in firing, so we 
 		//listen for touchstart on touch devices
-		x$(".imageButton").on("touchstart", onImageDown);
+		x$(".imageButton").on("touchstart", onImageSelectDown);
 		
 		
 		//listen for all touchmove events made in the documet
@@ -373,9 +373,11 @@ function onCanvasClick(e)
 		canvasOverlayWrapper.on("mousemove", onMouseMove);
 	}
 
+	//draw the overlay stage
 	overlayStage.tick();
 }
 
+//create a new drone, using the specific target
 function createNewDroneOnPoint(t)
 {
 	var d = new Drone(t);
@@ -384,21 +386,29 @@ function createNewDroneOnPoint(t)
 	return d;
 }
 
-//called when the mouse is moved over the canvas
+//called when the mouse is moved over the canvas (on mouse based devices)
 function onMouseMove(e)
 {
+	//update the the overlay shape position, and the drone's target
+	//with the current canvas relative coordinates
 	targetShape.x = lastDrone.target.x = e.pageX + canvasOffset.left;
 	targetShape.y = lastDrone.target.y = e.pageY + canvasOffset.top;
 }
 
-function onImageDown(e)
+//event handler for when an image is selected on the main screen
+function onImageSelectDown(e)
 {	
-	x$(".imageButton").un(e.type, onImageDown);
+	//unsubscribe from the event
+	x$(".imageButton").un(e.type, onImageSelectDown);
 
+	//get the image which was clicked
 	image = e.target;
 	
+	//set the thumbnail image to load the selected image. we just pass the url
+	//as the image should be cached
 	x$("#thumbImage").attr("src", image.src);
-			
+	
+	//get a reference to the imageSelectDiv
 	var divXUI = x$("#imageSelect");
 	
 	initCanvas();
