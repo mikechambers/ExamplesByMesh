@@ -23,7 +23,7 @@
 */
 
 //temp placeholder until EaselJS 0.3 is released
-Stage.prototype.toDataURL = function(mimeType, backgroundColor)
+Stage.prototype.toDataURL = function(backgroundColor, mimeType)
 {
 	if(!mimeType)
 	{
@@ -112,6 +112,9 @@ var PD = new PixelData();
 
 //viewport dimensions for container / browser
 var viewport = {height:0, width:0};
+
+
+/************** initialization methods **************/
 
 //called once the page has loaded
 function init()
@@ -202,27 +205,6 @@ function init()
 		//if it doesnt, disable the save image button
 		x$("#saveButtonSpan").setStyle("display", "none");
 	}
-}
-
-//checks whether the browser supports the Canvas.toDataURL API
-//Android currently doesnt
-function supportsToDataURL()
-{
-	//create a canvas
-	var c = document.createElement("canvas");
-	
-	//get a data url from it
-	var data = c.toDataURL("image/png");
-	
-	//see if it is valid
-	return (data.indexOf("data:image/png") == 0);
-}
-
-//called on touchmove events in the document (unless something else captures it)
-function onDocumentTouchMove(e)
-{
-	//this is to prevent page scroll on touch devices
-	e.preventDefault();
 }
 
 //initializes the drawing canvas
@@ -316,6 +298,28 @@ function initCanvas()
 	Tick.setPaused(true);
 }
 
+/************* Timer event handler ************/
+
+//called at each time interval. This is essentially the listener
+//for Tick.addListener. This is where everything is redrawn and moved.
+function tick()
+{
+	//redraw the main stage / canvas
+	stage.tick();
+	
+	//check if we have an overlay graphic
+	if(canvasOverlayWrapper)
+	{
+		//update the overlay line
+		updateLine();
+	
+		//redraw the overlay stage / canvas
+		overlayStage.tick();
+	}
+}
+
+/************* mouse event handlers *************/
+
 //called when the drawing canvas is clicked (with a mouse)
 function onCanvasClick(e)
 {
@@ -377,15 +381,6 @@ function onCanvasClick(e)
 	overlayStage.tick();
 }
 
-//create a new drone, using the specific target
-function createNewDroneOnPoint(t)
-{
-	var d = new Drone(t);
-	d.x = t.x;
-	d.y = t.y;
-	return d;
-}
-
 //called when the mouse is moved over the canvas (on mouse based devices)
 function onMouseMove(e)
 {
@@ -394,6 +389,8 @@ function onMouseMove(e)
 	targetShape.x = lastDrone.target.x = e.pageX + canvasOffset.left;
 	targetShape.y = lastDrone.target.y = e.pageY + canvasOffset.top;
 }
+
+/************ UI event Handlers / transition events *****************/
 
 //event handler for when an image is selected on the main screen
 function onImageSelectDown(e)
@@ -436,14 +433,6 @@ function onImageSelectDown(e)
 	//move the credits off the bottom of the screen with a css transform
 	creditsDiv.setStyle(transformName, "translate(0px, 200px)");
 	creditsDiv.on(transitionEndName, onCreditsTransitionEnd);
-}
-
-//unsubscribes the event.target from the specified event
-//returns an XUI wrapper of the element that was the target of
-//the event
-function unsubscribeFromEvent(e)
-{
-	return x$(e.target).un(e.type);
 }
 
 //called when the credits transition ends
@@ -516,12 +505,14 @@ function onBottomButtonClick(e)
 	}
 }
 
+/************** save image methods ****************/
+
 //called when the user has requested to generate an image from the canvas
 function saveImage()
 {		
 	//get the image data url string from the stage. Create a PNG
 	//with a white background
-	var dataURL = stage.toDataURL("image/png", "#FFFFFF");
+	var dataURL = stage.toDataURL("#FFFFFF", "image/png");
 	
 	var saveImage = x$("#saveImage");
 	
@@ -587,45 +578,6 @@ function onSaveCloseTransitionEnd(e)
 	saveImage.attr("src", "");
 }
 
-//scales the selected image to the current dimensions of the main drawing canvas.
-//the scaled image is used to provide a pixel / color map for drawing on the main canvas
-function scaleImageData()
-{	
-	//get the window dimensions
-	//note, we should technically get the canvas dimensions here
-	var w = viewport.width;
-	var h = viewport.height;
-	
-	//create a temporary canvas. We will use this to scale the image, and generate
-	//the pixel information
-	var srcCanvas = x$('<canvas>');
-		srcCanvas.attr("height", h);
-		srcCanvas.attr("width", w);
-		
-	//note: dont try and access image while it is cached by
-	//the GPU (i.e. as part of a CSS transition). This can lead
-	//to some weird visual glitches 
-	var context = srcCanvas[0].getContext("2d");
-	
-		//draw the image into the temp canvas, setting the h / w
-		//this will scale / skew it so it fills the entire canvas
-		context.drawImage(image, 0, 0, w, h);
-		
-	//get the ImadeData from the canvas (this contains all of the pixel
-	// rgba info)
-	var imageData = context.getImageData(0, 0, w, h);
-
-	//see if we have created an instance of the PixelData instance (which
-	//provides access to the data)
-	if(!PD)
-	{
-		//no, create a new instance
-		PD = new PixelData();
-	}
-
-	//update the image data
-	PD.imageData = imageData;			
-}
 
 /************** touch events for iOS / Android **************/
 
@@ -756,14 +708,20 @@ function onTouchMove(e)
 	//loop through all of the changed touch points
 	for(var i = 0; i < len; i++)
 	{		
+		//get the touch
 		touch = changedTouches[i];
+		
+		//get the drone associated with the touch
 		drone = drones[touch.identifier];
 		
+		//if there is nothing, then dont do anything
 		if(!drone)
 		{
 			continue;
 		}
 		
+		//update the target for the drone, based on the canvas relative
+		//touch coordinates
 		drone.target.x = touch.pageX - canvasOffset.left;
 		drone.target.y = touch.pageY - canvasOffset.top;
 	}
@@ -820,23 +778,29 @@ function removeDrone(id)
 	drones.length--;
 }
 
+//create a new drone, using the specific target
+function createNewDroneOnPoint(t)
+{
+	var d = new Drone(t);
+	d.x = t.x;
+	d.y = t.y;
+	return d;
+}
+
 /************** general app functions *************/
 
-//called at each time interval. This is essentially the listener
-//for Tick.addListener
-function tick()
+//checks whether the browser supports the Canvas.toDataURL API
+//Android currently doesnt
+function supportsToDataURL()
 {
-	//update the main stage / canvas
-	stage.tick();
+	//create a canvas
+	var c = document.createElement("canvas");
 	
-	if(canvasOverlayWrapper)
-	{
-		//update the overlay line
-		updateLine();
+	//get a data url from it
+	var data = c.toDataURL("image/png");
 	
-		//rerender the overlay stage / canvas
-		overlayStage.tick();
-	}
+	//see if it is valid
+	return (data.indexOf("data:image/png") == 0);
 }
 
 //redraws the overlay line based on Mouse and Drone position
@@ -851,6 +815,7 @@ function updateLine()
 	//stroke color
 	lineGraphics.beginStroke(targetColor);
 	
+	//draw the line between the mouse target and the drone
 	lineGraphics.moveTo(targetShape.x, targetShape.y);
 	lineGraphics.lineTo(lastDrone.x, lastDrone.y);
 }
@@ -868,29 +833,85 @@ function updateCanvasDimensions()
 	viewport.height = window.innerHeight;
 	viewport.width = window.innerWidth;
 	
+	//set the new canvas dimensions
 	//note that changing the canvas dimensions clears the canvas.
 	canvasWrapper.attr("height", viewport.height);
 	canvasWrapper.attr("width", viewport.width);
-	
-	//keep for debugging on android
-	//console.log([document.body.clientHeight, window.innerHeight, screen.availHeight]);// 618,613,748
 	
 	//save the canvas offset
 	canvasOffset.left = canvasWrapper.attr("offsetLeft");
 	canvasOffset.top = canvasWrapper.attr("offsetTop");
 	
+	//check if we have an overlay canvas
 	if(canvasOverlayWrapper)
 	{
+		//update the size
 		canvasOverlayWrapper.attr("height", viewport.height);
 		canvasOverlayWrapper.attr("width", viewport.width);	
 		
-		//todo: get direct properties
+		//save the offset (we could probably just use the canvas ones above,
+		//since their position and size should be synced up.
 		canvasOverlayOffset.left = canvasOverlayWrapper.attr("offsetLeft");
 		canvasOverlayOffset.top = canvasOverlayWrapper.attr("offsetTop");
 	}	
 }
 
-/************** Window Events ************/
+//scales the selected image to the current dimensions of the main drawing canvas.
+//the scaled image is used to provide a pixel / color map for drawing on the main canvas
+function scaleImageData()
+{	
+	//get the window dimensions
+	//note, we should technically get the canvas dimensions here
+	var w = viewport.width;
+	var h = viewport.height;
+	
+	//create a temporary canvas. We will use this to scale the image, and generate
+	//the pixel information
+	var srcCanvas = x$('<canvas>');
+		srcCanvas.attr("height", h);
+		srcCanvas.attr("width", w);
+		
+	//note: dont try and access image while it is cached by
+	//the GPU (i.e. as part of a CSS transition). This can lead
+	//to some weird visual glitches 
+	var context = srcCanvas[0].getContext("2d");
+	
+		//draw the image into the temp canvas, setting the h / w
+		//this will scale / skew it so it fills the entire canvas
+		context.drawImage(image, 0, 0, w, h);
+		
+	//get the ImadeData from the canvas (this contains all of the pixel
+	// rgba info)
+	var imageData = context.getImageData(0, 0, w, h);
+
+	//see if we have created an instance of the PixelData instance (which
+	//provides access to the data)
+	if(!PD)
+	{
+		//no, create a new instance
+		PD = new PixelData();
+	}
+
+	//update the image data
+	PD.imageData = imageData;			
+}
+
+//unsubscribes the event.target from the specified event
+//returns an XUI wrapper of the element that was the target of
+//the event
+function unsubscribeFromEvent(e)
+{
+	return x$(e.target).un(e.type);
+}
+
+/************** Window / Document Events ************/
+
+//called on touchmove events in the document (unless something else captures it)
+function onDocumentTouchMove(e)
+{
+	//this is to prevent page scroll on touch devices
+	e.preventDefault();
+}
 
 //called when the window looses focus
 function onWindowBlur(e)
@@ -904,6 +925,9 @@ function onWindowBlur(e)
 //called when the browser window is resized
 function onWindowResize(e)
 {
+	//todo: a lot if not most of this code could be moved to
+	//updateCanvasDimensions()
+	
 	//right now, the stage instance, doesnt expose the canvas
 	//context, so we have to get a reference to it ourselves
 	var context = canvasWrapper[0].getContext("2d");
