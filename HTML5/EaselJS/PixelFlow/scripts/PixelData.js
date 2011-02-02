@@ -1,11 +1,11 @@
-function PixelCanvas(imageData)
+function PixelData(imageData)
 {
 	this.imageData = imageData;
 }
 
-PixelCanvas.prototype.imageData = null;
+PixelData.prototype.imageData = null;
 
-PixelCanvas.prototype.getPixelRBG = function(xPos, yPos)
+PixelData.prototype.getRBGA = function(xPos, yPos)
 {
 	var imageData = this.imageData;
 	if(!imageData)

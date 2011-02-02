@@ -117,19 +117,13 @@ Drone.prototype.$draw = function()
 			50, 
 			1.0));
 	*/
-	//console.log([this.x, this.y, PC.getPixelRBG(this.x, this.y)]);
 	
-	var rgb = PC.getPixelRBG(Math.floor(this.x), Math.floor(this.y));
+	var rgba = PC.getRBGA(Math.floor(this.x), Math.floor(this.y));
 	
-	g.beginFill(Graphics.getRGB(rgb.r, rgb.g, rgb.b, .5));
+	g.beginFill(Graphics.getRGB(rgba.r, rgba.g, rgba.b, .5));
 	//draw the circle
 	g.drawCircle(0,0,this.radius);
-	
-	//move drawing point to center
-	//g.moveTo(0,0);
-	
-	//draw another smaller circle
-	//g.drawCircle(0,0,2);
+
 	g.endFill();		
 	
 	//set the graphics property to our Graphics. This 
