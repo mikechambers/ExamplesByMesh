@@ -251,6 +251,8 @@ function initCanvas()
 	//the tick event. (We will unpause when the user clicks
 	//the canvas)
 	Tick.setPaused(true);
+	
+	scaleImageData();
 }
 
 function onCanvasClick(e)
@@ -321,12 +323,10 @@ function onImageDown(e)
 	image = e.target;
 	
 	x$("#thumbImage").attr("src", image.src);
-	
-	updateCanvasDimensions();
-	initCanvas();	
 			
 	var divXUI = x$("#imageSelect");
 	
+	updateCanvasDimensions();
 	
 	var css = {
 		//position:"absolute", 
@@ -345,7 +345,7 @@ function onIntroTransitionEnd(e)
 {
 	x$("#imageSelect").un(transitionEndName, onIntroTransitionEnd);
 	x$("#imageSelect").remove();
-	
+		
 	var margin = x$("#bottomBar").getStyle("right");
 	var bottomXUI = x$("#bottomBar");
 	bottomXUI.css({bottom:margin});
@@ -361,6 +361,8 @@ function onBottomBarTransitionEnd(e)
 	x$(window).on("resize", onWindowResize);
 	
 	x$(".bottomButton").on("click", onBottomButtonClick);
+	
+	initCanvas();
 }
 
 
@@ -460,8 +462,6 @@ function onSaveCloseTransitionEnd(e)
 	saveImage.attr("src", "");
 }
 
-
-
 function scaleImageData()
 {	
 	var w = viewport.width;
@@ -471,6 +471,9 @@ function scaleImageData()
 		srcCanvas.attr("height", h);
 		srcCanvas.attr("width", w);
 		
+	//note: dont try and access image while it is cached by
+	//the GPU (i.e. as part of a CSS transition). This can lead
+	//to some weird visual glitches 
 	var context = srcCanvas[0].getContext("2d");
 		context.drawImage(image, 0, 0, w, h);
 		
@@ -690,10 +693,7 @@ function updateCanvasDimensions()
 		//todo: get direct properties
 		canvasOverlayOffset.left = canvasOverlayWrapper.attr("offsetLeft");
 		canvasOverlayOffset.top = canvasOverlayWrapper.attr("offsetTop");
-	}
-	
-	
-	scaleImageData();	
+	}	
 }
 
 /************** Window Events ************/
@@ -723,6 +723,7 @@ function onWindowResize(e)
 	//has resized. Note that changing canvas dimensions, 
 	//will cause it to be cleared
 	updateCanvasDimensions();
+	scaleImageData();
 	
 	//copy the data back onto the resized canvas. It is possible
 	//that if the previous canvas was larger than the newly sized one
