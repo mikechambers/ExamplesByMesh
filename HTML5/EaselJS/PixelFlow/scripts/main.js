@@ -22,8 +22,8 @@
 	THE SOFTWARE.
 */
 
-
-Stage.prototype.toImage = function(mimeType, backgroundColor)
+//temp placeholder until EaselJS 0.3 is released
+Stage.prototype.toDataURL = function(mimeType, backgroundColor)
 {
 	if(!mimeType)
 	{
@@ -71,32 +71,30 @@ Stage.prototype.toImage = function(mimeType, backgroundColor)
 	return imageData;
 }
 
-
+//listen for when the window finishes loaded.
 x$(window).load(init);
 
-var stage;
-var canvas;
-var canvasWrapper;
+var stage, canvas, canvasWrapper;
 var canvasOffset = {top:0, left:0};
 var drones = {length:0};
 var lastDrone;
 var image;
-var hasTouchSupport = false;
+
 
 var canvasOverlayWrapper;
 var canvasOverlayOffset = {top:0, left:0};
-var overlayStage;
-var targetShape;
-var lineShape;
-var targetColor;
-var lineGraphics;
+var overlayStage, targetShape, lineShape, targetColor, lineGraphics;
 
 var isFirefox = false;
+var hasTouchSupport = false;
 
-var transformName;
-var transitionEndName;
+//event names for transform and transition end
+//since webkit and mozilla based browsers have different names for each
+var transformName, transitionEndName;
 
-var PC = new PixelCanvas();
+//Global instance so it cna be accessed from anywhere.
+//this stores 
+var PC = new PixelData();
 
 //viewport dimensions for container / browser
 var viewport = {height:0, width:0};
@@ -130,7 +128,6 @@ function init()
 			return;
 	}
 
-	
 	canvasWrapper = x$("#mainCanvas");
 	
 	isFirefox = (navigator.userAgent.indexOf("Firefox") != -1);
@@ -346,6 +343,8 @@ function onIntroTransitionEnd(e)
 	x$("#imageSelect").un(transitionEndName, onIntroTransitionEnd);
 	x$("#imageSelect").remove();
 		
+	initCanvas();	
+		
 	var margin = x$("#bottomBar").getStyle("right");
 	var bottomXUI = x$("#bottomBar");
 	bottomXUI.css({bottom:margin});
@@ -361,8 +360,6 @@ function onBottomBarTransitionEnd(e)
 	x$(window).on("resize", onWindowResize);
 	
 	x$(".bottomButton").on("click", onBottomButtonClick);
-	
-	initCanvas();
 }
 
 
@@ -417,7 +414,7 @@ function onModalTransitionEnd(e)
 
 function saveImage()
 {		
-	var imageData = stage.toImage("image/png", "#FFFFFF");
+	var imageData = stage.toDataURL("image/png", "#FFFFFF");
 	
 	//dont start transition until image has loaded. This is mostly
 	//for smart phones, tablets, which might take a second to process the data
@@ -481,7 +478,7 @@ function scaleImageData()
 
 	if(!PC)
 	{
-		PC = new PixelCanvas();
+		PC = new PixelData();
 	}
 
 	PC.imageData = imageData;			
