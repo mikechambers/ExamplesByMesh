@@ -130,7 +130,6 @@ function init()
 			return;
 	}
 
-	
 	canvasWrapper = x$("#mainCanvas");
 	
 	isFirefox = (navigator.userAgent.indexOf("Firefox") != -1);
@@ -346,6 +345,8 @@ function onIntroTransitionEnd(e)
 	x$("#imageSelect").un(transitionEndName, onIntroTransitionEnd);
 	x$("#imageSelect").remove();
 		
+	initCanvas();	
+		
 	var margin = x$("#bottomBar").getStyle("right");
 	var bottomXUI = x$("#bottomBar");
 	bottomXUI.css({bottom:margin});
@@ -361,8 +362,6 @@ function onBottomBarTransitionEnd(e)
 	x$(window).on("resize", onWindowResize);
 	
 	x$(".bottomButton").on("click", onBottomButtonClick);
-	
-	initCanvas();
 }
 
 
