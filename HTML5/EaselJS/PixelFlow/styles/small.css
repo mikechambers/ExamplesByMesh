@@ -1,0 +1,109 @@
+
+#body
+{
+	background-color:#FF0000;
+}
+
+#creditsLarge
+{
+	display:none;
+}
+
+#imageSelect
+{
+	padding-top:2px;
+}
+
+.imageButton
+{
+	width:100px;
+	height:66px;
+}
+
+#selectContainer
+{
+	padding:5px;
+	width: 470px;	
+}
+
+#selectTitle
+{
+	text-align:center;
+	font-size:12px;
+	margin-bottom:2px;
+}
+
+#credits
+{
+	left:2px;
+	bottom:2px;
+}
+
+#creditsSmall
+{
+	display:block;
+	font-size:12px;
+}
+
+
+#credits p
+{
+	font-size:12px;
+	margin:2px;
+}
+
+.text
+{
+	padding:2px;
+	color:#222222;
+}
+
+#thumbImage
+{
+	width:40px;
+	height:27px;
+}
+
+#bottomBar
+{
+	position:fixed;
+
+	right:10px;
+	padding-left:2px;
+	padding-right:2px;
+	
+	text-align:center;
+	font-size:20px;
+
+}
+
+.bottomButton
+{
+	margin-left:6px;
+	margin-right:6px;
+	text-decoration: none;
+	
+	color:#363636;
+}
+
+#savePanel
+{
+	position:absolute;
+	
+	top:5px;
+	right:-340px;
+	
+	text-align:center;
+	
+	-webkit-transition:all .5s ease-out;
+	-moz-transition:all .5s ease-out;
+	-o-transition:all .5s ease-out;
+	transition:all .5s ease-out;
+	
+	padding:4px;
+	
+	background-color:#FFFFFF;
+	border-style:solid;
+	border-color:#000000;
+	border-width:1px;
+}
