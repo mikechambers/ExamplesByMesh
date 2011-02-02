@@ -324,22 +324,21 @@ function onImageDown(e)
 	
 	updateCanvasDimensions();
 	initCanvas();	
-		
+			
 	var divXUI = x$("#imageSelect");
 	
+	
 	var css = {
-		position:"absolute", 
-		top:"0"
+		//position:"absolute", 
+		//top:"0px"
 	}
-		
-	divXUI.on(transitionEndName, onIntroTransitionEnd);
 	
 	//note the 100 constant below is the top-padding style for the div, set in the stylesheet.
 	css[transformName] = "translate(0px,"+ -(viewport.height + 100) + "px)";
+	divXUI.on(transitionEndName, onIntroTransitionEnd);
 	divXUI.css(css);
 	
 	x$("#credits").setStyle(transformName, "translate(0px, 200px)");
-	
 }
 
 function onIntroTransitionEnd(e)
