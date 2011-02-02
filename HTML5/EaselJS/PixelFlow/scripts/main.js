@@ -76,14 +76,28 @@ x$(window).load(init);
 
 var stage, canvas, canvasWrapper;
 var canvasOffset = {top:0, left:0};
+
+//hash to store multitple drones
+//when on a multitouch device
 var drones = {length:0};
+
+//the last drone that was created
 var lastDrone;
+
+//image selected by the user to pull images from
 var image;
 
-
+//XUI object for the overlay canvas
 var canvasOverlayWrapper;
+
+var overlayStage;
+
+//canvas offset. we cache for performance reasons
+//so we dont have to recalculate it all of the time
 var canvasOverlayOffset = {top:0, left:0};
-var overlayStage, targetShape, lineShape, targetColor, lineGraphics;
+
+//items for the overlay graphics
+var targetShape, lineShape, targetColor, lineGraphics;
 
 var isFirefox = false;
 var hasTouchSupport = false;
@@ -102,20 +116,26 @@ var viewport = {height:0, width:0};
 //called once the page has loaded
 function init()
 {
+	//whether we should abort initialization
+	//because we find the browser doesnt support something
+	//that we need
 	var abort = false;
 	
+	//check for canvas
 	if(!Modernizr.canvas)
 	{
 		x$("#canvasSupport").setStyle("color", "#FF0000");
 		abort = true;
 	}
 	
+	//check for CSS transitions
 	if(!Modernizr.csstransitions)
 	{
 		abort = true;
 		x$("#transitionSupport").setStyle("color", "#FF0000");
 	}	
 	
+	//check for CSS transforms
 	if(!Modernizr.csstransforms)
 	{
 		abort = true;
@@ -124,21 +144,30 @@ function init()
 	
 	if(abort)
 	{
+			//if something isnt supported that we need,
+			//display the noSupport dialog
 			x$("#noSupport").setStyle("display", "block");
+			
+			//and stop initializing
 			return;
 	}
-
+	
+	//XUI element for main canvas
 	canvasWrapper = x$("#mainCanvas");
 	
-	isFirefox = (navigator.userAgent.indexOf("Firefox") != -1);
+	//check if we are running in firefox
+	isFirefox = (navigator.userAgent.indexOf("Firefox") != -1);	
+	
+	//Firefox 4 beta has support for touch events on Windows 7
+	//but, i havent been able to develop on one, and since it uses
+	//a different touch api than webkit, im not going to try and support
+	//it right now.
+	//so, basically, if its Firefox, we say not touch
 	hasTouchSupport = Modernizr.touch && !isFirefox;
 	
 	if(!hasTouchSupport)
-	{
-		//overlay canvas used to draw target and line
-		canvasWrapper.after('<canvas id="overlayCanvas"></canvas>');
-		canvasOverlayWrapper = x$("#overlayCanvas");
-		
+	{	
+		//listen for mousedown on the image select screen
 		x$(".imageButton").on("mousedown", onImageDown);
 	}
 	else
@@ -147,9 +176,14 @@ function init()
 		//listen for touchstart on touch devices
 		x$(".imageButton").on("touchstart", onImageDown);
 		
+		
+		//listen for all touchmove events made in the documet
+		//so we can cancel them (and prevent the user from moving
+		//the page around)
 		x$(document).on("touchmove", onDocumentTouchMove);
 	}
 
+	//set css style names depending on firefox / webkit
 	if(isFirefox)
 	{
 		transformName = "-moz-transform";
@@ -161,25 +195,37 @@ function init()
 		transitionEndName = "webkitTransitionEnd";
 	}
 
+	//check if the browser supports the canvas.toDataURL API
+	//Andorid doesn't
 	if(!supportsToDataURL())
 	{
+		//if it doesnt, disable the save image button
 		x$("#saveButtonSpan").setStyle("display", "none");
 	}
 }
 
+//checks whether the browser supports the Canvas.toDataURL API
+//Android currently doesnt
 function supportsToDataURL()
 {
+	//create a canvas
 	var c = document.createElement("canvas");
+	
+	//get a data url from it
 	var data = c.toDataURL("image/png");
+	
+	//see if it is valid
 	return (data.indexOf("data:image/png") == 0);
 }
 
+//called on touchmove events in the document (unless something else captures it)
 function onDocumentTouchMove(e)
 {
 	//this is to prevent page scroll on touch devices
 	e.preventDefault();
 }
 
+//initializes the drawing canvas
 function initCanvas()
 {	
 	//get a reference to the actual canvas element
@@ -206,6 +252,14 @@ function initCanvas()
 	}
 	else
 	{
+		//if it doesnt have touch support, then we assume
+		//it is a mouse based computer
+		//and we display the overlay graphic
+		
+		//overlay canvas used to draw target and line
+		//note we dynamically add it, intead
+		canvasWrapper.after('<canvas id="overlayCanvas"></canvas>');
+		canvasOverlayWrapper = x$("#overlayCanvas");		
 		
 		x$("#saveInstructionsSpan").inner("Right Click Image to Save");	
 		//listen for a click event
@@ -248,8 +302,6 @@ function initCanvas()
 	//the tick event. (We will unpause when the user clicks
 	//the canvas)
 	Tick.setPaused(true);
-	
-	scaleImageData();
 }
 
 function onCanvasClick(e)
@@ -323,6 +375,7 @@ function onImageDown(e)
 			
 	var divXUI = x$("#imageSelect");
 	
+	initCanvas();
 	updateCanvasDimensions();
 	
 	var css = {
@@ -341,9 +394,11 @@ function onImageDown(e)
 function onIntroTransitionEnd(e)
 {
 	x$("#imageSelect").un(transitionEndName, onIntroTransitionEnd);
-	x$("#imageSelect").remove();
-		
-	initCanvas();	
+	x$("#imageSelect").remove();	
+	
+	//we have to do this here. If we do it earlier, then it glitches the 
+	//gpu on ipad
+	scaleImageData();	
 		
 	var margin = x$("#bottomBar").getStyle("right");
 	var bottomXUI = x$("#bottomBar");
