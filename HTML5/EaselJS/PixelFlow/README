@@ -22,6 +22,11 @@ THE SOFTWARE.
 
 -----------
 
+Photographs are copyright Mike Chambers, and may not be redistributed or re-used
+without express permission from Mike Chambers.
+
+-----------
+
 EaselJS example that shows a couple of techniques:
 
 -creating persistent designs, by setting stage.autoClear to false
@@ -33,4 +38,4 @@ EaselJS example that shows a couple of techniques:
 -Using CSS3 Media Queries to deliver different designs to different screen sizes
 
 More info at:
-http://www.mikechambers.com/blog/2011/01/24/easeljs-example-follow-drone/
+http://www.mikechambers.com/blog/2011/02/02/pixelflow-easeljs-canvas-dynamic-graphics-example/
