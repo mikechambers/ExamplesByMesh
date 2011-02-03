@@ -680,7 +680,7 @@ function onTouchEnd(e)
 	if(drones.length == 0)
 	{
 		//if not stop listening for the touch move event
-		unsubscribeFromEvent(e);
+		canvasWrapper.un("touchmove", onTouchMove);
 		
 		//pause the Ticker
 		Tick.setPaused(true);
