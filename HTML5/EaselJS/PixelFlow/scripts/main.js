@@ -22,55 +22,6 @@
 	THE SOFTWARE.
 */
 
-//temp placeholder until EaselJS 0.3 is released
-Stage.prototype.toDataURL = function(backgroundColor, mimeType)
-{
-	if(!mimeType)
-	{
-		mimeType = "image/png";
-	}
-	
-	var ctx = this.canvas.getContext('2d');
-	var w = this.canvas.width;
-	var h = this.canvas.height;
-
-	var data;		
-
-	if(backgroundColor)
-	{
-		data = ctx.getImageData(0, 0, w, h);
-		
-		//store the current globalCompositeOperation
-		var compositeOperation = ctx.globalCompositeOperation;
-
-		//set to draw behind current content
-		ctx.globalCompositeOperation = "destination-over";
-
-		//set background color
-		ctx.fillStyle = backgroundColor;
-
-		//draw background on entire canvas
-		ctx.fillRect(0,0,w,h);
-	}
-
-	//get the image data from the canvas
-	var imageData = this.canvas.toDataURL(mimeType);
-
-	if(backgroundColor)
-	{
-		//clear the canvas
-		ctx.clearRect (0,0,w,h);
-
-		//restore it with original settings
-		ctx.putImageData(data, 0,0);		
-
-		//reset the globalCompositeOperation to what it was
-		ctx.globalCompositeOperation = compositeOperation;
-	}
-	
-	return imageData;
-}
-
 //listen for when the window finishes loaded.
 x$(window).load(init);
 
