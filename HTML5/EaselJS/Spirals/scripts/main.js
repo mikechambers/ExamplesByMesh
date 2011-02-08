@@ -45,6 +45,13 @@ function init()
 	//get a reference to the canvas element
 	canvasWrapper = x$("#mainCanvas");
 	
+	if(!Modernizr.canvas)
+	{
+		canvasWrapper.outer("<div>It appears you are using a " +
+			"browser which does not support the HTML5 Canvas element</div>");
+		return;
+	}	
+	
 	//update the dimensions of the canvas
 	updateCanvasDimensions();
 	
