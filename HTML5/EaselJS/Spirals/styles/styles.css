@@ -39,6 +39,8 @@ body, canvas
 	left:5px;
 	bottom:5px;
 	color:#272727;
+	
+	display:none;
 }
 
 a:link, a:visited, a:active

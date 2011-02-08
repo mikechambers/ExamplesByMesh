@@ -48,14 +48,17 @@ Drone.prototype.spread = 0.5;
 
 Drone.prototype.$draw = function()
 {
-	if(this.radius > this.maxRadius || this.radius < this.minRadius)
+	if(this.maxRadius != this.minRadius)
 	{
-		this.reverse = !this.reverse;
-	}	
+		if(this.radius > this.maxRadius || this.radius < this.minRadius)
+		{
+			this.reverse = !this.reverse;
+		}	
 	
-	var mod = (this.reverse)?-1:1;
+		var mod = (this.reverse)?-1:1;
 	
-	this.radius += mod;
+		this.radius += mod;
+	}
 	
 	var g = new Graphics();
 	g.setStrokeStyle(1);

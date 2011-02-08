@@ -86,7 +86,7 @@ function init()
 	if(spreadParam)
 	{
 		spread = spreadParam;
-	}	
+	}
 	
 	drone = new Drone(minRadius, maxRadius, strokeAlpha, spread);
 	drone.x = bounds.w / 2;
@@ -96,7 +96,7 @@ function init()
 	
 	stage.update();
 	
-	Ticker.setFPS(24);
+	Ticker.setFPS(30);
 	Ticker.addListener(window, true);
 	Ticker.setPaused(true);
 }
