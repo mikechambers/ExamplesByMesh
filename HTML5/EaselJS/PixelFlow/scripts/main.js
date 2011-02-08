@@ -285,27 +285,27 @@ function initCanvas()
 	x$(window).on("blur", onWindowBlur);	
 
 	//set the tick interval to 24 frames per second.
-	Tick.setInterval(1000/24);
+	Ticker.setInterval(1000/24);
 	
 	//listen for the tick event (time event)
 	//note, the secound argument allows this listener
 	//to be paused
-	Tick.addListener(window, true);
+	Ticker.addListener(window, true);
 	
 	//pause the Tick instance, so it doesnt broadcast
 	//the tick event. (We will unpause when the user clicks
 	//the canvas)
-	Tick.setPaused(true);
+	Ticker.setPaused(true);
 }
 
 /************* Timer event handler ************/
 
 //called at each time interval. This is essentially the listener
-//for Tick.addListener. This is where everything is redrawn and moved.
+//for Ticker.addListener. This is where everything is redrawn and moved.
 function tick()
 {
 	//redraw the main stage / canvas
-	stage.tick();
+	stage.update();
 	
 	//check if we have an overlay graphic
 	if(canvasOverlayWrapper)
@@ -314,7 +314,7 @@ function tick()
 		updateLine();
 	
 		//redraw the overlay stage / canvas
-		overlayStage.tick();
+		overlayStage.update();
 	}
 }
 
@@ -324,8 +324,8 @@ function tick()
 function onCanvasClick(e)
 {
 	//toggle pause state
-	var paused = !Tick.getPaused();
-	Tick.setPaused(paused);
+	var paused = !Ticker.getPaused();
+	Ticker.setPaused(paused);
 	
 	if(paused)
 	{
@@ -378,7 +378,7 @@ function onCanvasClick(e)
 	}
 
 	//draw the overlay stage
-	overlayStage.tick();
+	overlayStage.update();
 }
 
 //called when the mouse is moved over the canvas (on mouse based devices)
@@ -651,7 +651,7 @@ function onTouchStart(e)
 	}
 
 	//start the Ticker so we start getting tick events
-	Tick.setPaused(false);
+	Ticker.setPaused(false);
 }
 
 
@@ -683,7 +683,7 @@ function onTouchEnd(e)
 		canvasWrapper.un("touchmove", onTouchMove);
 		
 		//pause the Ticker
-		Tick.setPaused(true);
+		Ticker.setPaused(true);
 	}
 }
 
@@ -919,7 +919,7 @@ function onWindowBlur(e)
 	//pause the Tick / time manager
 	//this is so it doesnt keep drawing / using CPU
 	//when the user switches away
-	Tick.setPaused(true);
+	Ticker.setPaused(true);
 }
 
 //called when the browser window is resized
@@ -952,10 +952,10 @@ function onWindowResize(e)
 	//to false, otherwise, the stage instance could redraw the entire canvas
 	
 	//only rerender the stage if the Tick manager is not paused
-	if(!Tick.getPaused())
+	if(!Ticker.getPaused())
 	{
 		//render stage
-		stage.tick();
+		stage.update();
 	}
 }
 
