@@ -52,7 +52,7 @@
 	<!-- import the Easel library. Downloaded from:
 		http://easeljs.com/
 	-->
-	<script src="scripts/easeljs.js"></script>
+	<script src="scripts/easel.js"></script>
 
 	<script>
 		//EaselJS Stage instance that wraps the Canvas element
@@ -93,8 +93,8 @@
 			//Note, if we resize the canvas, we need to reset
 			//these bounds.
 			bounds = new Rectangle();
-			bounds.w = canvas.width;
-			bounds.h = canvas.height;
+			bounds.width = canvas.width;
+			bounds.height = canvas.height;
 			
 			//pass the canvas element to the EaselJS Stage instance
 			//The Stage class abstracts away the Canvas element and
@@ -139,12 +139,14 @@
 			stage.addChild(circle);
 			
 			//tell the stage to render to the canvas
-			stage.tick();
+			stage.update();
+			
+			Ticker.setFPS(24);
 			
 			//Subscribe to the Tick class. This will call the tick
 			//method at a set interval (similar to ENTER_FRAME with
 			//the Flash Player)
-			Tick.addListener(this);
+			Ticker.addListener(this);
 		}
 		
 		//function called by the Tick instance at a set interval
@@ -152,17 +154,17 @@
 		{
 			//check and see if the Shape has gone of the right
 			//of the stage.
-			if(circle.x > bounds.w)
+			if(circle.x > bounds.width)
 			{
 				//if it has, reset it.
 				circle.x = circleXReset;
 			}
 			
 			//move the circle over 10 pixels
-			circle.x += 10;
+			circle.x += 8;
 			
 			//re-render the stage
-			stage.tick();
+			stage.update();
 		}
 	</script>
 	
