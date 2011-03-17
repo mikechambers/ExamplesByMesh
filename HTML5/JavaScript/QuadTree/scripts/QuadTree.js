@@ -142,49 +142,49 @@ Node.prototype.subdivide = function()
 	//todo : optimize var lookup below
 	var depth = this._depth + 1;
 	
-	//console.log();
+	var bx = this._bounds.x;
+	var by = this._bounds.y;
+	var b_w_h = this._bounds.width / 2;
+	var b_h_h = this._bounds.height / 2;
+	var bx_b_w_h = bx + b_w_h;
+	var by_b_h_h = by + b_h_h;
 	
 	//top left
-	var node_0 = new Node({
-		x:this._bounds.x, 
-		y:this._bounds.y, 
-		width:this._bounds.width / 2, 
-		height:this._bounds.height / 2
+	this._nodes[Node.TOP_LEFT] = new Node({
+		x:bx, 
+		y:by, 
+		width:b_w_h, 
+		height:b_h_h
 	}, 
 	depth);
 	
 	//top right
-	var node_1 = new Node({
-		x:this._bounds.x + this._bounds.width / 2,
-		y:this._bounds.y,
-		width:this._bounds.width / 2, 
-		height:this._bounds.height / 2
+	this._nodes[Node.TOP_RIGHT] = new Node({
+		x:bx_b_w_h,
+		y:by,
+		width:b_w_h, 
+		height:b_h_h
 	},
 	depth);
 	
 	//bottom left
-	var node_2 = new Node({
-		x:this._bounds.x,
-		y:this._bounds.y + this._bounds.height / 2,
-		width:this._bounds.width / 2, 
-		height:this._bounds.height / 2
+	this._nodes[Node.BOTTOM_LEFT] = new Node({
+		x:bx,
+		y:by_b_h_h,
+		width:b_w_h, 
+		height:b_h_h
 	},
 	depth);
 	
 	
 	//bottom right
-	var node_3 = new Node({
-		x:this._bounds.x + this._bounds.width / 2, 
-		y:this._bounds.y + this._bounds.height / 2,
-		width:this._bounds.width / 2, 
-		height:this._bounds.height / 2
+	this._nodes[Node.BOTTOM_RIGHT] = new Node({
+		x:bx_b_w_h, 
+		y:by_b_h_h,
+		width:b_w_h, 
+		height:b_h_h
 	},
 	depth);	
-	
-	this._nodes[Node.TOP_LEFT] = node_0;
-	this._nodes[Node.TOP_RIGHT] = node_1;
-	this._nodes[Node.BOTTOM_LEFT] = node_2;
-	this._nodes[Node.BOTTOM_RIGHT] = node_3;
 }
 
 Node.prototype.clear = function()
