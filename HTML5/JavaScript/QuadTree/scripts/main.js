@@ -84,27 +84,24 @@ function drawNode(node)
 	var g = shape.graphics;
 
 	g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
-	var cLen = node._children.length;
+	
+	var cLen = node.children.length;
+	var childNode;
 	if(cLen)
 	{
 		for(var j = 0; j < cLen; j++)
 		{
+			childNode = node.children[j];
 			g.beginStroke(drawColor);
-			g.drawCircle(node._children[j].x, node._children[j].y,3);
+			g.drawCircle(childNode.x, childNode.y,3);
 		}
 	}
 	
-	
-	if(!node._nodes)
-	{
-		return;
-	}
-	
-	var len = node._nodes.length;
+	var len = node.nodes.length;
 	
 	for(var i = 0; i < len; i++)
 	{
-		drawNode(node._nodes[i]);
+		drawNode(node.nodes[i]);
 	}
 	
 }

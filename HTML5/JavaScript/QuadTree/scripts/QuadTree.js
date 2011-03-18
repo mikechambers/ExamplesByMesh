@@ -50,8 +50,8 @@ QuadTree.prototype.clear = function()
 function Node(bounds, depth)
 {
 	this._bounds = bounds;
-	this._children = [];
-	this._nodes = [];
+	this.children = [];
+	this.nodes = [];
 	
 	if(depth)
 	{
@@ -60,10 +60,10 @@ function Node(bounds, depth)
 }
 
 //subnodes
-Node.prototype._nodes = null;
+Node.prototype.nodes = null;
 
 //children contained directly in the node
-Node.prototype._children = null;
+Node.prototype.children = null;
 Node.prototype._bounds = null;
 
 //read only
@@ -79,7 +79,8 @@ Node.BOTTOM_RIGHT = 3;
 
 Node.prototype.insert = function(item)
 {
-	if(this._nodes.length)
+	if(this.nodes.length)
+	{
 		var b = this._bounds;
 		var left = (item.x > b.x + b.width / 2)? false : true;
 		var top = (item.y > b.y + b.height / 2)? false : true;
@@ -110,26 +111,25 @@ Node.prototype.insert = function(item)
 			}
 		}
 		
-		this._nodes[index].insert(item);
+		this.nodes[index].insert(item);
 		
 		return;
 	}
 
-	this._children.push(item);
+	this.children.push(item);
 
-	if(
-		!(this._depth >= Node.MAX_DEPTH) && 
-		this._children.length > Node.MAX_CHILDREN
-	)
+	var len = this.children.length;
+	if(!(this._depth >= Node.MAX_DEPTH) && 
+		len > Node.MAX_CHILDREN)
 	{
 		this.subdivide();
 		
-		//todo : for loop might be slightly faster, since it will
-		//remove the .length lookup, and the pop() calls
-		while(this._children.length)
+		for(var i = 0; i < len; i++)
 		{
-			this.insert(this._children.pop());
+			this.insert(this.children[i]);
 		}
+		
+		this.children.length = 0;
 	}
 }
 
@@ -145,7 +145,7 @@ Node.prototype.subdivide = function()
 	var by_b_h_h = by + b_h_h;
 	
 	//top left
-	this._nodes[Node.TOP_LEFT] = new Node({
+	this.nodes[Node.TOP_LEFT] = new Node({
 		x:bx, 
 		y:by, 
 		width:b_w_h, 
@@ -154,7 +154,7 @@ Node.prototype.subdivide = function()
 	depth);
 	
 	//top right
-	this._nodes[Node.TOP_RIGHT] = new Node({
+	this.nodes[Node.TOP_RIGHT] = new Node({
 		x:bx_b_w_h,
 		y:by,
 		width:b_w_h, 
@@ -163,7 +163,7 @@ Node.prototype.subdivide = function()
 	depth);
 	
 	//bottom left
-	this._nodes[Node.BOTTOM_LEFT] = new Node({
+	this.nodes[Node.BOTTOM_LEFT] = new Node({
 		x:bx,
 		y:by_b_h_h,
 		width:b_w_h, 
@@ -173,7 +173,7 @@ Node.prototype.subdivide = function()
 	
 	
 	//bottom right
-	this._nodes[Node.BOTTOM_RIGHT] = new Node({
+	this.nodes[Node.BOTTOM_RIGHT] = new Node({
 		x:bx_b_w_h, 
 		y:by_b_h_h,
 		width:b_w_h, 
@@ -184,12 +184,12 @@ Node.prototype.subdivide = function()
 
 Node.prototype.clear = function()
 {	
-	this._children.length = 0;
+	this.children.length = 0;
 	
-	var len = this._nodes.length;
+	var len = this.nodes.length;
 	for(var i = 0; i < len; i++)
 	{
-		this._nodes[i].clear();
+		this.nodes[i].clear();
 	}
 }
 
