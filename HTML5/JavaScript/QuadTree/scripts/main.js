@@ -26,14 +26,21 @@ var quad;
 var canvas;
 var stage;
 var shape;
+var drawColor;
 
 function init()
 {
 	canvas = document.getElementById("canvas");
 	
+	//prevent doublclicking on canvas from selecting text on the
+	//page
+	canvas.onselectstart = function () { return false; }
+	
 	stage = new Stage(canvas);
 	shape = new Shape();
 	stage.addChild(shape);
+
+	drawColor = Graphics.getRGB(0,0,0);
 
 	stage.onMouseUp = onMouseUp;
 	
@@ -63,8 +70,8 @@ function renderQuad()
 {
 	var g = shape.graphics;
 	g.clear();
-	g.setStrokeStyle(0.5);
-	g.beginStroke(Graphics.getRGB(0,0,0));
+	g.setStrokeStyle(1);
+	g.beginStroke(drawColor);
 	
 	drawNode(quad.root);
 	
@@ -77,14 +84,12 @@ function drawNode(node)
 	var g = shape.graphics;
 
 	g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
-		
 	var cLen = node._children.length;
 	if(cLen)
 	{
 		for(var j = 0; j < cLen; j++)
 		{
-			g.setStrokeStyle(1);
-			g.beginStroke(Graphics.getRGB(0,0,0));
+			g.beginStroke(drawColor);
 			g.drawCircle(node._children[j].x, node._children[j].y,3);
 		}
 	}

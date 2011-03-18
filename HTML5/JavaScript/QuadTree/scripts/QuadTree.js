@@ -79,9 +79,7 @@ Node.BOTTOM_RIGHT = 3;
 
 Node.prototype.insert = function(item)
 {
-	//console.log("Node.insert");
 	if(this._nodes.length)
-	{
 		var b = this._bounds;
 		var left = (item.x > b.x + b.width / 2)? false : true;
 		var top = (item.y > b.y + b.height / 2)? false : true;
@@ -91,7 +89,6 @@ Node.prototype.insert = function(item)
 		if(left)
 		{
 			//left side
-		
 			if(!top)
 			{
 				//bottom left
@@ -101,7 +98,6 @@ Node.prototype.insert = function(item)
 		else
 		{
 			//right side
-			
 			if(top)
 			{
 				//top right
@@ -114,21 +110,22 @@ Node.prototype.insert = function(item)
 			}
 		}
 		
-		//console.log("Node.insert : inserting into subnode");
 		this._nodes[index].insert(item);
 		
 		return;
 	}
 
 	this._children.push(item);
-	//console.log("_children length : " + this._children.length);
-	//console.log("this._depth : " + this._depth);
+
 	if(
 		!(this._depth >= Node.MAX_DEPTH) && 
-		this._children.length > Node.MAX_CHILDREN)
+		this._children.length > Node.MAX_CHILDREN
+	)
 	{
 		this.subdivide();
 		
+		//todo : for loop might be slightly faster, since it will
+		//remove the .length lookup, and the pop() calls
 		while(this._children.length)
 		{
 			this.insert(this._children.pop());
@@ -138,8 +135,6 @@ Node.prototype.insert = function(item)
 
 Node.prototype.subdivide = function()
 {
-	//console.log("Node.subdivide");
-	//todo : optimize var lookup below
 	var depth = this._depth + 1;
 	
 	var bx = this._bounds.x;
