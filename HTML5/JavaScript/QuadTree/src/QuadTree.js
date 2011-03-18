@@ -24,8 +24,7 @@
 
 
 /**
-* A QuadTree implementation in JavaScript, for storing 2d coordinates
-* and objects.
+* A QuadTree implementation in JavaScript, a 2d spatial subdivision algorithm.
 * @module QuadTree
 **/
 
