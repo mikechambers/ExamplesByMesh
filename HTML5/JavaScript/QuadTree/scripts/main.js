@@ -83,19 +83,9 @@ function drawNode(node)
 	{
 		for(var j = 0; j < cLen; j++)
 		{
-			var graphics = new Graphics();
-		
-			graphics.setStrokeStyle(1);
-			graphics.beginStroke(Graphics.getRGB(0,0,0));
-			graphics.drawCircle(0,0,3);
-
-		
-			var s = new Shape(graphics);
-		
-			s.x = node._children[j].x;
-			s.y = node._children[j].y;
-	
-			stage.addChild(s);
+			g.setStrokeStyle(1);
+			g.beginStroke(Graphics.getRGB(0,0,0));
+			g.drawCircle(node._children[j].x, node._children[j].y,3);
 		}
 	}
 	
