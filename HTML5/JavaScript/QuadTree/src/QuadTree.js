@@ -289,7 +289,7 @@ BoundsNode.prototype.insert = function(item)
 			this.nodes[index].insert(item);
 		}
 		else
-		{
+		{			
 			this.stuckChildren.push(item);
 		}
 		
