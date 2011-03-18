@@ -60,13 +60,31 @@ function init()
 
 function initPoints()
 {
-	for(var i = 0; i < 20; i++)
+	var x,y;
+	var w = 10;
+	var h = 5;
+	for(var i = 0; i < 1000; i++)
 	{
+		x = Math.random() * canvas.width;
+		y = Math.random() * canvas.height;
+		
+		//make sure our items dont outside of the top bounds
+		//or else we have to end up doing extra checks
+		if(x + w > canvas.width)
+		{
+			x = canvas.width - w - 2;
+		}
+
+		if(y + h > canvas.height)
+		{
+			y = canvas.height - h - 2;
+		}
+
 		quad.insert({
-			x:Math.random() * canvas.width, 
-			y:Math.random() * canvas.height,
-			width:50,
-			height:25});
+			x:x, 
+			y:y,
+			width:w,
+			height:h});
 	}
 }
 
