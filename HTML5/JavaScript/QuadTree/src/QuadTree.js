@@ -22,26 +22,60 @@
 	THE SOFTWARE.
 */
 
+
+/**
+* A QuadTree implementation in JavaScript, for storing 2d coordinates
+* and objects.
+* @module QuadTree
+**/
+
 (function(window) {
 
 /****************** QuadTree ****************/
 
+/**
+* QuadTree data structure.
+* @class QuadTree
+* @constructor
+* @param {Object} An object representing the bounds of the top level of the QuadTree. The object 
+* should contain the following properties : x, y, width, height
+**/
 function QuadTree(bounds)
 {	
 	this.root = new Node(bounds)
 }
 
-
+/**
+* The root node of the QuadTree which covers the entire area being segmented.
+* @property root
+* @type Node
+**/
 QuadTree.prototype.root = null;
 
+
+/**
+* Inserts an item into the QuadTree.
+* @method insert
+* @param {Boolean} item The item to be inserted into the QuadTree. The item should expose x, y properties
+* that represents its position in 2D space.
+**/
 QuadTree.prototype.insert = function(item)
 {
 	this.root.insert(item);
 }
 
+/**
+* Clears all nodes and children from the QuadTree
+* @method clear
+**/
 QuadTree.prototype.clear = function()
 {
 	this.root.clear();
+}
+
+QuadTree.prototype.retrieve = function(item)
+{
+	return this.root.retrieve(item);
 }
 
 /************** Node ********************/
@@ -81,35 +115,7 @@ Node.prototype.insert = function(item)
 {
 	if(this.nodes.length)
 	{
-		var b = this._bounds;
-		var left = (item.x > b.x + b.width / 2)? false : true;
-		var top = (item.y > b.y + b.height / 2)? false : true;
-		
-		//top left
-		var index = Node.TOP_LEFT;
-		if(left)
-		{
-			//left side
-			if(!top)
-			{
-				//bottom left
-				index = Node.BOTTOM_LEFT;
-			}
-		}
-		else
-		{
-			//right side
-			if(top)
-			{
-				//top right
-				index = Node.TOP_RIGHT;
-			}
-			else
-			{
-				//bottom right
-				index = Node.BOTTOM_RIGHT;
-			}
-		}
+		var index = this._findIndex(item);
 		
 		this.nodes[index].insert(item);
 		
@@ -132,6 +138,54 @@ Node.prototype.insert = function(item)
 		this.children.length = 0;
 	}
 }
+
+Node.prototype.retrieve = function(item)
+{
+	if(this.nodes.length)
+	{
+		var index = this._findIndex(item);
+		
+		return this.nodes[index].retrieve(item);
+	}
+	
+	return this.children;
+}
+
+Node.prototype._findIndex = function(item)
+{
+	var b = this._bounds;
+	var left = (item.x > b.x + b.width / 2)? false : true;
+	var top = (item.y > b.y + b.height / 2)? false : true;
+	
+	//top left
+	var index = Node.TOP_LEFT;
+	if(left)
+	{
+		//left side
+		if(!top)
+		{
+			//bottom left
+			index = Node.BOTTOM_LEFT;
+		}
+	}
+	else
+	{
+		//right side
+		if(top)
+		{
+			//top right
+			index = Node.TOP_RIGHT;
+		}
+		else
+		{
+			//bottom right
+			index = Node.BOTTOM_RIGHT;
+		}
+	}
+	
+	return index;
+}
+
 
 Node.prototype.subdivide = function()
 {
