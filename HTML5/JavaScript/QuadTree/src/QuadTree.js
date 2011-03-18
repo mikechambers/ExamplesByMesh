@@ -39,10 +39,22 @@
 * @constructor
 * @param {Object} An object representing the bounds of the top level of the QuadTree. The object 
 * should contain the following properties : x, y, width, height
+* @param {Boolean} pointQuad Whether the QuadTree will contain points (true), or items with bounds 
+* (width / height)(false). Default value is false.
 **/
-function QuadTree(bounds)
+function QuadTree(bounds, pointQuad)
 {	
-	this.root = new Node(bounds)
+	var node;
+	if(pointQuad)
+	{
+		node = new Node(bounds);
+	}
+	else
+	{
+		node = new BoundsNode(bounds);
+	}
+	
+	this.root = node;
 }
 
 /**
@@ -95,6 +107,7 @@ function Node(bounds, depth)
 
 //subnodes
 Node.prototype.nodes = null;
+Node.prototype.classConstructor = Node;
 
 //children contained directly in the node
 Node.prototype.children = null;
@@ -197,9 +210,9 @@ Node.prototype.subdivide = function()
 	var b_h_h = this._bounds.height / 2;
 	var bx_b_w_h = bx + b_w_h;
 	var by_b_h_h = by + b_h_h;
-	
+
 	//top left
-	this.nodes[Node.TOP_LEFT] = new Node({
+	this.nodes[Node.TOP_LEFT] = new this.classConstructor({
 		x:bx, 
 		y:by, 
 		width:b_w_h, 
@@ -208,7 +221,7 @@ Node.prototype.subdivide = function()
 	depth);
 	
 	//top right
-	this.nodes[Node.TOP_RIGHT] = new Node({
+	this.nodes[Node.TOP_RIGHT] = new this.classConstructor({
 		x:bx_b_w_h,
 		y:by,
 		width:b_w_h, 
@@ -217,7 +230,7 @@ Node.prototype.subdivide = function()
 	depth);
 	
 	//bottom left
-	this.nodes[Node.BOTTOM_LEFT] = new Node({
+	this.nodes[Node.BOTTOM_LEFT] = new this.classConstructor({
 		x:bx,
 		y:by_b_h_h,
 		width:b_w_h, 
@@ -227,7 +240,7 @@ Node.prototype.subdivide = function()
 	
 	
 	//bottom right
-	this.nodes[Node.BOTTOM_RIGHT] = new Node({
+	this.nodes[Node.BOTTOM_RIGHT] = new this.classConstructor({
 		x:bx_b_w_h, 
 		y:by_b_h_h,
 		width:b_w_h, 
@@ -245,6 +258,85 @@ Node.prototype.clear = function()
 	{
 		this.nodes[i].clear();
 	}
+}
+
+
+/******************** BoundsQuadTree ****************/
+
+function BoundsNode(bounds, depth)
+{
+	Node.call(this, bounds, depth);
+	this.stuckChildren = [];
+}
+
+BoundsNode.prototype = new Node();
+BoundsNode.prototype.classConstructor = BoundsNode;
+BoundsNode.prototype.stuckChildren = null;
+
+BoundsNode.prototype.insert = function(item)
+{	
+	if(this.nodes.length)
+	{
+		var index = this._findIndex(item);
+		var node = this.nodes[index];
+
+		//todo: make _bounds bounds
+		if(item.x >= node._bounds.x &&
+			item.x + item.width <= node._bounds.x + node._bounds.width &&
+			item.y >= node._bounds.y &&
+			item.y + item.height <= node._bounds.y + node._bounds.height)
+		{
+			this.nodes[index].insert(item);
+		}
+		else
+		{
+			this.stuckChildren.push(item);
+		}
+		
+		return;
+	}
+
+	this.children.push(item);
+
+	var len = this.children.length;
+	if(!(this._depth >= Node.MAX_DEPTH) && 
+		len > Node.MAX_CHILDREN)
+	{
+		this.subdivide();
+		
+		for(var i = 0; i < len; i++)
+		{
+			this.insert(this.children[i]);
+		}
+		
+		this.children.length = 0;
+	}
+}
+
+BoundsNode.prototype.getChildren = function()
+{
+	return this.children.concat(this.stuckChildren);
+}
+
+BoundsNode.prototype.retrieve = function(item)
+{
+	var out = [];
+	if(this.nodes.length)
+	{
+		var index = this._findIndex(item);
+		
+		out.push.apply(out, this.nodes[index].retrieve(item));
+	}
+	
+	out.push.apply(out, this.stuckChildren);
+	out.push.apply(out, this.children);
+	
+	return out;
+}
+
+BoundsNode.prototype.clear = function()
+{
+	this._stuckCount = 0;
 }
 
 window.QuadTree = QuadTree;
