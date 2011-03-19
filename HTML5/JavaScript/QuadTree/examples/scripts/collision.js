@@ -2,7 +2,7 @@ var stage;
 var circles;
 var tree;
 
-var CIRCLE_COUNT = 10;
+var CIRCLE_COUNT = 500;
 var bounds;
 var shape;
 var fps;
@@ -21,7 +21,7 @@ function init()
 	
 	fps = new Text();
 	fps.x = 10;
-	fps.y = 10;
+	fps.y = 15;
 	
 	stage.addChild(fps);
 	
@@ -29,11 +29,9 @@ function init()
 	
 	initCircles();
 	
-	stage.onMouseDown = function(e){
-		tick();
-	};
-	
 	stage.update();	
+	
+	this.tick = tick_quad;
 	
 	Ticker.setFPS(24);
 	//Ticker.setPaused(true);
@@ -81,11 +79,15 @@ function initCircles()
 function updateTree()
 {
 	//todo: call clear
+	
+	//tree = new QuadTree(bounds);
+	//tree.insert(circles);
+	
 	tree.clear();
 	tree.insert(circles);
 }
 
-function tick()
+function tick_quad()
 {	
 	fps.text = Math.round(Ticker.getMeasuredFPS());
 	for(var k = 0; k < CIRCLE_COUNT; k++)
@@ -113,6 +115,63 @@ function tick()
 		for(var j = 0; j < len; j++)
 		{
 			item = items[j];
+			
+			if(c == item)
+			{
+				continue;
+			}
+			
+			if(c.isColliding && item.isColliding)
+			{
+				continue;
+			}
+			
+			dx = c.x - item.x;
+			dy = c.y - item.y;
+			radii = c.radius + item.radius;		
+			
+			colliding = (( dx * dx )  + ( dy * dy )) < (radii * radii);
+			
+			if(!c.isColliding)
+			{
+				c.setIsColliding(colliding);
+			}
+			
+			if(!item.isColliding)
+			{
+				item.setIsColliding(colliding);
+			}
+		}
+	}
+	stage.update();
+}
+
+function tick_brute()
+{	
+	fps.text = Math.round(Ticker.getMeasuredFPS());
+	for(var k = 0; k < CIRCLE_COUNT; k++)
+	{
+		circles[k].update();	
+	}
+	updateTree();
+	
+	
+	renderQuad();
+	var items;
+	var c;
+	var len;
+	var item;
+	var dx, dy, radii;
+	var colliding = false;
+	
+
+	for(var i = 0; i < CIRCLE_COUNT; i++)
+	{
+		c = circles[i];
+
+		for(var j = i + 1; j < CIRCLE_COUNT; j++)
+		{
+			item = circles[j];
 			
 			if(c == item)
 			{

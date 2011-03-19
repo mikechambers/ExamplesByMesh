@@ -93,4 +93,11 @@ Circle.prototype._draw = function()
 	}
 	
 	g.drawCircle(this.radius, this.radius, this.radius);
+	
+
+	//check what the cache state is
+	//if there is a cache stored yet
+	//then override it
+	//this.cache(0,0,this.width, this.height);
 }
+

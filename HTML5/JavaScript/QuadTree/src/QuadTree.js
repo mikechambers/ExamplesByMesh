@@ -43,8 +43,17 @@
 **/
 function QuadTree(bounds, pointQuad)
 {	
+	this._isPointQuad = pointQuad;
+	
+	this.root = this.createRootNood();
+}
+
+QuadTree.prototype._isPointQuad = false;
+
+QuadTree.prototype.createRootNood = function()
+{
 	var node;
-	if(pointQuad)
+	if(this._isPointQuad)
 	{
 		node = new Node(bounds);
 	}
@@ -53,7 +62,7 @@ function QuadTree(bounds, pointQuad)
 		node = new BoundsNode(bounds);
 	}
 	
-	this.root = node;
+	return node;
 }
 
 /**
@@ -93,6 +102,7 @@ QuadTree.prototype.insert = function(item)
 **/
 QuadTree.prototype.clear = function()
 {
+	//this.root = this.createRootNood();
 	this.root.clear();
 }
 
@@ -357,11 +367,32 @@ BoundsNode.prototype.retrieve = function(item)
 
 BoundsNode.prototype.clear = function()
 {
-	this._stuckCount = 0;
+
+	this._stuckChildren.length = 0;
+	
+	//array
+	this.children.length = 0;
+	
+	var len = this.nodes.length;
+	
+	if(!len)
+	{
+		return;
+	}
+	
+	for(var i = 0; i < len; i++)
+	{
+		this.nodes[i].clear();
+	}
+	
+	//array
+	this.nodes.length = 0;	
 	
 	//call the hidden super.clear, and make sure its called with this = this instance
-	Object.getPrototypeOf(BoundsNode.prototype).clear.call(this);
+	//Object.getPrototypeOf(BoundsNode.prototype).clear.call(this);
 }
+
+BoundsNode.prototype.getChildCount
 
 window.QuadTree = QuadTree;
 
