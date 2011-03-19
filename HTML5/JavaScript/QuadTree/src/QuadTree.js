@@ -43,14 +43,22 @@
 **/
 function QuadTree(bounds, pointQuad)
 {	
-	this._isPointQuad = pointQuad;
+	var node;
+	if(pointQuad)
+	{
+		node = new Node(bounds);
+	}
+	else
+	{
+		node = new BoundsNode(bounds);
+	}
 	
-	this.root = this.createRootNood();
+	this.root = node;
 }
 
 QuadTree.prototype._isPointQuad = false;
 
-QuadTree.prototype.createRootNood = function()
+QuadTree.prototype._createRootNood = function()
 {
 	var node;
 	if(this._isPointQuad)
@@ -102,7 +110,6 @@ QuadTree.prototype.insert = function(item)
 **/
 QuadTree.prototype.clear = function()
 {
-	//this.root = this.createRootNood();
 	this.root.clear();
 }
 
