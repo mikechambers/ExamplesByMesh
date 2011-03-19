@@ -56,8 +56,6 @@ function QuadTree(bounds, pointQuad)
 	this.root = node;
 }
 
-QuadTree.prototype._isPointQuad = false;
-
 QuadTree.prototype._createRootNood = function()
 {
 	var node;
