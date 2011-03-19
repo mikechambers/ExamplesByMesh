@@ -1,8 +1,9 @@
 var stage;
+var quadStage;
 var circles;
 var tree;
 
-var CIRCLE_COUNT = 500;
+var CIRCLE_COUNT = 300;
 var bounds;
 var shape;
 var fps;
@@ -11,9 +12,12 @@ function init()
 {
 	circles = [];
 	
-	canvas = document.getElementById("canvas");
+	var canvas = document.getElementById("canvas");
 	
-	bounds = new Rectangle(0,0, canvas.width, canvas.height);
+	var quadCanvas = document.getElementById("quadCanvas");
+	quadStage = new Stage(quadCanvas);
+	
+	bounds = new Rectangle(0,0, quadCanvas.width, quadCanvas.height);
 	
 	stage = new Stage(canvas);
 	shape = new Shape();
@@ -25,11 +29,12 @@ function init()
 	
 	stage.addChild(fps);
 	
-	stage.addChild(shape);
+	quadStage.addChild(shape);
 	
 	initCircles();
 	
-	stage.update();	
+	stage.update();
+	quadStage.update();
 	
 	this.tick = tick_quad;
 	
@@ -89,7 +94,7 @@ function updateTree()
 
 function tick_quad()
 {	
-	fps.text = Math.round(Ticker.getMeasuredFPS());
+	fps.text = "Balls : " + CIRCLE_COUNT + " / " + Math.round(Ticker.getMeasuredFPS()) + " fps";
 	for(var k = 0; k < CIRCLE_COUNT; k++)
 	{
 		circles[k].update();	
@@ -144,6 +149,7 @@ function tick_quad()
 		}
 	}
 	stage.update();
+	quadStage.update();
 }
 
 function tick_brute()
@@ -201,6 +207,7 @@ function tick_brute()
 		}
 	}
 	stage.update();
+	quadStage.update();
 }
 
 function renderQuad()
@@ -220,24 +227,6 @@ function drawNode(node)
 
 	g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
 	
-	//console.log(node);
-	/*
-	var children = node.getChildren();
-	var cLen = children.length;
-	var childNode;
-	if(cLen)
-	{
-		for(var j = 0; j < cLen; j++)
-		{
-			childNode = children[j];
-			g.beginStroke(drawColor);
-			
-			//draw rect
-			g.drawRect(childNode.x, childNode.y, childNode.width, childNode.height);
-			//g.drawCircle(childNode.x, childNode.y,3);
-		}
-	}
-	*/
 	var len = node.nodes.length;
 	
 	for(var i = 0; i < len; i++)

@@ -2,6 +2,8 @@ function Circle(bounds, radius)
 {
 	Shape.call(this);
 	
+	this.snapToPixel = true;
+	
 	this._bounds = bounds;
 	this.radius = radius;
 	this.height = this.width = this.radius * 2;
@@ -32,7 +34,7 @@ Circle.prototype = new Shape();
 Circle.prototype._bounds = null;
 Circle.prototype._vx = 0;
 Circle.prototype._vy = 0;
-Circle.MAX_SPEED = 8;
+Circle.MAX_SPEED = 4;
 
 Circle.prototype.height = 0;
 Circle.prototype.width = 0;
@@ -75,8 +77,27 @@ Circle.prototype.setIsColliding = function(isColliding)
 	this._draw();
 }
 
+Circle.prototype._collidingCacheCanvas = null;
+Circle.prototype._normalCacheCanvas = null;
 Circle.prototype._draw = function()
 {
+	if(this.isColliding)
+	{
+		if(this._collidingCacheCanvas)
+		{
+			this.cacheCanvas = this._collidingCacheCanvas;
+			return;
+		}
+	}
+	else
+	{
+		if(this._normalCacheCanvas)
+		{
+			this.cacheCanvas = this._normalCacheCanvas;
+			return;
+		}
+	}
+	
 	var g = this.graphics;
 	
 	g.clear();
@@ -94,10 +115,16 @@ Circle.prototype._draw = function()
 	
 	g.drawCircle(this.radius, this.radius, this.radius);
 	
+	this.uncache();
+	this.cache(-1,-1, this.width + 2, this.height + 2);
 
-	//check what the cache state is
-	//if there is a cache stored yet
-	//then override it
-	//this.cache(0,0,this.width, this.height);
+	if(this.isColliding)
+	{
+		this._collidingCacheCanvas = this.cacheCanvas;
+	}
+	else
+	{
+		this._normalCacheCanvas = this.cacheCanvas;
+	}
 }
 
