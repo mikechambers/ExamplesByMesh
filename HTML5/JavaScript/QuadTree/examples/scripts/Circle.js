@@ -102,15 +102,15 @@ Circle.prototype._draw = function()
 	
 	g.clear();
 	g.setStrokeStyle(1);
-	g.beginStroke("#000000");
+	g.beginStroke(Graphics.getRGB(0,0,0, 0.4));
 	
 	if(this.isColliding)
 	{
-		g.beginFill("FF0000");
+		g.beginFill(Graphics.getRGB(255,0,0, 0.4));
 	}
 	else
 	{
-		g.beginFill("FFFFFF");
+		g.beginFill(Graphics.getRGB(255,255,255, 0.4));
 	}
 	
 	g.drawCircle(this.radius, this.radius, this.radius);

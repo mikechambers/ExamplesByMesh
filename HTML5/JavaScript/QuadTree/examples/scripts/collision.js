@@ -3,14 +3,33 @@ var quadStage;
 var circles;
 var tree;
 
-var CIRCLE_COUNT = 300;
+var CIRCLE_COUNT = 100;
 var bounds;
 var shape;
 var fps;
+var showOverlay = false;
+
 
 function init()
 {
 	circles = [];
+	
+	var check = document.getElementById("showQuadCheck");
+	check.onclick = function(e)
+	{
+		if(e.target.value == "on")
+		{
+			showOverlay = true;
+		}
+		else
+		{
+			shape.graphics.clear();
+			quadStage.update();
+			showOverlay = false;
+		}
+	};
+	
+	
 	
 	var canvas = document.getElementById("canvas");
 	
@@ -21,7 +40,7 @@ function init()
 	
 	stage = new Stage(canvas);
 	shape = new Shape();
-	tree = new QuadTree(bounds);
+	tree = new QuadTree(bounds, 7);
 	
 	fps = new Text();
 	fps.x = 10;
@@ -48,15 +67,16 @@ function initCircles()
 {
 	var c;
 	var g;
-	var radius = 5;
+	
 	var x, y;
 	
 	//note, we are sharing the same graphics instance between all shape instances
 	//this saves CPU and memory, but could lead to some weird bugs, so keep that in mind
 	
-	
+	var radius;
 	for(var i = 0; i < CIRCLE_COUNT; i++)
 	{
+		radius = Math.ceil(Math.random() * 10) + 1;
 		c = new Circle(bounds, radius);
 		
 		x = Math.random() * bounds.width;
@@ -102,7 +122,11 @@ function tick_quad()
 	updateTree();
 	
 	
-	renderQuad();
+	if(showOverlay)
+	{
+		renderQuad();
+	}
+	
 	var items;
 	var c;
 	var len;
@@ -149,7 +173,11 @@ function tick_quad()
 		}
 	}
 	stage.update();
-	quadStage.update();
+	
+	if(showOverlay)
+	{
+		quadStage.update();
+	}
 }
 
 function tick_brute()
@@ -162,7 +190,11 @@ function tick_brute()
 	updateTree();
 	
 	
-	renderQuad();
+	if(showOverlay)
+	{
+		renderQuad();
+	}
+	
 	var items;
 	var c;
 	var len;
@@ -207,7 +239,11 @@ function tick_brute()
 		}
 	}
 	stage.update();
-	quadStage.update();
+	
+	if(showOverlay)
+	{
+		quadStage.update();
+	}
 }
 
 function renderQuad()

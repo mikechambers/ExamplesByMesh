@@ -1,3 +1,12 @@
+body
+{
+	background-color:#333333;
+	text-align:center;
+	font-family: sans-serif;
+	font-size: 14px;
+	color: #CCC;
+}
+
 canvas
 {
 	border-style:solid;
@@ -5,6 +14,33 @@ canvas
 	border-color:#000000;
 	
 	position:absolute;
-	left:5px;
-	top:5px;
+	left:0px;
+	top:0px;
+}
+
+#showQuadCheckContainer
+{
+	position:absolute;
+	left:0px;
+	top:505px;
+}
+
+#canvasContainer
+{
+	margin:0px auto;
+	width:500px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color:#FF0000;
+	position:relative;
+
+}
+
+#canvas
+{
+	-webkit-box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+	box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+	
+	background-color:#FFFFFF;
 }

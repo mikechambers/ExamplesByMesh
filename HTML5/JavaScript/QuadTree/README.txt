@@ -41,8 +41,4 @@ quad.insert({x:Math.random() * canvas.width, y:Math.random() * canvas.height});
 
 
 To do :
-	-Clean up / optimize code (especially variable access)
-	-Add support for mapping items which have dimensions (height / width)
-	-Combine into single file, and wrap in closure
 	-Comment code
-	-Create better example

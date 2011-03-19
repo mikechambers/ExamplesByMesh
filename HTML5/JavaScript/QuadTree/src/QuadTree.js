@@ -41,8 +41,13 @@
 * @param {Boolean} pointQuad Whether the QuadTree will contain points (true), or items with bounds 
 * (width / height)(false). Default value is false.
 **/
-function QuadTree(bounds, pointQuad)
+function QuadTree(bounds, maxDepth, pointQuad)
 {	
+	if(maxDepth)
+	{
+		Node.MAX_DEPTH = maxDepth;
+	}
+	
 	var node;
 	if(pointQuad)
 	{
@@ -144,7 +149,7 @@ Node.prototype._bounds = null;
 //read only
 Node.prototype._depth = 0;
 Node.MAX_CHILDREN = 4;
-Node.MAX_DEPTH = 6;
+Node.MAX_DEPTH = 4;
 
 Node.TOP_LEFT = 0;
 Node.TOP_RIGHT = 1;
