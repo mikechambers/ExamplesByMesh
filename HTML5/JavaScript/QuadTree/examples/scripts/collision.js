@@ -36,7 +36,7 @@ function init()
 	stage.update();	
 	
 	Ticker.setFPS(24);
-	//Ticker.setPaused(true);
+	Ticker.setPaused(true);
 	Ticker.addListener(stage);
 	Ticker.addListener(window);
 }
@@ -123,12 +123,10 @@ function tick()
 				continue;
 			}
 			
-			/*
-			if(c._highlight && item._highlight)
+			if(c.isColliding && item.isColliding)
 			{
 				continue;
 			}
-			*/
 			
 			dx = c.x - item.x;
 			dy = c.y - item.y;
@@ -136,14 +134,14 @@ function tick()
 			
 			colliding = (( dx * dx )  + ( dy * dy )) < (radii * radii);
 			
-			if(!c._highlight)
+			if(!c.isColliding)
 			{
-				c.setHighlight(colliding);
+				c.setIsColliding(colliding);
 			}
 			
-			if(!item._highlight)
+			if(!item.isColliding)
 			{
-				item.setHighlight(colliding);
+				item.setIsColliding(colliding);
 			}
 		}
 	}

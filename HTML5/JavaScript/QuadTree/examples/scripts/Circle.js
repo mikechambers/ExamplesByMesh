@@ -37,11 +37,11 @@ Circle.MAX_SPEED = 8;
 Circle.prototype.height = 0;
 Circle.prototype.width = 0;
 Circle.prototype.radius = 0;
-Circle.prototype._highlight = false;
+Circle.prototype.isColliding = false;
 
 Circle.prototype.update = function()
 {
-	this._highlight = false;
+	this.isColliding = false;
 	
 	this.x += this._vx;
 	this.y += this._vy;
@@ -69,9 +69,9 @@ Circle.prototype.update = function()
 	}
 }
 
-Circle.prototype.setHighlight = function(highlight)
+Circle.prototype.setIsColliding = function(isColliding)
 {
-	this._highlight = highlight;
+	this.isColliding = isColliding;
 	this._draw();
 }
 
@@ -83,7 +83,7 @@ Circle.prototype._draw = function()
 	g.setStrokeStyle(1);
 	g.beginStroke("#000000");
 	
-	if(this._highlight)
+	if(this.isColliding)
 	{
 		g.beginFill("FF0000");
 	}
