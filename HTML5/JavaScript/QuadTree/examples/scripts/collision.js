@@ -2,7 +2,7 @@ var stage;
 var circles;
 var tree;
 
-var CIRCLE_COUNT = 500;
+var CIRCLE_COUNT = 10;
 var bounds;
 var shape;
 var fps;
@@ -36,7 +36,7 @@ function init()
 	stage.update();	
 	
 	Ticker.setFPS(24);
-	Ticker.setPaused(true);
+	//Ticker.setPaused(true);
 	Ticker.addListener(stage);
 	Ticker.addListener(window);
 }
@@ -81,12 +81,8 @@ function initCircles()
 function updateTree()
 {
 	//todo: call clear
-	tree = new QuadTree(bounds);
-	
-	for(var i = 0; i < CIRCLE_COUNT; i++)
-	{
-		tree.insert(circles[i]);
-	}
+	tree.clear();
+	tree.insert(circles);
 }
 
 function tick()

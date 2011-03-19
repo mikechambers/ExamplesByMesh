@@ -67,12 +67,24 @@ QuadTree.prototype.root = null;
 /**
 * Inserts an item into the QuadTree.
 * @method insert
-* @param {Boolean} item The item to be inserted into the QuadTree. The item should expose x, y properties
-* that represents its position in 2D space.
+* @param {Object|Array} item The item or Array of items to be inserted into the QuadTree. The item should expose x, y 
+* properties that represents its position in 2D space.
 **/
 QuadTree.prototype.insert = function(item)
 {
-	this.root.insert(item);
+	if(item instanceof Array)
+	{
+		var len = item.length;
+		
+		for(var i = 0; i < len; i++)
+		{
+			this.root.insert(item[i]);
+		}
+	}
+	else
+	{
+		this.root.insert(item);
+	}
 }
 
 /**
@@ -86,7 +98,9 @@ QuadTree.prototype.clear = function()
 
 QuadTree.prototype.retrieve = function(item)
 {
-	return this.root.retrieve(item);
+	//get a copy of the array of items
+	var out = this.root.retrieve(item).slice(0);
+	return out;
 }
 
 /************** Node ********************/
@@ -106,7 +120,7 @@ function Node(bounds, depth)
 
 //subnodes
 Node.prototype.nodes = null;
-Node.prototype.classConstructor = Node;
+Node.prototype._classConstructor = Node;
 
 //children contained directly in the node
 Node.prototype.children = null;
@@ -211,7 +225,7 @@ Node.prototype.subdivide = function()
 	var by_b_h_h = by + b_h_h;
 
 	//top left
-	this.nodes[Node.TOP_LEFT] = new this.classConstructor({
+	this.nodes[Node.TOP_LEFT] = new this._classConstructor({
 		x:bx, 
 		y:by, 
 		width:b_w_h, 
@@ -220,7 +234,7 @@ Node.prototype.subdivide = function()
 	depth);
 	
 	//top right
-	this.nodes[Node.TOP_RIGHT] = new this.classConstructor({
+	this.nodes[Node.TOP_RIGHT] = new this._classConstructor({
 		x:bx_b_w_h,
 		y:by,
 		width:b_w_h, 
@@ -229,7 +243,7 @@ Node.prototype.subdivide = function()
 	depth);
 	
 	//bottom left
-	this.nodes[Node.BOTTOM_LEFT] = new this.classConstructor({
+	this.nodes[Node.BOTTOM_LEFT] = new this._classConstructor({
 		x:bx,
 		y:by_b_h_h,
 		width:b_w_h, 
@@ -239,7 +253,7 @@ Node.prototype.subdivide = function()
 	
 	
 	//bottom right
-	this.nodes[Node.BOTTOM_RIGHT] = new this.classConstructor({
+	this.nodes[Node.BOTTOM_RIGHT] = new this._classConstructor({
 		x:bx_b_w_h, 
 		y:by_b_h_h,
 		width:b_w_h, 
@@ -257,6 +271,8 @@ Node.prototype.clear = function()
 	{
 		this.nodes[i].clear();
 	}
+	
+	this.nodes.length = 0;
 }
 
 
@@ -265,12 +281,17 @@ Node.prototype.clear = function()
 function BoundsNode(bounds, depth)
 {
 	Node.call(this, bounds, depth);
-	this.stuckChildren = [];
+	this._stuckChildren = [];
 }
 
 BoundsNode.prototype = new Node();
-BoundsNode.prototype.classConstructor = BoundsNode;
-BoundsNode.prototype.stuckChildren = null;
+BoundsNode.prototype._classConstructor = BoundsNode;
+BoundsNode.prototype._stuckChildren = null;
+
+//we use this to collect and conctenate items being retrieved. This way
+//we dont have to continuously create new Array instances.
+//Note, when returned from QuadTree.retrieve, we then copy the array
+BoundsNode.prototype._out = [];
 
 BoundsNode.prototype.insert = function(item)
 {	
@@ -289,7 +310,7 @@ BoundsNode.prototype.insert = function(item)
 		}
 		else
 		{			
-			this.stuckChildren.push(item);
+			this._stuckChildren.push(item);
 		}
 		
 		return;
@@ -314,12 +335,13 @@ BoundsNode.prototype.insert = function(item)
 
 BoundsNode.prototype.getChildren = function()
 {
-	return this.children.concat(this.stuckChildren);
+	return this.children.concat(this._stuckChildren);
 }
 
 BoundsNode.prototype.retrieve = function(item)
 {
-	var out = [];
+	var out = this._out;
+	out.length = 0;
 	if(this.nodes.length)
 	{
 		var index = this._findIndex(item);
@@ -327,7 +349,7 @@ BoundsNode.prototype.retrieve = function(item)
 		out.push.apply(out, this.nodes[index].retrieve(item));
 	}
 	
-	out.push.apply(out, this.stuckChildren);
+	out.push.apply(out, this._stuckChildren);
 	out.push.apply(out, this.children);
 	
 	return out;
@@ -336,8 +358,26 @@ BoundsNode.prototype.retrieve = function(item)
 BoundsNode.prototype.clear = function()
 {
 	this._stuckCount = 0;
+	
+	//call the hidden super.clear, and make sure its called with this = this instance
+	Object.getPrototypeOf(BoundsNode.prototype).clear.call(this);
 }
 
 window.QuadTree = QuadTree;
+
+//http://ejohn.org/blog/objectgetprototypeof/
+if ( typeof Object.getPrototypeOf !== "function" ) {
+  if ( typeof "test".__proto__ === "object" ) {
+    Object.getPrototypeOf = function(object){
+      return object.__proto__;
+    };
+  } else {
+    Object.getPrototypeOf = function(object){
+      // May break if the constructor has been tampered with
+      return object.constructor.prototype;
+    };
+  }
+}
+
 
 }(window));
