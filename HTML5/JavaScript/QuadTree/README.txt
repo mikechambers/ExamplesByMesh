@@ -27,18 +27,44 @@ Created by Mike Chambers
 http://www.mikechambers.com
 mikechambers@gmail.com
 
-Currently supports mapping 2d coordinates.
+Currently supports mapping 2d coordinates and items with bounds.
 
-var quad = new QuadTree({
-	x:0,
-	y:0,
-	width:canvas.width,
-	height:canvas.height
-});
+-------------Point QuadTree Example--------------
+var pointQuad = true;
+var bounds = {
+			x:0,
+			y:0,
+			width:canvas.width,
+			height:canvas.height
+}
+var quad = new QuadTree(bounds, pointQuad);
 
 //insert a random point
-quad.insert({x:Math.random() * canvas.width, y:Math.random() * canvas.height});
+quad.insert({x:12, y:25});
 
+var items = quad.retrieve({x:11, y:20});
+---------------------------------------------------
+
+
+-------------Point QuadTree Example--------------
+var bounds = {
+			x:0,
+			y:0,
+			width:canvas.width,
+			height:canvas.height
+}
+var quad = new QuadTree(bounds);
+
+//insert a random point
+quad.insert({
+		x:12, 
+		y:25,
+		height:10,
+		width:25});
+		
+var items = quad.retrieve({x:11, y:20, height:10, width:20});		
+	
+---------------------------------------------------
 
 To do :
 	-Comment code

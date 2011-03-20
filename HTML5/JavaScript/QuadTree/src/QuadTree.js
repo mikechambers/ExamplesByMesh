@@ -41,39 +41,22 @@
 * @param {Boolean} pointQuad Whether the QuadTree will contain points (true), or items with bounds 
 * (width / height)(false). Default value is false.
 **/
-function QuadTree(bounds, maxDepth, pointQuad)
+function QuadTree(bounds, pointQuad, maxDepth, maxChildren)
 {	
-	if(maxDepth)
-	{
-		Node.MAX_DEPTH = maxDepth;
-	}
+	//todo, need to make these instance and not static vars
 	
 	var node;
 	if(pointQuad)
 	{
-		node = new Node(bounds);
+		
+		node = new Node(bounds, 0, maxDepth, maxChildren);
 	}
 	else
 	{
-		node = new BoundsNode(bounds);
+		node = new BoundsNode(bounds, 0, maxDepth, maxChildren);
 	}
 	
 	this.root = node;
-}
-
-QuadTree.prototype._createRootNood = function()
-{
-	var node;
-	if(this._isPointQuad)
-	{
-		node = new Node(bounds);
-	}
-	else
-	{
-		node = new BoundsNode(bounds);
-	}
-	
-	return node;
 }
 
 /**
@@ -126,11 +109,22 @@ QuadTree.prototype.retrieve = function(item)
 /************** Node ********************/
 
 
-function Node(bounds, depth)
+function Node(bounds, depth, maxDepth, maxChildren)
 {
 	this._bounds = bounds;
 	this.children = [];
 	this.nodes = [];
+	
+	if(maxChildren)
+	{
+		this._maxChildren = maxChildren;
+		
+	}
+	
+	if(maxDepth)
+	{
+		this._maxDepth = maxDepth;
+	}
 	
 	if(depth)
 	{
@@ -148,8 +142,9 @@ Node.prototype._bounds = null;
 
 //read only
 Node.prototype._depth = 0;
-Node.MAX_CHILDREN = 4;
-Node.MAX_DEPTH = 4;
+
+Node.prototype._maxChildren = 4;
+Node.prototype._maxDepth = 4;
 
 Node.TOP_LEFT = 0;
 Node.TOP_RIGHT = 1;
@@ -171,8 +166,8 @@ Node.prototype.insert = function(item)
 	this.children.push(item);
 
 	var len = this.children.length;
-	if(!(this._depth >= Node.MAX_DEPTH) && 
-		len > Node.MAX_CHILDREN)
+	if(!(this._depth >= this._maxDepth) && 
+		len > this._maxChildren)
 	{
 		this.subdivide();
 		
@@ -298,9 +293,9 @@ Node.prototype.clear = function()
 
 /******************** BoundsQuadTree ****************/
 
-function BoundsNode(bounds, depth)
+function BoundsNode(bounds, depth, maxChildren, maxDepth)
 {
-	Node.call(this, bounds, depth);
+	Node.call(this, bounds, depth, maxChildren, maxDepth);
 	this._stuckChildren = [];
 }
 
@@ -339,8 +334,9 @@ BoundsNode.prototype.insert = function(item)
 	this.children.push(item);
 
 	var len = this.children.length;
-	if(!(this._depth >= Node.MAX_DEPTH) && 
-		len > Node.MAX_CHILDREN)
+	
+	if(!(this._depth >= this._maxDepth) && 
+		len > this._maxChildren)
 	{
 		this.subdivide();
 		
@@ -406,6 +402,7 @@ BoundsNode.prototype.getChildCount
 
 window.QuadTree = QuadTree;
 
+/*
 //http://ejohn.org/blog/objectgetprototypeof/
 if ( typeof Object.getPrototypeOf !== "function" ) {
   if ( typeof "test".__proto__ === "object" ) {
@@ -419,6 +416,6 @@ if ( typeof Object.getPrototypeOf !== "function" ) {
     };
   }
 }
-
+*/
 
 }(window));

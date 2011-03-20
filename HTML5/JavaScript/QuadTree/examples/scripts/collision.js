@@ -40,7 +40,7 @@ function init()
 	
 	stage = new Stage(canvas);
 	shape = new Shape();
-	tree = new QuadTree(bounds, 7);
+	tree = new QuadTree(bounds, false, 7);
 	
 	fps = new Text();
 	fps.x = 10;
