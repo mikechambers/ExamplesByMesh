@@ -39,7 +39,7 @@
 	<meta name="copyright" content="Mike Chambers" /> 
 	<meta name="robots" content="index,follow" /> 	
 	
-	<title>QuadTree Retrieve Example</title>
+	<title>QuadTree Collision Detection Example</title>
 
 	<script src="scripts/easel.js"></script>
 	<script src="../src/QuadTree.js"></script>
@@ -53,8 +53,18 @@
 	<div id="canvasContainer">
 	<canvas height="500" width="500" id="canvas"></canvas>
 	<canvas height="500" width="500" id="quadCanvas"></canvas>
-	<div id="showQuadCheckContainer"><input type="checkbox"  id="showQuadCheck" /> Show QuadTree Boundaries</div>
+		<div id="copyContainer">
+			<input type="checkbox"  id="showQuadCheck" /> Show QuadTree Boundaries
+			<span id="countLinks">Circles : <a href="collision.html?circleCount=10">10</a> | 
+				<a href="collision.html?circleCount=100">100</a> | 
+				<a href="collision.html?circleCount=250">250</a> | 
+				<a href="collision.html?circleCount=500">500</a></span>
+		</div>
 	<div>
+
+	<div id="footer">
+		Created by <a href="http://www.mikechambers.com">Mike Chambers</a>. Source on <a href="https://github.com/mikechambers/ExamplesByMesh/tree/master/HTML5/JavaScript/QuadTree">GitHub</a>.
+	</div>
 
 
 </body>

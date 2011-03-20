@@ -106,11 +106,11 @@ Circle.prototype._draw = function()
 	
 	if(this.isColliding)
 	{
-		g.beginFill(Graphics.getRGB(255,0,0, 0.4));
+		g.beginFill("rgba(217,83,77,0.7)");
 	}
 	else
 	{
-		g.beginFill(Graphics.getRGB(255,255,255, 0.4));
+		g.beginFill("rgb(255,255,255)");
 	}
 	
 	g.drawCircle(this.radius, this.radius, this.radius);

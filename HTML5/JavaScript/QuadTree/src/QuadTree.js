@@ -234,8 +234,10 @@ Node.prototype.subdivide = function()
 	
 	var bx = this._bounds.x;
 	var by = this._bounds.y;
-	var b_w_h = this._bounds.width / 2;
-	var b_h_h = this._bounds.height / 2;
+	
+	//floor the values
+	var b_w_h = (this._bounds.width / 2)|0;
+	var b_h_h = (this._bounds.height / 2)|0;
 	var bx_b_w_h = bx + b_w_h;
 	var by_b_h_h = by + b_h_h;
 

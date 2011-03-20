@@ -12,6 +12,14 @@ var showOverlay = false;
 
 function init()
 {
+	
+	if(!(!!document.createElement('canvas').getContext))
+	{
+		var d = document.getElementById("canvasContainer");
+		d.innerHTML = "This example requires a browser that supports the HTML5 Canvas element."
+		return;
+	}
+	
 	circles = [];
 	
 	var check = document.getElementById("showQuadCheck");
@@ -29,10 +37,7 @@ function init()
 		}
 	};
 	
-	
-	
 	var canvas = document.getElementById("canvas");
-	
 	var quadCanvas = document.getElementById("quadCanvas");
 	quadStage = new Stage(quadCanvas);
 	
@@ -49,6 +54,19 @@ function init()
 	stage.addChild(fps);
 	
 	quadStage.addChild(shape);
+	
+	var params = parseGetParams();
+	
+	var circlesParam = params.circleCount;
+	if(circlesParam)
+	{
+		circleCount = parseInt(circlesParam);
+		
+		if(circleCount)
+		{
+			CIRCLE_COUNT = circleCount;
+		}
+	}	
 	
 	initCircles();
 	
@@ -261,7 +279,12 @@ function drawNode(node)
 	var bounds = node._bounds;
 	var g = shape.graphics;
 
-	g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+	g.drawRect(
+			abs(bounds.x)  + 0.5,
+			abs(bounds.y) + 0.5,
+			bounds.width,
+			bounds.height
+		);
 	
 	var len = node.nodes.length;
 	
@@ -270,6 +293,36 @@ function drawNode(node)
 		drawNode(node.nodes[i]);
 	}
 	
+}
+
+//fast Math.abs
+function abs(x)
+{
+	return (x < 0 ? -x : x);
+}
+
+function parseGetParams()
+{
+	var getData = new Array();
+	var sGet = window.location.search;
+	if (sGet)
+	{
+	    sGet = sGet.substr(1);
+
+	    var sNVPairs = sGet.split("&");
+
+	    for (var i = 0; i < sNVPairs.length; i++)
+	    {
+
+	        var sNV = sNVPairs[i].split("=");
+	        
+	        var sName = sNV[0];
+	        var sValue = sNV[1];
+	        getData[sName] = sValue;
+	    }
+	}
+	
+	return getData;
 }
 
 window.onload = init;
