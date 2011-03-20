@@ -31,6 +31,13 @@ var pointShape;
 
 function init()
 {
+	if(!(!!document.createElement('canvas').getContext))
+	{
+		var d = document.getElementById("canvasContainer");
+		d.innerHTML = "This example requires a browser that supports the HTML5 Canvas element."
+		return;
+	}	
+	
 	canvas = document.getElementById("canvas");
 	
 	//prevent doublclicking on canvas from selecting text on the
@@ -61,9 +68,9 @@ function init()
 function initPoints()
 {
 	var x,y;
-	var w = 10;
-	var h = 5;
-	for(var i = 0; i < 1000; i++)
+	var w = 20;
+	var h = 10;
+	for(var i = 0; i < 250; i++)
 	{
 		x = Math.random() * canvas.width;
 		y = Math.random() * canvas.height;

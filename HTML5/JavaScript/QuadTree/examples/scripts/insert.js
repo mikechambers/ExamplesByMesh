@@ -30,6 +30,13 @@ var drawColor;
 
 function init()
 {
+	if(!(!!document.createElement('canvas').getContext))
+	{
+		var d = document.getElementById("canvasContainer");
+		d.innerHTML = "This example requires a browser that supports the HTML5 Canvas element."
+		return;
+	}	
+	
 	canvas = document.getElementById("canvas");
 	
 	//prevent doublclicking on canvas from selecting text on the
@@ -44,26 +51,21 @@ function init()
 
 	stage.onMouseUp = onMouseUp;
 	
+	var isPointQuad = true;
 	quad = new QuadTree({
 		x:0,
 		y:0,
 		width:canvas.width,
 		height:canvas.height
-	});
-	
-	//Ticker.addListener(window);
-}
-
-function tick()
-{
-	quad.insert({x:Math.random() * canvas.width, y:Math.random() * canvas.height});
-	renderQuad();
+	}, 
+	isPointQuad);
 }
 
 function onMouseUp(e)
 {
 	quad.insert({x:e.stageX, y:e.stageY});
 	renderQuad();
+	stage.update();
 }
 
 function renderQuad()
@@ -74,8 +76,6 @@ function renderQuad()
 	g.beginStroke(drawColor);
 	
 	drawNode(quad.root);
-	
-	stage.update();
 }
 
 function drawNode(node)
@@ -102,10 +102,7 @@ function drawNode(node)
 	for(var i = 0; i < len; i++)
 	{
 		drawNode(node.nodes[i]);
-	}
-	
+	}	
 }
-
-
 
 window.onload = init;

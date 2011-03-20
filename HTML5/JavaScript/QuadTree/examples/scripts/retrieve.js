@@ -31,6 +31,13 @@ var pointShape;
 
 function init()
 {
+	if(!(!!document.createElement('canvas').getContext))
+	{
+		var d = document.getElementById("canvasContainer");
+		d.innerHTML = "This example requires a browser that supports the HTML5 Canvas element."
+		return;
+	}	
+	
 	canvas = document.getElementById("canvas");
 	
 	//prevent doublclicking on canvas from selecting text on the
@@ -47,15 +54,18 @@ function init()
 
 	stage.onMouseUp = onMouseUp;
 	
+	var isPointQuad = true;
 	quad = new QuadTree({
 		x:0,
 		y:0,
 		width:canvas.width,
 		height:canvas.height
-	});
+	},
+	isPointQuad);
 	
 	initPoints();
 	renderQuad();
+	stage.update();
 }
 
 function initPoints()
@@ -71,7 +81,7 @@ function onMouseUp(e)
 	var points = quad.retrieve({x:e.stageX, y:e.stageY});
 	
 	renderPoints(points);
-	//renderQuad();
+	stage.update();
 }
 
 function renderPoints(points)
@@ -87,8 +97,6 @@ function renderPoints(points)
 		g.beginFill("#FF0000");
 		g.drawCircle(point.x, point.y,3);
 	}
-	
-	stage.update();
 }
 
 function renderQuad()

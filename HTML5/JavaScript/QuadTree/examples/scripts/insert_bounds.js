@@ -30,6 +30,13 @@ var drawColor;
 
 function init()
 {
+	if(!(!!document.createElement('canvas').getContext))
+	{
+		var d = document.getElementById("canvasContainer");
+		d.innerHTML = "This example requires a browser that supports the HTML5 Canvas element."
+		return;
+	}	
+	
 	canvas = document.getElementById("canvas");
 	
 	//prevent doublclicking on canvas from selecting text on the
@@ -50,24 +57,13 @@ function init()
 		width:canvas.width,
 		height:canvas.height
 	});
-	
-	//Ticker.addListener(window);
-}
-
-function tick()
-{
-	quad.insert({
-			x:Math.random() * canvas.width,
-			y:Math.random() * canvas.height,
-			height:25,
-			width:50});
-	renderQuad();
 }
 
 function onMouseUp(e)
 {
 	quad.insert({x:e.stageX, y:e.stageY, width:50, height:25});
 	renderQuad();
+	stage.update();
 }
 
 function renderQuad()
@@ -78,8 +74,6 @@ function renderQuad()
 	g.beginStroke(drawColor);
 	
 	drawNode(quad.root);
-	
-	stage.update();
 }
 
 function drawNode(node)
@@ -99,8 +93,7 @@ function drawNode(node)
 		{
 			childNode = children[j];
 			g.beginStroke(drawColor);
-			
-			//draw rect
+
 			g.drawRect(childNode.x, childNode.y, childNode.width, childNode.height);
 			//g.drawCircle(childNode.x, childNode.y,3);
 		}

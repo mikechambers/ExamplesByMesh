@@ -41,6 +41,9 @@ Circle.prototype.width = 0;
 Circle.prototype.radius = 0;
 Circle.prototype.isColliding = false;
 
+Circle.prototype._collidingCacheCanvas = null;
+Circle.prototype._normalCacheCanvas = null;
+
 Circle.prototype.update = function()
 {
 	this.isColliding = false;
@@ -77,8 +80,6 @@ Circle.prototype.setIsColliding = function(isColliding)
 	this._draw();
 }
 
-Circle.prototype._collidingCacheCanvas = null;
-Circle.prototype._normalCacheCanvas = null;
 Circle.prototype._draw = function()
 {
 	if(this.isColliding)

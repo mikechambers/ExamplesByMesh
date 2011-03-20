@@ -7,6 +7,13 @@ var c2;
 
 function init()
 {	
+	if(!(!!document.createElement('canvas').getContext))
+	{
+		var d = document.getElementById("canvasContainer");
+		d.innerHTML = "This example requires a browser that supports the HTML5 Canvas element."
+		return;
+	}	
+
 	canvas = document.getElementById("canvas");
 	bounds = new Rectangle(0,0, canvas.width, canvas.height);
 	
@@ -18,8 +25,6 @@ function init()
 	
 	c1.x = 400;
 	c1.y = bounds.height / 2;
-	
-	c1.tick = null;
 	
 	stage.addChild(c1, c2);
 	
@@ -43,12 +48,11 @@ function tick()
 	var radii = c1.radius + c2.radius;		
 	
 	var highlight = ( ( dx * dx )  + ( dy * dy ) < radii * radii );	
+
+	c1.setIsColliding(highlight);
+	c2.setIsColliding(highlight);
 	
-	if(highlight)
-	{
-		c1.setHighlight(true);
-		c2.setHighlight(true);
-	}
+	c2.update();	
 	
 	stage.update();
 }
