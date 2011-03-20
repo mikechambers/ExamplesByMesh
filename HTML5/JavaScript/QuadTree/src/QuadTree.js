@@ -40,6 +40,8 @@
 * should contain the following properties : x, y, width, height
 * @param {Boolean} pointQuad Whether the QuadTree will contain points (true), or items with bounds 
 * (width / height)(false). Default value is false.
+* @param {Number} maxDepth The maximum number of levels that the quadtree will create. Default is 4.
+* @param {Number} maxChildren The maximum number of children that a node can contain before it is split into sub-nodes.
 **/
 function QuadTree(bounds, pointQuad, maxDepth, maxChildren)
 {	
