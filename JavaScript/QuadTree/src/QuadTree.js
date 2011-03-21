@@ -107,6 +107,7 @@ QuadTree.prototype.clear = function()
 * @method retrieve
 * @param {Object} item An object representing a 2D coordinate point (with x, y properties), or a shape
 * with dimensions (x, y, width, height) properties.
+**/
 QuadTree.prototype.retrieve = function(item)
 {
 	//get a copy of the array of items
