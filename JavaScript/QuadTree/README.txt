@@ -29,6 +29,20 @@ mikechambers@gmail.com
 
 Currently supports mapping 2d coordinates and items with bounds.
 
+There are a number of examples included which show different parts of using the tree.
+
+examples/collision.html : Shows how to use the QuadTree to optimize collision detection of circles of multiple sizes
+
+examples/insert.html : Shows how to insert points, and visually displays the nodes of the QuadTree.
+
+examples/insert_bounds.html : Shows how to insert items with dimensions / bounds, and visually displays the nodes of the QuadTree.
+
+examples/retrieve.html : Shows how to retrieve points in the same node as a specified point.
+
+examples/retrieve_bounds.html : Shows how to retrieve items in the same node as a specified item with bounds. 
+
+
+
 -------------Point QuadTree Example--------------
 var pointQuad = true;
 var bounds = {
@@ -65,6 +79,3 @@ quad.insert({
 var items = quad.retrieve({x:11, y:20, height:10, width:20});		
 	
 ---------------------------------------------------
-
-To do :
-	-Comment code

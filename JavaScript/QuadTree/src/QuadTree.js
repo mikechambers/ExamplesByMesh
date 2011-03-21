@@ -101,6 +101,12 @@ QuadTree.prototype.clear = function()
 	this.root.clear();
 }
 
+/**
+* Retrieves all items / points in the same node as the specified item / point. If the specified item
+* overlaps the bounds of a node, then all children in both nodes will be returned.
+* @method retrieve
+* @param {Object} item An object representing a 2D coordinate point (with x, y properties), or a shape
+* with dimensions (x, y, width, height) properties.
 QuadTree.prototype.retrieve = function(item)
 {
 	//get a copy of the array of items
@@ -398,6 +404,7 @@ BoundsNode.prototype.clear = function()
 	//array
 	this.nodes.length = 0;	
 	
+	//we could call the super clear function but for now, im just going to inline it
 	//call the hidden super.clear, and make sure its called with this = this instance
 	//Object.getPrototypeOf(BoundsNode.prototype).clear.call(this);
 }
