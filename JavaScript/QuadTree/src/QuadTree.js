@@ -45,8 +45,6 @@
 **/
 function QuadTree(bounds, pointQuad, maxDepth, maxChildren)
 {	
-	//todo, need to make these instance and not static vars
-	
 	var node;
 	if(pointQuad)
 	{
