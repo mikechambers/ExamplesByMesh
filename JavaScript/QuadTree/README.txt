@@ -29,6 +29,8 @@ mikechambers@gmail.com
 
 Currently supports mapping 2d coordinates and items with bounds.
 
+http://www.mikechambers.com/blog/2011/03/21/javascript-quadtree-implementation/
+
 There are a number of examples included which show different parts of using the tree.
 
 examples/collision.html : Shows how to use the QuadTree to optimize collision detection of circles of multiple sizes
