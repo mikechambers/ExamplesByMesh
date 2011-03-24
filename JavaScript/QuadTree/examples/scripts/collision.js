@@ -49,7 +49,7 @@ function init()
 	var check = document.getElementById("showQuadCheck");
 	check.onclick = function(e)
 	{
-		if(e.target.value == "on")
+		if(e.target.checked)
 		{
 			showOverlay = true;
 		}
