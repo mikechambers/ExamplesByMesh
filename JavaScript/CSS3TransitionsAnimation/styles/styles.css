@@ -25,17 +25,16 @@
 body
 {
 	background-color:#333333;
-	/*-webkit-perspective: 600;*/
 	
 	font-family: sans-serif;
 	font-size: 12px;
 	color: #CCCCCC;
 	
-  -moz-user-select: -moz-none;
-   -khtml-user-select: none;
-   -webkit-user-select: none;
-   -o-user-select: none;
-   user-select: none;
+	-moz-user-select: -moz-none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-o-user-select: none;
+	user-select: none;
 }
 
 #drawingSurface
@@ -57,10 +56,12 @@ body
 	top:0px;
 	opacity:0.0;
 	/*-webkit-transform:translateZ(0);*/
-	/*-webkit-transform-style: preserve-3d;*/
-	/*-webkit-transform:rotateY(0deg);*/
 	-webkit-border-radius: 100px;
 	-moz-border-radius: 100px;
 	border-radius: 100px;
+	
 	-webkit-transition: all 0.7s ease;
+	-moz-transition: all 0.7s ease;
+	-o-transition: all 0.7s ease;
+	transition: all 0.7s ease;
 }
