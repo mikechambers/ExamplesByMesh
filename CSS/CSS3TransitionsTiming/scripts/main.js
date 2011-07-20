@@ -72,7 +72,7 @@ function onMouseClick()
 
 	//set position we want div to animate to (using the CSS Transition)
 	//NOTE : This will not animate, but will instead just be moved / drawn in the final position
-	//need to delay this call by 1 ms
+	//need to delay this call by 20 ms
 	box.style.left = (window.innerWidth - 100) + "px";
 }
 

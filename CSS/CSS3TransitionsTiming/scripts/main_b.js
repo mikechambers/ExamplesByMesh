@@ -72,7 +72,7 @@ function onMouseClick()
 	box.style.top = (window.innerHeight / 2) + "px";
 
 	//delay updating position so it will animate correctly
-	setTimeout(moveBox, 1, box);
+	setTimeout(moveBox, 20, box);
 }
 
 function moveBox(box)
