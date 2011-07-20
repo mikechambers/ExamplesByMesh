@@ -37,15 +37,6 @@ body
 	user-select: none;
 }
 
-#drawingSurface
-{
-	border-style:solid;
-	border-width:1px;
-	border-color:#FFFFFF;
-	height:300px;
-	width:300px;
-}
-
 .box
 {
 	width:50px;

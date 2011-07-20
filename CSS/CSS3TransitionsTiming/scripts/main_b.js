@@ -32,7 +32,7 @@ function init()
 		info.innerHTML = "<strong>The page requires support for CSS Transitions in order to run correctly. "+
 			"Unfortunately, it appears that your browser does not support this features</strong>";
 			
-		//we will continue setting up, just in case things still work
+		return;
 		
 	}
 		
