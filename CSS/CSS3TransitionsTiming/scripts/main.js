@@ -51,7 +51,6 @@ function init()
 	}
 }
 
-//timer for creating new divs. Probably should use requestAnimationFrame here
 function onMouseClick()
 {
 	if(box)
