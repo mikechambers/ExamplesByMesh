@@ -62,7 +62,7 @@ function onTick()
 	
 	//note, if we try to animate the box right after we create it, it wont animate
 	//that is why we have to wait 1 ms to try to animate it.
-	setTimeout(animatePosition, 1, box, mousePos.x, mousePos.y);
+	setTimeout(animatePosition, 20, box, mousePos.x, mousePos.y);
 }
 
 //called when a touch point moves
