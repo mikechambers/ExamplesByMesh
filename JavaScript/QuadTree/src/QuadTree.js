@@ -113,6 +113,37 @@ QuadTree.prototype.retrieve = function(item)
 	return out;
 }
 
+QuadTree.prototype.retrieveInBounds = function (bounds)
+{
+	if(this.root instanceof BoundsNode)
+	{
+		throw 'Not implemented';
+	}
+	
+	var treeResult = this.root.retrieveInBounds(bounds);
+	var filteredResult = [];
+
+	for (var i=0; i < treeResult.length; i++)
+	{
+		var point = treeResult[i];
+		if(_isPointInsideBounds(point, bounds))
+		{
+			filteredResult.push(point);
+		}
+	}
+	return filteredResult;
+}
+
+var _isPointInsideBounds = function (point, bounds)
+{
+	return (
+		(point.x >= bounds.x) &&
+		(point.x <= bounds.x + bounds.width) &&
+		(point.y >= bounds.y) &&
+		(point.y <= bounds.y + bounds.height)
+	);
+}
+
 /************** Node ********************/
 
 
@@ -197,6 +228,49 @@ Node.prototype.retrieve = function(item)
 	}
 	
 	return this.children;
+}
+
+Node.prototype.retrieveInBounds = function(bounds)
+{
+	if(!this.collidesWith(bounds))
+	{
+		return [];
+	}
+
+	if(this.children.length)
+	{
+		return this.children;
+	}
+	else
+	{
+		if(this.nodes.length)
+		{
+			var result = [];
+			for (var i = 0; i < this.nodes.length; i++)
+			{
+				result = result.concat(this.nodes[i].retrieveInBounds(bounds));
+			}
+			return result;
+		}
+		else
+		{
+			return [];
+		}
+	}
+}
+
+
+Node.prototype.collidesWith = function (bounds)
+{
+	var b1 = this._bounds;
+	var b2 = bounds;
+
+	return !(
+	        b1.x > (b2.x + b2.width)  || 
+			b2.x > (b1.x + b1.width)  || 
+	        b1.y > (b2.y + b2.height) ||
+	        b2.y > (b1.y + b1.height)
+	   );
 }
 
 Node.prototype._findIndex = function(item)
