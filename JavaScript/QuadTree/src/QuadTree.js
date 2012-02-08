@@ -255,7 +255,7 @@ Node.prototype.subdivide = function()
 		width:b_w_h, 
 		height:b_h_h
 	}, 
-	depth);
+	depth, this._maxDepth, this._maxChildren);
 	
 	//top right
 	this.nodes[Node.TOP_RIGHT] = new this._classConstructor({
@@ -264,7 +264,7 @@ Node.prototype.subdivide = function()
 		width:b_w_h, 
 		height:b_h_h
 	},
-	depth);
+	depth, this._maxDepth, this._maxChildren);
 	
 	//bottom left
 	this.nodes[Node.BOTTOM_LEFT] = new this._classConstructor({
@@ -273,7 +273,7 @@ Node.prototype.subdivide = function()
 		width:b_w_h, 
 		height:b_h_h
 	},
-	depth);
+	depth, this._maxDepth, this._maxChildren);
 	
 	
 	//bottom right
@@ -283,7 +283,7 @@ Node.prototype.subdivide = function()
 		width:b_w_h, 
 		height:b_h_h
 	},
-	depth);	
+	depth, this._maxDepth, this._maxChildren);	
 }
 
 Node.prototype.clear = function()
@@ -428,4 +428,4 @@ if ( typeof Object.getPrototypeOf !== "function" ) {
 }
 */
 
-}(window));
+}(this));
