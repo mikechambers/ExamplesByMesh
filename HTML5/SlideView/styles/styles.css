@@ -1,0 +1,39 @@
+/*
+overflow-x:hidden
+overflow-y:hidden
+*/
+
+#slider-view
+{
+	/*background-color:#FF0000;*/
+	height:250px;
+	width:400px;
+	position:absolute;
+	overflow-x:hidden;
+	overflow-y:hidden;
+}
+
+/*make this a class not element*/
+img
+{
+	position:absolute;
+	-webkit-transition:all .4s ease-in-out;
+	-moz-transition:all .4s ease-in-out;
+	-o-transition:all .4s ease-in-out;
+	transition:all .4s ease-in-out;	
+}
+
+.leftPos
+{
+	left:-400px;
+}
+
+.centerPos
+{
+	left:0px;
+}
+
+.rightPos
+{
+	left:400px;
+}
