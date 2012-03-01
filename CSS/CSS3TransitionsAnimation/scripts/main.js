@@ -26,15 +26,15 @@ var mousePos = {x:0, y:0};
 var intervalId = 0;
 function init()
 {
+	var info = document.getElementById("info");
+	
 	//check for support for CSS Transitions
 	if(!Modernizr.csstransitions)
 	{
-		var info = document.getElementById("info");
-		
-		info.innerHTML = "<strong>It appears you are using a browser which does not support all of the HTML5 / CSS3 features " +
-			"required by this example.</strong>";
+		info.innerHTML = "<strong>The page requires support for CSS Transitions in order to run correctly. "+
+			"Unfortunately, it appears that your browser does not support this features</strong>";
 			
-		//we will continue setting up, just in case things still work
+		return;
 		
 	}
 		
@@ -44,6 +44,8 @@ function init()
 		//touch so use touch events
 		document.ontouchstart = onTouchStart;
 		document.ontouchend = onTouchEnd;
+		
+		info.innerHTML = "Touch screen and move finger.";
 	}
 	else
 	{
@@ -60,7 +62,7 @@ function onTick()
 	
 	//note, if we try to animate the box right after we create it, it wont animate
 	//that is why we have to wait 1 ms to try to animate it.
-	setTimeout(animatePosition, 1, box, mousePos.x, mousePos.y);
+	setTimeout(animatePosition, 20, box, mousePos.x, mousePos.y);
 }
 
 //called when a touch point moves
