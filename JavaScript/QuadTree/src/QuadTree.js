@@ -110,31 +110,47 @@ QuadTree.prototype.retrieve = function(item)
 {
 	//get a copy of the array of items
 	var out = this.root.retrieve(item).slice(0);
+	//return QuadTree._filterResults(out, {x:item.x, y:item.y, width:0, height:0});
 	return out;
 }
 
 QuadTree.prototype.retrieveInBounds = function (bounds)
 {
-	if(this.root instanceof BoundsNode)
-	{
-		throw 'Not implemented';
-	}
-	
 	var treeResult = this.root.retrieveInBounds(bounds);
+	return QuadTree._filterResults(treeResult, bounds);
+}
+
+QuadTree._filterResults = function(treeResult, bounds)
+{
 	var filteredResult = [];
 
-	for (var i=0; i < treeResult.length; i++)
+	if(this.root instanceof BoundsNode)
 	{
-		var point = treeResult[i];
-		if(_isPointInsideBounds(point, bounds))
+		for (var i=0; i < treeResult.length; i++)
 		{
-			filteredResult.push(point);
+			var node = treeResult[i];
+			if (QuadTree._isBoundOverlappingBound(node, bounds))
+			{
+				filteredResult.push(node);
+			}
 		}
 	}
+	else
+	{
+		for (var i=0; i < treeResult.length; i++)
+		{
+			var node = treeResult[i];
+			if(QuadTree._isPointInsideBounds(node, bounds))
+			{
+				filteredResult.push(node);
+			}
+		}
+	}
+
 	return filteredResult;
 }
 
-var _isPointInsideBounds = function (point, bounds)
+QuadTree._isPointInsideBounds = function (point, bounds)
 {
 	return (
 		(point.x >= bounds.x) &&
@@ -142,6 +158,17 @@ var _isPointInsideBounds = function (point, bounds)
 		(point.y >= bounds.y) &&
 		(point.y <= bounds.y + bounds.height)
 	);
+}
+
+
+QuadTree._isBoundOverlappingBound = function (b1, b2)
+{
+	return !(
+	        b1.x > (b2.x + b2.width)  || 
+			b2.x > (b1.x + b1.width)  || 
+	        b1.y > (b2.y + b2.height) ||
+	        b2.y > (b1.y + b1.height)
+	   );
 }
 
 /************** Node ********************/
@@ -232,31 +259,29 @@ Node.prototype.retrieve = function(item)
 
 Node.prototype.retrieveInBounds = function(bounds)
 {
-	if(!this.collidesWith(bounds))
-	{
-		return [];
-	}
+	var result = [];
 
-	if(this.children.length)
+	if(this.collidesWith(bounds))
 	{
-		return this.children;
-	}
-	else
-	{
-		if(this.nodes.length)
+		result = result.concat(this._stuckChildren);
+		
+		if(this.children.length)
 		{
-			var result = [];
-			for (var i = 0; i < this.nodes.length; i++)
-			{
-				result = result.concat(this.nodes[i].retrieveInBounds(bounds));
-			}
-			return result;
+			result = result.concat(this.children);
 		}
 		else
 		{
-			return [];
+			if(this.nodes.length)
+			{
+				for (var i = 0; i < this.nodes.length; i++)
+				{
+					result = result.concat(this.nodes[i].retrieveInBounds(bounds));
+				}
+			}
 		}
 	}
+	
+	return result;
 }
 
 
