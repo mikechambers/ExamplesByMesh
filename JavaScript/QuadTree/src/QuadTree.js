@@ -110,7 +110,65 @@ QuadTree.prototype.retrieve = function(item)
 {
 	//get a copy of the array of items
 	var out = this.root.retrieve(item).slice(0);
+	//return QuadTree._filterResults(out, {x:item.x, y:item.y, width:0, height:0});
 	return out;
+}
+
+QuadTree.prototype.retrieveInBounds = function (bounds)
+{
+	var treeResult = this.root.retrieveInBounds(bounds);
+	return QuadTree._filterResults(treeResult, bounds);
+}
+
+QuadTree._filterResults = function(treeResult, bounds)
+{
+	var filteredResult = [];
+
+	if(this.root instanceof BoundsNode)
+	{
+		for (var i=0; i < treeResult.length; i++)
+		{
+			var node = treeResult[i];
+			if (QuadTree._isBoundOverlappingBound(node, bounds))
+			{
+				filteredResult.push(node);
+			}
+		}
+	}
+	else
+	{
+		for (var i=0; i < treeResult.length; i++)
+		{
+			var node = treeResult[i];
+			if(QuadTree._isPointInsideBounds(node, bounds))
+			{
+				filteredResult.push(node);
+			}
+		}
+	}
+
+	return filteredResult;
+}
+
+QuadTree._isPointInsideBounds = function (point, bounds)
+{
+	return (
+		(point.x >= bounds.x) &&
+		(point.x <= bounds.x + bounds.width) &&
+		(point.y >= bounds.y) &&
+		(point.y <= bounds.y + bounds.height)
+	);
+}
+
+
+QuadTree._isBoundOverlappingBound = function (b1, b2)
+{
+	return !(
+	        b1.x > (b2.x + b2.width)  || 
+			b2.x > (b1.x + b1.width)  || 
+	        b1.y > (b2.y + b2.height) ||
+	        b2.y > (b1.y + b1.height)
+	   );
 }
 
 /************** Node ********************/
@@ -199,6 +257,47 @@ Node.prototype.retrieve = function(item)
 	return this.children;
 }
 
+Node.prototype.retrieveInBounds = function(bounds)
+{
+	var result = [];
+
+	if(this.collidesWith(bounds))
+	{
+		result = result.concat(this._stuckChildren);
+		
+		if(this.children.length)
+		{
+			result = result.concat(this.children);
+		}
+		else
+		{
+			if(this.nodes.length)
+			{
+				for (var i = 0; i < this.nodes.length; i++)
+				{
+					result = result.concat(this.nodes[i].retrieveInBounds(bounds));
+				}
+			}
+		}
+	}
+	
+	return result;
+}
+
+
+Node.prototype.collidesWith = function (bounds)
+{
+	var b1 = this._bounds;
+	var b2 = bounds;
+
+	return !(
+	        b1.x > (b2.x + b2.width)  || 
+			b2.x > (b1.x + b1.width)  || 
+	        b1.y > (b2.y + b2.height) ||
+	        b2.y > (b1.y + b1.height)
+	   );
+}
+
 Node.prototype._findIndex = function(item)
 {
 	var b = this._bounds;
@@ -255,7 +354,7 @@ Node.prototype.subdivide = function()
 		width:b_w_h, 
 		height:b_h_h
 	}, 
-	depth);
+	depth, this._maxDepth, this._maxChildren);
 	
 	//top right
 	this.nodes[Node.TOP_RIGHT] = new this._classConstructor({
@@ -264,7 +363,7 @@ Node.prototype.subdivide = function()
 		width:b_w_h, 
 		height:b_h_h
 	},
-	depth);
+	depth, this._maxDepth, this._maxChildren);
 	
 	//bottom left
 	this.nodes[Node.BOTTOM_LEFT] = new this._classConstructor({
@@ -273,7 +372,7 @@ Node.prototype.subdivide = function()
 		width:b_w_h, 
 		height:b_h_h
 	},
-	depth);
+	depth, this._maxDepth, this._maxChildren);
 	
 	
 	//bottom right
@@ -283,7 +382,7 @@ Node.prototype.subdivide = function()
 		width:b_w_h, 
 		height:b_h_h
 	},
-	depth);	
+	depth, this._maxDepth, this._maxChildren);	
 }
 
 Node.prototype.clear = function()
@@ -428,4 +527,4 @@ if ( typeof Object.getPrototypeOf !== "function" ) {
 }
 */
 
-}(window));
+}(this));
