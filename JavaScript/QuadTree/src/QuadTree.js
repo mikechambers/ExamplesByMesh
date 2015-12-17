@@ -186,8 +186,8 @@
 
     Node.prototype._findIndex = function (item) {
         var b = this._bounds;
-        var left = (item.x > b.x + b.width / 2) ? false : true;
-        var top = (item.y > b.y + b.height / 2) ? false : true;
+        var left = (item.x <= b.x + b.width / 2);
+        var top = (item.y <= b.y + b.height / 2);
 
         //top left
         var index = Node.TOP_LEFT;
